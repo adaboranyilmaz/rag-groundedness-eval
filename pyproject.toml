@@ -1,0 +1,27 @@
+[project]
+name = "rag-groundedness-eval"
+version = "0.1.0"
+description = "A measurement harness that separates retrieval failure from generation failure in RAG over financial filings."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "python-dotenv>=1.0",
+    "mlflow>=2.16",
+    "dvc>=3.55",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.7",
+    "pytest>=8.3",
+    "pre-commit>=3.8",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

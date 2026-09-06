@@ -1,0 +1,41 @@
+# --- secrets ---
+.env
+
+# --- internal planning doc ---
+PROJECT_SPEC.md
+DECISIONS.md
+
+# --- data & indices (DVC-tracked, never git) ---
+data/raw/*
+data/processed/*
+data/indices/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/indices/.gitkeep
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# --- MLflow ---
+mlruns/
+mlflow.db
+mlartifacts/
+
+# --- DVC ---
+/dvc.lock.tmp
+
+# --- OS / editor ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- misc build ---
+dist/
+build/
+*.egg-info/
