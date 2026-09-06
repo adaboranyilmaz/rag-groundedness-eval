@@ -1,0 +1,133 @@
+{
+  "documents_chunked": 72,
+  "strategies": {
+    "fixed_size": {
+      "n_chunks": 83499,
+      "mean_chunk_length_chars": 507.3666031928526,
+      "median_chunk_length_chars": 509,
+      "n_table_chunks": 8891,
+      "round_trip_mismatches": 0,
+      "min_coverage_ratio_across_docs": 1.0,
+      "table_handling": {
+        "split": 6702,
+        "merged": 1084,
+        "standalone": 0,
+        "source_tables": 7786
+      }
+    },
+    "recursive_structural": {
+      "n_chunks": 39103,
+      "mean_chunk_length_chars": 944.8919520241413,
+      "median_chunk_length_chars": 849,
+      "n_table_chunks": 6966,
+      "round_trip_mismatches": 0,
+      "min_coverage_ratio_across_docs": 1.0,
+      "table_handling": {
+        "split": 0,
+        "merged": 5013,
+        "standalone": 2773,
+        "source_tables": 7786
+      }
+    },
+    "table_aware": {
+      "n_chunks": 44021,
+      "mean_chunk_length_chars": 839.1057449853479,
+      "median_chunk_length_chars": 756,
+      "n_table_chunks": 7786,
+      "round_trip_mismatches": 0,
+      "min_coverage_ratio_across_docs": 1.0,
+      "table_handling": {
+        "split": 0,
+        "merged": 0,
+        "standalone": 7786,
+        "source_tables": 7786
+      }
+    }
+  },
+  "gold_figure_spot_check": {
+    "n_checked": 10,
+    "n_found": 8,
+    "results": [
+      {
+        "financebench_id": "financebench_id_03029",
+        "doc_id": "3M_2018_10K",
+        "question": "What is the FY2018 capital expenditure amount (in USD millions) for 3M? Give a response to the question by relying on the details shown in the cash flow statement.",
+        "answer": "$1577.00",
+        "searched_number": "1577",
+        "found_in_table_aware_chunks": true
+      },
+      {
+        "financebench_id": "financebench_id_04672",
+        "doc_id": "3M_2018_10K",
+        "question": "Assume that you are a public equities analyst. Answer the following question by primarily using information that is shown in the balance sheet: what is the year end FY2018 net PPNE for 3M? Answer in USD billions.",
+        "answer": "$8.70",
+        "searched_number": "8.7",
+        "found_in_table_aware_chunks": true
+      },
+      {
+        "financebench_id": "financebench_id_08286",
+        "doc_id": "AMAZON_2019_10K",
+        "question": "By drawing conclusions from the information stated only in the income statement, what is Amazon's FY2019 net income attributable to shareholders (in USD millions)?",
+        "answer": "$11588.00",
+        "searched_number": "11588",
+        "found_in_table_aware_chunks": true
+      },
+      {
+        "financebench_id": "financebench_id_03882",
+        "doc_id": "AMCOR_2020_10K",
+        "question": "What is Amcor's year end FY2020 net AR (in USD millions)? Address the question by adopting the perspective of a financial analyst who can only use the details shown within the balance sheet.",
+        "answer": "$1616.00",
+        "searched_number": "1616",
+        "found_in_table_aware_chunks": false
+      },
+      {
+        "financebench_id": "financebench_id_01079",
+        "doc_id": "AMCOR_2023_10K",
+        "question": "What are major acquisitions that AMCOR has done in FY2023, FY2022 and FY2021?",
+        "answer": "Amcor completed these acquisitions during FY2023:\n-100% equity interest of a flexibles manufacturing company in the Czech Republic\n- 100% equity interest in a medical device packaging manufacturing site in\nShanghai, China.\n-acquisition of a New Zealand-based leading manufacturer of state-of-the-art, automated protein\npackaging machines.",
+        "searched_number": "2023",
+        "found_in_table_aware_chunks": true
+      },
+      {
+        "financebench_id": "financebench_id_01198",
+        "doc_id": "AMD_2022_10K",
+        "question": "What drove revenue change as of the FY22 for AMD?",
+        "answer": "In 2022, AMD reported Higher sales of their EPYC server processors, higher semi-custom product sales, and the inclusion of Xilinx embedded product sales",
+        "searched_number": "2022",
+        "found_in_table_aware_chunks": true
+      },
+      {
+        "financebench_id": "financebench_id_05718",
+        "doc_id": "AMERICANWATERWORKS_2020_10K",
+        "question": "How much (in USD billions) did American Water Works pay out in cash dividends for FY2020? Compute or extract the answer by primarily using the details outlined in the statement of cash flows.",
+        "answer": "$0.40",
+        "searched_number": "0.4",
+        "found_in_table_aware_chunks": true
+      },
+      {
+        "financebench_id": "financebench_id_04417",
+        "doc_id": "BESTBUY_2019_10K",
+        "question": "What is the year end FY2019 total amount of inventories for Best Buy? Answer in USD millions. Base your judgments on the information provided primarily in the balance sheet.",
+        "answer": "$5409.00",
+        "searched_number": "5409",
+        "found_in_table_aware_chunks": true
+      },
+      {
+        "financebench_id": "financebench_id_07661",
+        "doc_id": "BLOCK_2020_10K",
+        "question": "Using the cash flow statement, answer the following question to the best of your abilities: how much did Block (formerly known as Square) generate in cash flow from operating activities in FY2020? Answer in USD millions.",
+        "answer": "$382.00",
+        "searched_number": "382",
+        "found_in_table_aware_chunks": false
+      },
+      {
+        "financebench_id": "financebench_id_10285",
+        "doc_id": "BOEING_2018_10K",
+        "question": "We need to calculate a financial metric by using information only provided within the balance sheet. Please answer the following question: what is Boeing's year end FY2018 net property, plant, and equipment (in USD millions)?",
+        "answer": "$12645.00",
+        "searched_number": "12645",
+        "found_in_table_aware_chunks": true
+      }
+    ]
+  }
+}

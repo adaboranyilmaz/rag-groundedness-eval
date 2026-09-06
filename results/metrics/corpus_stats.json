@@ -1,0 +1,783 @@
+{
+  "financebench_questions": 150,
+  "financebench_unique_docs": 84,
+  "documents_ingested": 72,
+  "page_count": 8403,
+  "word_count": 5634337,
+  "word_count_method": "whitespace-split token approximation, not a specific model tokenizer",
+  "table_block_density": 0.05685660247843962,
+  "ingestion_outcomes": {
+    "3M_2018_10K": {
+      "status": "ok",
+      "company": "3M",
+      "cik": "0000066740",
+      "cik_method": "title_exact",
+      "accession_number": "0001558370-19-000470",
+      "form": "10-K",
+      "n_blocks": 2125,
+      "n_chars": 559869
+    },
+    "3M_2022_10K": {
+      "status": "ok",
+      "company": "3M",
+      "cik": "0000066740",
+      "cik_method": "title_exact",
+      "accession_number": "0000066740-23-000014",
+      "form": "10-K",
+      "n_blocks": 1734,
+      "n_chars": 729936
+    },
+    "3M_2023Q2_10Q": {
+      "status": "ok",
+      "company": "3M",
+      "cik": "0000066740",
+      "cik_method": "title_exact",
+      "accession_number": "0000066740-23-000058",
+      "form": "10-Q",
+      "n_blocks": 1137,
+      "n_chars": 447100
+    },
+    "ACTIVISIONBLIZZARD_2019_10K": {
+      "status": "ok",
+      "company": "Activision Blizzard",
+      "cik": "0000718877",
+      "cik_method": "edgar_browse_prefix",
+      "accession_number": "0000718877-20-000003",
+      "form": "10-K",
+      "n_blocks": 2089,
+      "n_chars": 531377
+    },
+    "ADOBE_2015_10K": {
+      "status": "ok",
+      "company": "Adobe",
+      "cik": "0000796343",
+      "cik_method": "title_exact",
+      "accession_number": "0000796343-16-000224",
+      "form": "10-K",
+      "n_blocks": 2256,
+      "n_chars": 450239
+    },
+    "ADOBE_2016_10K": {
+      "status": "ok",
+      "company": "Adobe",
+      "cik": "0000796343",
+      "cik_method": "title_exact",
+      "accession_number": "0000796343-17-000031",
+      "form": "10-K",
+      "n_blocks": 2031,
+      "n_chars": 437923
+    },
+    "ADOBE_2017_10K": {
+      "status": "ok",
+      "company": "Adobe",
+      "cik": "0000796343",
+      "cik_method": "title_exact",
+      "accession_number": "0000796343-18-000015",
+      "form": "10-K",
+      "n_blocks": 2040,
+      "n_chars": 423662
+    },
+    "ADOBE_2022_10K": {
+      "status": "ok",
+      "company": "Adobe",
+      "cik": "0000796343",
+      "cik_method": "title_exact",
+      "accession_number": "0000796343-23-000007",
+      "form": "10-K",
+      "n_blocks": 1760,
+      "n_chars": 418492
+    },
+    "AES_2022_10K": {
+      "status": "ok",
+      "company": "AES Corporation",
+      "cik": "0000874761",
+      "cik_method": "title_exact",
+      "accession_number": "0000874761-23-000010",
+      "form": "10-K",
+      "n_blocks": 3516,
+      "n_chars": 1009678
+    },
+    "AMAZON_2017_10K": {
+      "status": "ok",
+      "company": "Amazon",
+      "cik": "0001018724",
+      "cik_method": "title_substring",
+      "accession_number": "0001018724-18-000005",
+      "form": "10-K",
+      "n_blocks": 1127,
+      "n_chars": 297507
+    },
+    "AMAZON_2019_10K": {
+      "status": "ok",
+      "company": "Amazon",
+      "cik": "0001018724",
+      "cik_method": "title_substring",
+      "accession_number": "0001018724-20-000004",
+      "form": "10-K",
+      "n_blocks": 1132,
+      "n_chars": 322902
+    },
+    "AMCOR_2020_10K": {
+      "status": "ok",
+      "company": "Amcor",
+      "cik": "0001748790",
+      "cik_method": "title_exact",
+      "accession_number": "0001748790-20-000025",
+      "form": "10-K",
+      "n_blocks": 1746,
+      "n_chars": 454599
+    },
+    "AMCOR_2022_8K_dated-2022-07-01": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='8k' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "AMCOR_2023Q2_10Q": {
+      "status": "ok",
+      "company": "Amcor",
+      "cik": "0001748790",
+      "cik_method": "title_exact",
+      "accession_number": "0001748790-23-000007",
+      "form": "10-Q",
+      "n_blocks": 510,
+      "n_chars": 166638
+    },
+    "AMCOR_2023Q4_EARNINGS": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='Earnings' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "AMCOR_2023_10K": {
+      "status": "ok",
+      "company": "Amcor",
+      "cik": "0001748790",
+      "cik_method": "title_exact",
+      "accession_number": "0001748790-23-000030",
+      "form": "10-K",
+      "n_blocks": 1430,
+      "n_chars": 421166
+    },
+    "AMD_2015_10K": {
+      "status": "ok",
+      "company": "AMD",
+      "cik": "0000002488",
+      "cik_method": "ticker_exact",
+      "accession_number": "0000002488-16-000111",
+      "form": "10-K",
+      "n_blocks": 1783,
+      "n_chars": 451701
+    },
+    "AMD_2022_10K": {
+      "status": "ok",
+      "company": "AMD",
+      "cik": "0000002488",
+      "cik_method": "ticker_exact",
+      "accession_number": "0000002488-23-000047",
+      "form": "10-K",
+      "n_blocks": 1516,
+      "n_chars": 438735
+    },
+    "AMERICANEXPRESS_2022_10K": {
+      "status": "ok",
+      "company": "American Express",
+      "cik": "0000004962",
+      "cik_method": "title_exact",
+      "accession_number": "0000004962-23-000006",
+      "form": "10-K",
+      "n_blocks": 2087,
+      "n_chars": 664424
+    },
+    "AMERICANWATERWORKS_2020_10K": {
+      "status": "ok",
+      "company": "American Water Works",
+      "cik": "0001410636",
+      "cik_method": "title_exact",
+      "accession_number": "0001410636-21-000101",
+      "form": "10-K",
+      "n_blocks": 1903,
+      "n_chars": 675583
+    },
+    "AMERICANWATERWORKS_2021_10K": {
+      "status": "ok",
+      "company": "American Water Works",
+      "cik": "0001410636",
+      "cik_method": "title_exact",
+      "accession_number": "0001410636-22-000048",
+      "form": "10-K",
+      "n_blocks": 2018,
+      "n_chars": 694205
+    },
+    "AMERICANWATERWORKS_2022_10K": {
+      "status": "ok",
+      "company": "American Water Works",
+      "cik": "0001410636",
+      "cik_method": "title_exact",
+      "accession_number": "0001410636-23-000020",
+      "form": "10-K",
+      "n_blocks": 1971,
+      "n_chars": 696392
+    },
+    "BESTBUY_2017_10K": {
+      "status": "ok",
+      "company": "Best Buy",
+      "cik": "0000764478",
+      "cik_method": "title_exact",
+      "accession_number": "0000764478-17-000008",
+      "form": "10-K",
+      "n_blocks": 1818,
+      "n_chars": 357206
+    },
+    "BESTBUY_2019_10K": {
+      "status": "ok",
+      "company": "Best Buy",
+      "cik": "0000764478",
+      "cik_method": "title_exact",
+      "accession_number": "0000764478-19-000009",
+      "form": "10-K",
+      "n_blocks": 1751,
+      "n_chars": 363756
+    },
+    "BESTBUY_2023_10K": {
+      "status": "ok",
+      "company": "Best Buy",
+      "cik": "0000764478",
+      "cik_method": "title_exact",
+      "accession_number": "0000764478-23-000006",
+      "form": "10-K",
+      "n_blocks": 1452,
+      "n_chars": 327920
+    },
+    "BESTBUY_2024Q2_10Q": {
+      "status": "ok",
+      "company": "Best Buy",
+      "cik": "0000764478",
+      "cik_method": "title_exact",
+      "accession_number": "0000764478-23-000041",
+      "form": "10-Q",
+      "n_blocks": 436,
+      "n_chars": 103442
+    },
+    "BLOCK_2016_10K": {
+      "status": "ok",
+      "company": "Block",
+      "cik": "0001512673",
+      "cik_method": "title_exact",
+      "accession_number": "0001628280-17-001754",
+      "form": "10-K",
+      "n_blocks": 1913,
+      "n_chars": 371704
+    },
+    "BLOCK_2020_10K": {
+      "status": "ok",
+      "company": "Block",
+      "cik": "0001512673",
+      "cik_method": "title_exact",
+      "accession_number": "0001512673-21-000008",
+      "form": "10-K",
+      "n_blocks": 2165,
+      "n_chars": 589850
+    },
+    "BOEING_2018_10K": {
+      "status": "ok",
+      "company": "Boeing",
+      "cik": "0000012927",
+      "cik_method": "title_exact",
+      "accession_number": "0000012927-19-000010",
+      "form": "10-K",
+      "n_blocks": 1432,
+      "n_chars": 492112
+    },
+    "BOEING_2022_10K": {
+      "status": "ok",
+      "company": "Boeing",
+      "cik": "0000012927",
+      "cik_method": "title_exact",
+      "accession_number": "0000012927-23-000007",
+      "form": "10-K",
+      "n_blocks": 1438,
+      "n_chars": 485469
+    },
+    "COCACOLA_2017_10K": {
+      "status": "ok",
+      "company": "Coca-Cola",
+      "cik": "0000021344",
+      "cik_method": "title_exact",
+      "accession_number": "0000021344-18-000008",
+      "form": "10-K",
+      "n_blocks": 2313,
+      "n_chars": 727674
+    },
+    "COCACOLA_2021_10K": {
+      "status": "ok",
+      "company": "Coca-Cola",
+      "cik": "0000021344",
+      "cik_method": "title_exact",
+      "accession_number": "0000021344-22-000009",
+      "form": "10-K",
+      "n_blocks": 1899,
+      "n_chars": 711198
+    },
+    "COCACOLA_2022_10K": {
+      "status": "ok",
+      "company": "Coca-Cola",
+      "cik": "0000021344",
+      "cik_method": "title_exact",
+      "accession_number": "0000021344-23-000011",
+      "form": "10-K",
+      "n_blocks": 1877,
+      "n_chars": 705672
+    },
+    "CORNING_2020_10K": {
+      "status": "ok",
+      "company": "Corning",
+      "cik": "0000024741",
+      "cik_method": "title_exact",
+      "accession_number": "0001562762-21-000023",
+      "form": "10-K",
+      "n_blocks": 1696,
+      "n_chars": 507103
+    },
+    "CORNING_2021_10K": {
+      "status": "ok",
+      "company": "Corning",
+      "cik": "0000024741",
+      "cik_method": "title_exact",
+      "accession_number": "0001437749-22-003247",
+      "form": "10-K",
+      "n_blocks": 1855,
+      "n_chars": 528637
+    },
+    "CORNING_2022_10K": {
+      "status": "ok",
+      "company": "Corning",
+      "cik": "0000024741",
+      "cik_method": "title_exact",
+      "accession_number": "0001437749-23-003123",
+      "form": "10-K",
+      "n_blocks": 1613,
+      "n_chars": 460255
+    },
+    "COSTCO_2021_10K": {
+      "status": "ok",
+      "company": "Costco",
+      "cik": "0000909832",
+      "cik_method": "title_substring",
+      "accession_number": "0000909832-21-000014",
+      "form": "10-K",
+      "n_blocks": 1032,
+      "n_chars": 237103
+    },
+    "CVSHEALTH_2018_10K": {
+      "status": "ok",
+      "company": "CVS Health",
+      "cik": "0000064803",
+      "cik_method": "title_exact",
+      "accession_number": "0000064803-19-000013",
+      "form": "10-K",
+      "n_blocks": 1151,
+      "n_chars": 377380
+    },
+    "CVSHEALTH_2022_10K": {
+      "status": "ok",
+      "company": "CVS Health",
+      "cik": "0000064803",
+      "cik_method": "title_exact",
+      "accession_number": "0000064803-23-000009",
+      "form": "10-K",
+      "n_blocks": 2461,
+      "n_chars": 944140
+    },
+    "FOOTLOCKER_2022_8K_dated-2022-05-20": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='8k' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "FOOTLOCKER_2022_8K_dated_2022-08-19": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='8k' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "GENERALMILLS_2019_10K": {
+      "status": "ok",
+      "company": "General Mills",
+      "cik": "0000040704",
+      "cik_method": "title_exact",
+      "accession_number": "0001193125-19-184675",
+      "form": "10-K",
+      "n_blocks": 2016,
+      "n_chars": 395846
+    },
+    "GENERALMILLS_2020_10K": {
+      "status": "ok",
+      "company": "General Mills",
+      "cik": "0000040704",
+      "cik_method": "title_exact",
+      "accession_number": "0001193125-20-186469",
+      "form": "10-K",
+      "n_blocks": 1425,
+      "n_chars": 444730
+    },
+    "GENERALMILLS_2022_10K": {
+      "status": "ok",
+      "company": "General Mills",
+      "cik": "0000040704",
+      "cik_method": "title_exact",
+      "accession_number": "0001193125-22-185257",
+      "form": "10-K",
+      "n_blocks": 6659,
+      "n_chars": 150442
+    },
+    "JOHNSON_JOHNSON_2022Q4_EARNINGS": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='Earnings' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "JOHNSON_JOHNSON_2022_10K": {
+      "status": "ok",
+      "company": "Johnson & Johnson",
+      "cik": "0000200406",
+      "cik_method": "title_exact",
+      "accession_number": "0000200406-22-000022",
+      "form": "10-K",
+      "n_blocks": 1660,
+      "n_chars": 577424
+    },
+    "JOHNSON_JOHNSON_2023Q2_EARNINGS": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='Earnings' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "JOHNSON_JOHNSON_2023_8K_dated-2023-08-30": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='8k' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "JPMORGAN_2021Q1_10Q": {
+      "status": "ok",
+      "company": "JPMorgan",
+      "cik": "0000019617",
+      "cik_method": "title_substring",
+      "accession_number": "0000019617-21-000292",
+      "form": "10-Q",
+      "n_blocks": 2610,
+      "n_chars": 861867
+    },
+    "JPMORGAN_2022Q2_10Q": {
+      "status": "ok",
+      "company": "JPMorgan",
+      "cik": "0000019617",
+      "cik_method": "title_substring",
+      "accession_number": "0000019617-22-000422",
+      "form": "10-Q",
+      "n_blocks": 2842,
+      "n_chars": 953259
+    },
+    "JPMORGAN_2022_10K": {
+      "status": "ok",
+      "company": "JPMorgan",
+      "cik": "0000019617",
+      "cik_method": "title_substring",
+      "accession_number": "0000019617-23-000231",
+      "form": "10-K",
+      "n_blocks": 5203,
+      "n_chars": 1500670
+    },
+    "JPMORGAN_2023Q2_10Q": {
+      "status": "ok",
+      "company": "JPMorgan",
+      "cik": "0000019617",
+      "cik_method": "title_substring",
+      "accession_number": "0000019617-23-000432",
+      "form": "10-Q",
+      "n_blocks": 3381,
+      "n_chars": 1074596
+    },
+    "KRAFTHEINZ_2019_10K": {
+      "status": "ok",
+      "company": "Kraft Heinz",
+      "cik": "0001637459",
+      "cik_method": "title_exact",
+      "accession_number": "0001637459-20-000027",
+      "form": "10-K",
+      "n_blocks": 1896,
+      "n_chars": 641285
+    },
+    "LOCKHEEDMARTIN_2020_10K": {
+      "status": "ok",
+      "company": "Lockheed Martin",
+      "cik": "0000936468",
+      "cik_method": "title_exact",
+      "accession_number": "0000936468-21-000013",
+      "form": "10-K",
+      "n_blocks": 1362,
+      "n_chars": 576241
+    },
+    "LOCKHEEDMARTIN_2021_10K": {
+      "status": "ok",
+      "company": "Lockheed Martin",
+      "cik": "0000936468",
+      "cik_method": "title_exact",
+      "accession_number": "0000936468-22-000008",
+      "form": "10-K",
+      "n_blocks": 1310,
+      "n_chars": 565600
+    },
+    "LOCKHEEDMARTIN_2022_10K": {
+      "status": "ok",
+      "company": "Lockheed Martin",
+      "cik": "0000936468",
+      "cik_method": "title_exact",
+      "accession_number": "0000936468-23-000009",
+      "form": "10-K",
+      "n_blocks": 1296,
+      "n_chars": 558732
+    },
+    "MGMRESORTS_2018_10K": {
+      "status": "ok",
+      "company": "MGM Resorts",
+      "cik": "0000789570",
+      "cik_method": "title_substring",
+      "accession_number": "0001564590-19-004807",
+      "form": "10-K",
+      "n_blocks": 1689,
+      "n_chars": 481056
+    },
+    "MGMRESORTS_2020_10K": {
+      "status": "ok",
+      "company": "MGM Resorts",
+      "cik": "0000789570",
+      "cik_method": "title_substring",
+      "accession_number": "0001564590-21-009205",
+      "form": "10-K",
+      "n_blocks": 1873,
+      "n_chars": 635428
+    },
+    "MGMRESORTS_2022Q4_EARNINGS": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='Earnings' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "MGMRESORTS_2022_10K": {
+      "status": "ok",
+      "company": "MGM Resorts",
+      "cik": "0000789570",
+      "cik_method": "title_substring",
+      "accession_number": "0000789570-23-000008",
+      "form": "10-K",
+      "n_blocks": 1515,
+      "n_chars": 517539
+    },
+    "MGMRESORTS_2023Q2_10Q": {
+      "status": "ok",
+      "company": "MGM Resorts",
+      "cik": "0000789570",
+      "cik_method": "title_substring",
+      "accession_number": "0000789570-23-000019",
+      "form": "10-Q",
+      "n_blocks": 493,
+      "n_chars": 188707
+    },
+    "MICROSOFT_2016_10K": {
+      "status": "ok",
+      "company": "Microsoft",
+      "cik": "0000789019",
+      "cik_method": "title_exact",
+      "accession_number": "0001193125-16-662209",
+      "form": "10-K",
+      "n_blocks": 1932,
+      "n_chars": 382650
+    },
+    "MICROSOFT_2023_10K": {
+      "status": "ok",
+      "company": "Microsoft",
+      "cik": "0000789019",
+      "cik_method": "title_exact",
+      "accession_number": "0000950170-23-035122",
+      "form": "10-K",
+      "n_blocks": 1732,
+      "n_chars": 419192
+    },
+    "NETFLIX_2015_10K": {
+      "status": "ok",
+      "company": "Netflix",
+      "cik": "0001065280",
+      "cik_method": "title_exact",
+      "accession_number": "0001065280-16-000047",
+      "form": "10-K",
+      "n_blocks": 1046,
+      "n_chars": 238429
+    },
+    "NETFLIX_2017_10K": {
+      "status": "ok",
+      "company": "Netflix",
+      "cik": "0001065280",
+      "cik_method": "title_exact",
+      "accession_number": "0001065280-18-000069",
+      "form": "10-K",
+      "n_blocks": 1066,
+      "n_chars": 241666
+    },
+    "NIKE_2018_10K": {
+      "status": "ok",
+      "company": "Nike",
+      "cik": "0000320187",
+      "cik_method": "title_exact",
+      "accession_number": "0000320187-18-000142",
+      "form": "10-K",
+      "n_blocks": 1207,
+      "n_chars": 390148
+    },
+    "NIKE_2019_10K": {
+      "status": "ok",
+      "company": "Nike",
+      "cik": "0000320187",
+      "cik_method": "title_exact",
+      "accession_number": "0000320187-19-000051",
+      "form": "10-K",
+      "n_blocks": 1188,
+      "n_chars": 367322
+    },
+    "NIKE_2021_10K": {
+      "status": "ok",
+      "company": "Nike",
+      "cik": "0000320187",
+      "cik_method": "title_exact",
+      "accession_number": "0000320187-21-000028",
+      "form": "10-K",
+      "n_blocks": 1313,
+      "n_chars": 472061
+    },
+    "NIKE_2023_10K": {
+      "status": "ok",
+      "company": "Nike",
+      "cik": "0000320187",
+      "cik_method": "title_exact",
+      "accession_number": "0000320187-23-000039",
+      "form": "10-K",
+      "n_blocks": 1285,
+      "n_chars": 433344
+    },
+    "PAYPAL_2022_10K": {
+      "status": "ok",
+      "company": "Paypal",
+      "cik": "0001633917",
+      "cik_method": "title_exact",
+      "accession_number": "0001633917-23-000033",
+      "form": "10-K",
+      "n_blocks": 1757,
+      "n_chars": 567902
+    },
+    "PEPSICO_2021_10K": {
+      "status": "ok",
+      "company": "PepsiCo",
+      "cik": "0000077476",
+      "cik_method": "title_exact",
+      "accession_number": "0000077476-22-000010",
+      "form": "10-K",
+      "n_blocks": 1653,
+      "n_chars": 488575
+    },
+    "PEPSICO_2022_10K": {
+      "status": "ok",
+      "company": "PepsiCo",
+      "cik": "0000077476",
+      "cik_method": "title_exact",
+      "accession_number": "0000077476-23-000007",
+      "form": "10-K",
+      "n_blocks": 1660,
+      "n_chars": 506809
+    },
+    "PEPSICO_2023Q1_EARNINGS": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='Earnings' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "PEPSICO_2023_8K_dated-2023-05-05": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='8k' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "PEPSICO_2023_8K_dated-2023-05-30": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='8k' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "PFIZER_2021_10K": {
+      "status": "ok",
+      "company": "Pfizer",
+      "cik": "0000078003",
+      "cik_method": "title_exact",
+      "accession_number": "0000078003-22-000027",
+      "form": "10-K",
+      "n_blocks": 2486,
+      "n_chars": 799806
+    },
+    "Pfizer_2023Q2_10Q": {
+      "status": "ok",
+      "company": "Pfizer",
+      "cik": "0000078003",
+      "cik_method": "title_exact",
+      "accession_number": "0000078003-23-000088",
+      "form": "10-Q",
+      "n_blocks": 1509,
+      "n_chars": 352429
+    },
+    "ULTABEAUTY_2023Q4_EARNINGS": {
+      "status": "skipped_out_of_scope",
+      "reason": "doc_type='Earnings' is not 10-K/10-Q; see PROJECT_SPEC.md \u00a75"
+    },
+    "ULTABEAUTY_2023_10K": {
+      "status": "ok",
+      "company": "Ulta Beauty",
+      "cik": "0001403568",
+      "cik_method": "title_exact",
+      "accession_number": "0001558370-23-004581",
+      "form": "10-K",
+      "n_blocks": 7284,
+      "n_chars": 295299
+    },
+    "VERIZON_2021_10K": {
+      "status": "ok",
+      "company": "Verizon",
+      "cik": "0000732712",
+      "cik_method": "title_substring",
+      "accession_number": "0000732712-22-000008",
+      "form": "10-K",
+      "n_blocks": 1930,
+      "n_chars": 592766
+    },
+    "VERIZON_2022_10K": {
+      "status": "ok",
+      "company": "Verizon",
+      "cik": "0000732712",
+      "cik_method": "title_substring",
+      "accession_number": "0000732712-23-000012",
+      "form": "10-K",
+      "n_blocks": 1940,
+      "n_chars": 601577
+    },
+    "WALMART_2018_10K": {
+      "status": "ok",
+      "company": "Walmart",
+      "cik": "0000104169",
+      "cik_method": "title_exact",
+      "accession_number": "0000104169-18-000028",
+      "form": "10-K",
+      "n_blocks": 1611,
+      "n_chars": 387339
+    },
+    "WALMART_2019_10K": {
+      "status": "ok",
+      "company": "Walmart",
+      "cik": "0000104169",
+      "cik_method": "title_exact",
+      "accession_number": "0000104169-19-000016",
+      "form": "10-K",
+      "n_blocks": 1436,
+      "n_chars": 382353
+    },
+    "WALMART_2020_10K": {
+      "status": "ok",
+      "company": "Walmart",
+      "cik": "0000104169",
+      "cik_method": "title_exact",
+      "accession_number": "0000104169-20-000011",
+      "form": "10-K",
+      "n_blocks": 1463,
+      "n_chars": 400334
+    }
+  },
+  "status_counts": {
+    "ok": 72,
+    "skipped_out_of_scope": 12
+  }
+}
