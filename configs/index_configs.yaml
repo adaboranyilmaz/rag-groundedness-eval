@@ -1,0 +1,22 @@
+# Phase 2 index-build grid. See PROJECT_SPEC.md §6 Phase 2 and scripts/03_build_index.py.
+
+chunking_strategies:
+  - fixed_size
+  - recursive_structural
+  - table_aware
+
+embedding_models:
+  - bge-small-en-v1.5
+  - all-MiniLM-L6-v2
+  - bge-base-en-v1.5
+
+backends:
+  - faiss
+  - qdrant
+
+# Latency benchmark: a fixed, deterministically-ordered sample of real FinanceBench
+# questions (not synthetic queries), searched repeatedly against each built index.
+latency_benchmark:
+  k: 5
+  n_queries: 30
+  n_repeats: 3

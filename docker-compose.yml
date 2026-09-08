@@ -1,0 +1,12 @@
+# Phase 2: Qdrant only. Phase 7 extends this with the `api` and `mlflow` services.
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.1 # match qdrant-client==1.19.0 in pyproject.toml
+    ports:
+      - "6333:6333" # REST
+      - "6334:6334" # gRPC
+    volumes:
+      - qdrant_storage:/qdrant/storage
+
+volumes:
+  qdrant_storage:
