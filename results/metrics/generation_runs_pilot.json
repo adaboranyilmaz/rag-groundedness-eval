@@ -1,0 +1,784 @@
+{
+  "arms": {
+    "retrieved__claude-sonnet-5__v1_zero_shot": {
+      "n": 10,
+      "parse_status": {
+        "ok": 10,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 0.7,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 10,
+        "mean": 55.7,
+        "median": 65.0
+      },
+      "issues": {
+        "text_before_first_field": 1
+      },
+      "stop_reasons": {
+        "end_turn": 10
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 14628,
+      "output_tokens_total": 1298,
+      "output_tokens_mean": 129.8,
+      "cost_usd_total": 0.042235999999999996,
+      "latency_ms": {
+        "p50": 1909.4,
+        "p95": 5491.9
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "38e975375fcabb7470149db42149bfafcfd5a587d042ed9f2166112a2cf2b25a",
+      "trace_file": "results/traces/pilot/retrieved/claude-sonnet-5__v1_zero_shot.jsonl"
+    },
+    "retrieved__claude-sonnet-5__v2_citation_required": {
+      "n": 10,
+      "parse_status": {
+        "ok": 9,
+        "partial": 1,
+        "failed": 0
+      },
+      "parse_ok_rate": 0.9,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 0.4,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 10,
+        "mean": 37.0,
+        "median": 37.5
+      },
+      "issues": {
+        "quotes_unparseable": 1,
+        "text_before_first_field": 1
+      },
+      "stop_reasons": {
+        "end_turn": 10
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 15368,
+      "output_tokens_total": 1816,
+      "output_tokens_mean": 181.6,
+      "cost_usd_total": 0.048896,
+      "latency_ms": {
+        "p50": 2497.4,
+        "p95": 5118.7
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "4d7c71682ad3804faaf0ae5d327ce21b0500529cbbbc9dd8ecc9164250d86094",
+      "trace_file": "results/traces/pilot/retrieved/claude-sonnet-5__v2_citation_required.jsonl"
+    },
+    "retrieved__claude-sonnet-5__v3_chain_of_thought": {
+      "n": 10,
+      "parse_status": {
+        "ok": 10,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 0.8,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 10,
+        "mean": 75.6,
+        "median": 87.5
+      },
+      "issues": {},
+      "stop_reasons": {
+        "end_turn": 10
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 15188,
+      "output_tokens_total": 2931,
+      "output_tokens_mean": 293.1,
+      "cost_usd_total": 0.059686,
+      "latency_ms": {
+        "p50": 2986.6,
+        "p95": 6475.2
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "20fb6a34873a19f1157b5b5cc05cd355bf015cff6c7fe4477cd7fcfe0fe7f354",
+      "trace_file": "results/traces/pilot/retrieved/claude-sonnet-5__v3_chain_of_thought.jsonl"
+    },
+    "retrieved__claude-sonnet-5__v4_abstention": {
+      "n": 10,
+      "parse_status": {
+        "ok": 10,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.7,
+      "mean_citations": 0.3,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 10,
+        "mean": 74.1,
+        "median": 92.5
+      },
+      "issues": {},
+      "stop_reasons": {
+        "end_turn": 10
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 15548,
+      "output_tokens_total": 722,
+      "output_tokens_mean": 72.2,
+      "cost_usd_total": 0.038316,
+      "latency_ms": {
+        "p50": 1969.7,
+        "p95": 3834.3
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "d1d24eaa48c505c3ba0a3b6770922c71794678548d091c1c187187635c0c6210",
+      "trace_file": "results/traces/pilot/retrieved/claude-sonnet-5__v4_abstention.jsonl"
+    },
+    "retrieved__qwen2.5-3b__v1_zero_shot": {
+      "n": 10,
+      "parse_status": {
+        "ok": 10,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 1.6,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 10,
+        "mean": 82.0,
+        "median": 100.0
+      },
+      "issues": {
+        "text_after_confidence": 1
+      },
+      "stop_reasons": {
+        "stop": 10
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11124,
+      "output_tokens_total": 280,
+      "output_tokens_mean": 28.0,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 807.9,
+        "p95": 6663.5
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "38e975375fcabb7470149db42149bfafcfd5a587d042ed9f2166112a2cf2b25a",
+      "trace_file": "results/traces/pilot/retrieved/qwen2.5-3b__v1_zero_shot.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "retrieved__qwen2.5-3b__v2_citation_required": {
+      "n": 10,
+      "parse_status": {
+        "ok": 7,
+        "partial": 3,
+        "failed": 0
+      },
+      "parse_ok_rate": 0.7,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 1.0,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 7,
+        "mean": 95.0,
+        "median": 100
+      },
+      "issues": {
+        "missing_confidence": 3,
+        "quote_for_uncited_label": 1,
+        "text_after_confidence": 1,
+        "duplicate_answer": 1,
+        "duplicate_citations": 1,
+        "duplicate_quotes": 1
+      },
+      "stop_reasons": {
+        "stop": 9,
+        "length": 1
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11564,
+      "output_tokens_total": 3323,
+      "output_tokens_mean": 332.3,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 2121.8,
+        "p95": 30858.0
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "4d7c71682ad3804faaf0ae5d327ce21b0500529cbbbc9dd8ecc9164250d86094",
+      "trace_file": "results/traces/pilot/retrieved/qwen2.5-3b__v2_citation_required.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "retrieved__qwen2.5-3b__v3_chain_of_thought": {
+      "n": 10,
+      "parse_status": {
+        "ok": 10,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 1.3,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 10,
+        "mean": 99.0,
+        "median": 100.0
+      },
+      "issues": {
+        "text_after_confidence": 2,
+        "duplicate_reasoning": 1,
+        "duplicate_answer": 1,
+        "duplicate_citations": 1,
+        "duplicate_confidence": 1
+      },
+      "stop_reasons": {
+        "stop": 10
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11484,
+      "output_tokens_total": 2078,
+      "output_tokens_mean": 207.8,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 3110.0,
+        "p95": 6719.9
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "20fb6a34873a19f1157b5b5cc05cd355bf015cff6c7fe4477cd7fcfe0fe7f354",
+      "trace_file": "results/traces/pilot/retrieved/qwen2.5-3b__v3_chain_of_thought.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "retrieved__qwen2.5-3b__v4_abstention": {
+      "n": 10,
+      "parse_status": {
+        "ok": 10,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.5,
+      "mean_citations": 0.6,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 10,
+        "mean": 99.5,
+        "median": 100.0
+      },
+      "issues": {},
+      "stop_reasons": {
+        "stop": 10
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11614,
+      "output_tokens_total": 246,
+      "output_tokens_mean": 24.6,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 779.6,
+        "p95": 942.4
+      },
+      "this_run": {
+        "cache_hits": 10,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "retrieved",
+      "prompt_version": 2,
+      "prompt_file_sha256": "d1d24eaa48c505c3ba0a3b6770922c71794678548d091c1c187187635c0c6210",
+      "trace_file": "results/traces/pilot/retrieved/qwen2.5-3b__v4_abstention.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "oracle__qwen2.5-3b__v1_zero_shot": {
+      "n": 8,
+      "parse_status": {
+        "ok": 8,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 2.25,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 8,
+        "mean": 93.125,
+        "median": 100.0
+      },
+      "issues": {},
+      "stop_reasons": {
+        "stop": 8
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11296,
+      "output_tokens_total": 254,
+      "output_tokens_mean": 31.75,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 964.2,
+        "p95": 8480.0
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "38e975375fcabb7470149db42149bfafcfd5a587d042ed9f2166112a2cf2b25a",
+      "trace_file": "results/traces/pilot/oracle/qwen2.5-3b__v1_zero_shot.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "oracle__qwen2.5-3b__v2_citation_required": {
+      "n": 8,
+      "parse_status": {
+        "ok": 3,
+        "partial": 5,
+        "failed": 0
+      },
+      "parse_ok_rate": 0.375,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 1.875,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 3,
+        "mean": 96.66666666666667,
+        "median": 95
+      },
+      "issues": {
+        "missing_confidence": 5
+      },
+      "stop_reasons": {
+        "stop": 7,
+        "length": 1
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11648,
+      "output_tokens_total": 3074,
+      "output_tokens_mean": 384.25,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 1731.8,
+        "p95": 30998.5
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "4d7c71682ad3804faaf0ae5d327ce21b0500529cbbbc9dd8ecc9164250d86094",
+      "trace_file": "results/traces/pilot/oracle/qwen2.5-3b__v2_citation_required.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "oracle__qwen2.5-3b__v3_chain_of_thought": {
+      "n": 8,
+      "parse_status": {
+        "ok": 8,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 1.75,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 8,
+        "mean": 99.375,
+        "median": 100.0
+      },
+      "issues": {
+        "duplicate_reasoning": 1
+      },
+      "stop_reasons": {
+        "stop": 8
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11584,
+      "output_tokens_total": 1432,
+      "output_tokens_mean": 179.0,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 2622.8,
+        "p95": 6685.4
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "20fb6a34873a19f1157b5b5cc05cd355bf015cff6c7fe4477cd7fcfe0fe7f354",
+      "trace_file": "results/traces/pilot/oracle/qwen2.5-3b__v3_chain_of_thought.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "oracle__qwen2.5-3b__v4_abstention": {
+      "n": 8,
+      "parse_status": {
+        "ok": 8,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.375,
+      "mean_citations": 1.375,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 8,
+        "mean": 99.375,
+        "median": 100.0
+      },
+      "issues": {},
+      "stop_reasons": {
+        "stop": 8
+      },
+      "models_reported": [
+        "qwen2.5:3b-instruct"
+      ],
+      "input_tokens_total": 11688,
+      "output_tokens_total": 209,
+      "output_tokens_mean": 26.125,
+      "cost_usd_total": 0,
+      "latency_ms": {
+        "p50": 969.2,
+        "p95": 1115.9
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "d1d24eaa48c505c3ba0a3b6770922c71794678548d091c1c187187635c0c6210",
+      "trace_file": "results/traces/pilot/oracle/qwen2.5-3b__v4_abstention.jsonl",
+      "model_digest": "357c53fb659c5076de1d65ccb0b397446227b71a42be9d1603d46168015c9e4b"
+    },
+    "oracle__claude-sonnet-5__v1_zero_shot": {
+      "n": 8,
+      "parse_status": {
+        "ok": 8,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 2.5,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 8,
+        "mean": 74.875,
+        "median": 81.5
+      },
+      "issues": {
+        "text_before_first_field": 1
+      },
+      "stop_reasons": {
+        "end_turn": 8
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 13187,
+      "output_tokens_total": 1539,
+      "output_tokens_mean": 192.375,
+      "cost_usd_total": 0.041764,
+      "latency_ms": {
+        "p50": 2962.4,
+        "p95": 5422.8
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "38e975375fcabb7470149db42149bfafcfd5a587d042ed9f2166112a2cf2b25a",
+      "trace_file": "results/traces/pilot/oracle/claude-sonnet-5__v1_zero_shot.jsonl"
+    },
+    "oracle__claude-sonnet-5__v2_citation_required": {
+      "n": 8,
+      "parse_status": {
+        "ok": 8,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 2.0,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 8,
+        "mean": 75.75,
+        "median": 80.0
+      },
+      "issues": {
+        "text_before_first_field": 1
+      },
+      "stop_reasons": {
+        "end_turn": 8
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 13779,
+      "output_tokens_total": 2757,
+      "output_tokens_mean": 344.625,
+      "cost_usd_total": 0.055127999999999996,
+      "latency_ms": {
+        "p50": 2503.3,
+        "p95": 7877.1
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "4d7c71682ad3804faaf0ae5d327ce21b0500529cbbbc9dd8ecc9164250d86094",
+      "trace_file": "results/traces/pilot/oracle/claude-sonnet-5__v2_citation_required.jsonl"
+    },
+    "oracle__claude-sonnet-5__v3_chain_of_thought": {
+      "n": 8,
+      "parse_status": {
+        "ok": 8,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.0,
+      "mean_citations": 2.375,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 8,
+        "mean": 80.875,
+        "median": 83.5
+      },
+      "issues": {},
+      "stop_reasons": {
+        "end_turn": 8
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 13635,
+      "output_tokens_total": 2671,
+      "output_tokens_mean": 333.875,
+      "cost_usd_total": 0.05398,
+      "latency_ms": {
+        "p50": 3870.9,
+        "p95": 7413.8
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "20fb6a34873a19f1157b5b5cc05cd355bf015cff6c7fe4477cd7fcfe0fe7f354",
+      "trace_file": "results/traces/pilot/oracle/claude-sonnet-5__v3_chain_of_thought.jsonl"
+    },
+    "oracle__claude-sonnet-5__v4_abstention": {
+      "n": 8,
+      "parse_status": {
+        "ok": 8,
+        "partial": 0,
+        "failed": 0
+      },
+      "parse_ok_rate": 1.0,
+      "abstained_token_rate": 0.125,
+      "mean_citations": 1.875,
+      "invalid_citation_rate": 0.0,
+      "confidence": {
+        "n_parsed": 8,
+        "mean": 84.625,
+        "median": 90.0
+      },
+      "issues": {
+        "text_before_first_field": 1
+      },
+      "stop_reasons": {
+        "end_turn": 8
+      },
+      "models_reported": [
+        "claude-sonnet-5"
+      ],
+      "input_tokens_total": 13923,
+      "output_tokens_total": 1430,
+      "output_tokens_mean": 178.75,
+      "cost_usd_total": 0.042146,
+      "latency_ms": {
+        "p50": 2484.9,
+        "p95": 5105.6
+      },
+      "this_run": {
+        "cache_hits": 8,
+        "new_calls": 0,
+        "new_cost_usd": 0.0
+      },
+      "condition": "oracle",
+      "prompt_version": 2,
+      "prompt_file_sha256": "d1d24eaa48c505c3ba0a3b6770922c71794678548d091c1c187187635c0c6210",
+      "trace_file": "results/traces/pilot/oracle/claude-sonnet-5__v4_abstention.jsonl"
+    }
+  },
+  "meta": {
+    "updated_utc": "2026-09-24T15:16:50+00:00",
+    "single_run": true,
+    "pilot": true,
+    "config": {
+      "retrieval": {
+        "chunking": "fixed_size",
+        "embedding": "bge-small-en-v1.5",
+        "method": "dense",
+        "backend": "faiss",
+        "k": 5,
+        "search_depth": 100
+      },
+      "conditions": [
+        "retrieved",
+        "oracle"
+      ],
+      "questions": "all",
+      "prompts": [
+        "v1_zero_shot",
+        "v2_citation_required",
+        "v3_chain_of_thought",
+        "v4_abstention"
+      ],
+      "max_tokens": 2048,
+      "models": {
+        "claude-sonnet-5": {
+          "backend": "anthropic",
+          "model": "claude-sonnet-5",
+          "thinking": "disabled",
+          "concurrency": 4
+        },
+        "qwen2.5-3b": {
+          "backend": "ollama",
+          "model": "qwen2.5:3b-instruct",
+          "temperature": 0,
+          "seed": 0,
+          "num_ctx": 8192,
+          "concurrency": 1
+        }
+      },
+      "budget": {
+        "ledger": "results/metrics/api_spend.json",
+        "project_cap_usd": 30.0,
+        "phase_cap_usd": 10.0,
+        "prices_as_of": "2026-06-24",
+        "prices_usd_per_mtok": {
+          "claude-sonnet-5": {
+            "input": 2.0,
+            "output": 10.0
+          }
+        }
+      },
+      "pilot_seed": 0
+    },
+    "n_questions": 10,
+    "n_in_corpus": 8,
+    "n_questions_per_condition": {
+      "retrieved": 10,
+      "oracle": 8
+    },
+    "context_check": {
+      "cell": "fixed_size__bge-small-en-v1.5__dense",
+      "k": 5,
+      "search_depth": 100,
+      "retrieved_phase3_top_k_match_counts": {
+        "exact": 8,
+        "None": 2
+      },
+      "oracle": {
+        "n_questions": 8,
+        "mean_recall@5": 1.0,
+        "n_recall@5_below_1": 0
+      }
+    },
+    "environment": {
+      "python": "3.12.13",
+      "anthropic": "1.8.0",
+      "ollama_client": "0.6.2",
+      "ollama_server": "0.34.4",
+      "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU"
+    },
+    "api_spend_to_date_usd": 5.726234
+  }
+}

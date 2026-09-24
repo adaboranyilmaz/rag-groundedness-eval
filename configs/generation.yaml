@@ -1,0 +1,63 @@
+# Phase 4 generation. See PROJECT_SPEC.md §6 Phase 4 and scripts/05_generate.py.
+# Every value here is copied into results/metrics/generation_runs.json.
+
+# The Phase 3 winner by recall@5 (results/metrics/retrieval_grid.json).
+retrieval:
+  chunking: fixed_size
+  embedding: bge-small-en-v1.5
+  method: dense
+  backend: faiss
+  k: 5
+  # Search this deep, then keep the top k: the depth Phase 3 searched at (hybrid
+  # candidate_depth). FAISS orders exactly tied scores differently depending on the
+  # requested depth, so searching at k=5 directly changed the 5th chunk for one question
+  # whose two tied chunks score 0.676353931 each.
+  search_depth: 100
+
+# Context conditions (PROJECT_SPEC.md §6 Phase 4). `retrieved`: the retriever above over
+# the whole corpus, every question. `oracle`: the 126 questions with aligned gold evidence
+# get the chunks containing it (src/retrieval/oracle.py), topped up from the same filing.
+conditions:
+  - retrieved
+  - oracle
+
+# All 150 FinanceBench questions. The 23 whose filing is not in the corpus are kept and
+# flagged `in_corpus: false`: retrieval still returns chunks from other filings, so they
+# act as naturally unanswerable questions for the Phase 5 abstention metrics.
+questions: all
+
+prompts:
+  - v1_zero_shot
+  - v2_citation_required
+  - v3_chain_of_thought
+  - v4_abstention
+
+# Same max_tokens for every model and prompt, so output length is never capped
+# differently between the arms being compared. Chain-of-thought is the longest variant.
+max_tokens: 2048
+
+models:
+  claude-sonnet-5:
+    backend: anthropic
+    model: claude-sonnet-5
+    thinking: disabled # the chain-of-thought prompt is the only source of reasoning
+    concurrency: 4
+  qwen2.5-3b:
+    backend: ollama
+    model: qwen2.5:3b-instruct
+    temperature: 0
+    seed: 0
+    num_ctx: 8192 # Ollama's default of 2048 would silently truncate the context
+    concurrency: 1 # one GPU
+
+budget:
+  ledger: results/metrics/api_spend.json
+  project_cap_usd: 30.0 # spec §3.8: all LLM API calls, all phases
+  phase_cap_usd: 10.0 # this phase; leaves the rest for the Phase 5 judge
+  # USD per million tokens, Anthropic first-party list prices.
+  prices_as_of: "2026-06-24"
+  prices_usd_per_mtok:
+    claude-sonnet-5: { input: 2.0, output: 10.0 }
+
+# Pilot runs (--pilot N) draw a fixed sample of questions with this seed.
+pilot_seed: 0

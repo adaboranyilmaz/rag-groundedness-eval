@@ -52,6 +52,21 @@ def is_relevant(chunk: ChunkSpan, gold: GoldSpan, min_overlap_frac: float = 0.5)
     return ov >= min_overlap_frac * chunk_len or ov >= min_overlap_frac * gold_len
 
 
+def count_relevant(
+    chunks_by_doc: dict[str, list[ChunkSpan]],
+    golds: Sequence[GoldSpan],
+    min_overlap_frac: float = 0.5,
+) -> int:
+    """Chunks relevant to any of `golds` among all chunks of the gold documents: the nDCG
+    ideal (`n_relevant_in_corpus` in `question_metrics`)."""
+    return sum(
+        1
+        for d in {g.doc_id for g in golds}
+        for c in chunks_by_doc.get(d, [])
+        if any(is_relevant(c, g, min_overlap_frac) for g in golds)
+    )
+
+
 def _union_length(intervals: list[tuple[int, int]]) -> int:
     total = 0
     cur_start = cur_end = None

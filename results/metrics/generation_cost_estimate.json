@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "run_utc": "2026-09-24T14:42:17+00:00",
+    "n_questions": 150,
+    "prices_as_of": "2026-06-24",
+    "estimate": true,
+    "claude-sonnet-5_tokens_per_char_measured": 0.4525
+  },
+  "arms": {
+    "oracle__claude-sonnet-5__v1_zero_shot": {
+      "calls_total": 126,
+      "calls_uncached": 125,
+      "input_tokens_est": 198369,
+      "output_tokens_mean_used": 129.8,
+      "output_tokens_source": "pilot mean over 10 (retrieved)",
+      "expected_usd": 0.559,
+      "worst_case_usd": 2.9567
+    },
+    "oracle__claude-sonnet-5__v2_citation_required": {
+      "calls_total": 126,
+      "calls_uncached": 125,
+      "input_tokens_est": 209794,
+      "output_tokens_mean_used": 181.6,
+      "output_tokens_source": "pilot mean over 10 (retrieved)",
+      "expected_usd": 0.6466,
+      "worst_case_usd": 2.9796
+    },
+    "oracle__claude-sonnet-5__v3_chain_of_thought": {
+      "calls_total": 126,
+      "calls_uncached": 125,
+      "input_tokens_est": 207758,
+      "output_tokens_mean_used": 293.1,
+      "output_tokens_source": "pilot mean over 10 (retrieved)",
+      "expected_usd": 0.7819,
+      "worst_case_usd": 2.9755
+    },
+    "oracle__claude-sonnet-5__v4_abstention": {
+      "calls_total": 126,
+      "calls_uncached": 125,
+      "input_tokens_est": 211547,
+      "output_tokens_mean_used": 72.2,
+      "output_tokens_source": "pilot mean over 10 (retrieved)",
+      "expected_usd": 0.5133,
+      "worst_case_usd": 2.9831
+    }
+  },
+  "total_expected_usd": 2.5008,
+  "total_worst_case_usd": 11.8949,
+  "already_spent_usd": 2.8923,
+  "caps": {
+    "project_usd": 30.0,
+    "phase_usd": 10.0
+  }
+}
