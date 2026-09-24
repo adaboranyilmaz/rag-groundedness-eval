@@ -5,10 +5,13 @@ the PDF path is exercised here only against a synthetic fixture, not real EDGAR 
 import pymupdf
 
 from src.ingestion.parser import (
+    ParsedDocument,
+    TextBlock,
     UnparseablePdfError,
     _extract_table_rows,
     _looks_like_financial_table,
     _strip_sgml_wrapper,
+    merge_documents,
     parse_html,
     parse_pdf,
 )
@@ -179,6 +182,55 @@ class TestParseHtml:
         for block in doc.blocks:
             assert doc.full_text[block.char_start : block.char_end] == block.text
 
+    def test_inline_xbrl_hidden_header_is_not_extracted(self, tmp_path):
+        # The real iXBRL layout: a display:none div wrapping ix:header, whose contents
+        # (contexts, member names) are machine-readable and never rendered.
+        body = """
+            <div style="display:none"><ix:header><ix:hidden>
+                <ix:nonNumeric name="dei:EntityCentralIndexKey">0000066740</ix:nonNumeric>
+                <div>0000066740mmm:CityOfDecaturMember2019-04-012019-04-30</div>
+            </ix:hidden></ix:header></div>
+            <p>For the fiscal year ended December 31, 2022</p>
+        """
+        doc = parse_html(write_html(tmp_path, body), "doc1")
+        assert "0000066740" not in doc.full_text
+        assert "CityOfDecatur" not in doc.full_text
+        assert doc.full_text.startswith("For the fiscal year ended")
+
+    def test_bare_ix_header_without_hidden_wrapper_is_not_extracted(self, tmp_path):
+        body = "<ix:header><div>xbrli:context junk</div></ix:header><p>Visible text.</p>"
+        doc = parse_html(write_html(tmp_path, body), "doc1")
+        assert doc.full_text == "Visible text."
+
+    def test_visible_inline_xbrl_facts_are_kept(self, tmp_path):
+        fact = '<ix:nonFraction name="us-gaap:Revenues">1,234</ix:nonFraction>'
+        body = f"<p>Net sales were ${fact} million.</p>"
+        doc = parse_html(write_html(tmp_path, body), "doc1")
+        assert doc.full_text == "Net sales were $1,234 million."
+
+    def test_hidden_spacer_cells_do_not_shift_table_columns(self, tmp_path):
+        body = """
+            <table>
+                <tr><td>Revenue</td><td style="display:none"></td>
+                    <td>2023</td><td>2022</td></tr>
+                <tr><td>Net sales</td><td style="display:none"></td>
+                    <td>1,234</td><td>1,100</td></tr>
+            </table>
+        """
+        with_spacer = parse_html(write_html(tmp_path, body, "a.htm"), "doc1")
+        plain = parse_html(
+            write_html(
+                tmp_path, body.replace('<td style="display:none"></td>', "<td></td>"), "b.htm"
+            ),
+            "doc1",
+        )
+        assert with_spacer.full_text == plain.full_text
+
+    def test_text_after_a_hidden_element_is_kept(self, tmp_path):
+        body = '<p>Before <span style="display: none">hidden</span>after.</p>'
+        doc = parse_html(write_html(tmp_path, body), "doc1")
+        assert doc.full_text == "Before after."
+
 
 class TestExtractTableRows:
     def test_reads_rows_in_order(self, tmp_path):
@@ -189,3 +241,19 @@ class TestExtractTableRows:
         )
         rows = _extract_table_rows(tree)
         assert rows == [["a", "b"], ["c", "d"]]
+
+
+def test_merge_documents_offsets_and_continued_pages():
+    a = ParsedDocument(
+        "d",
+        "a.htm",
+        "Alpha\n\nBeta",
+        (TextBlock("Alpha", 1, "S", False, 0, 5), TextBlock("Beta", 2, "S", True, 7, 11)),
+    )
+    b = ParsedDocument("d", "b.htm", "Gamma", (TextBlock("Gamma", 1, None, False, 0, 5),))
+    merged = merge_documents("d", [a, b])
+    assert merged.full_text == "Alpha\n\nBeta\n\nGamma"
+    assert [bl.page for bl in merged.blocks] == [1, 2, 3]
+    assert merged.blocks[1].is_table and merged.source_path == "a.htm + b.htm"
+    for bl in merged.blocks:
+        assert merged.full_text[bl.char_start : bl.char_end] == bl.text

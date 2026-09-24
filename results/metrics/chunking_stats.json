@@ -2,45 +2,45 @@
   "documents_chunked": 72,
   "strategies": {
     "fixed_size": {
-      "n_chunks": 83499,
-      "mean_chunk_length_chars": 507.3666031928526,
-      "median_chunk_length_chars": 509,
-      "n_table_chunks": 8891,
+      "n_chunks": 75951,
+      "mean_chunk_length_chars": 507.02222485549896,
+      "median_chunk_length_chars": 508,
+      "n_table_chunks": 9017,
       "round_trip_mismatches": 0,
       "min_coverage_ratio_across_docs": 1.0,
       "table_handling": {
-        "split": 6702,
-        "merged": 1084,
+        "split": 6831,
+        "merged": 1135,
         "standalone": 0,
-        "source_tables": 7786
+        "source_tables": 7966
       }
     },
     "recursive_structural": {
-      "n_chunks": 39103,
-      "mean_chunk_length_chars": 944.8919520241413,
+      "n_chunks": 39593,
+      "mean_chunk_length_chars": 847.9667365443387,
       "median_chunk_length_chars": 849,
-      "n_table_chunks": 6966,
+      "n_table_chunks": 7097,
       "round_trip_mismatches": 0,
       "min_coverage_ratio_across_docs": 1.0,
       "table_handling": {
         "split": 0,
-        "merged": 5013,
-        "standalone": 2773,
-        "source_tables": 7786
+        "merged": 5146,
+        "standalone": 2820,
+        "source_tables": 7966
       }
     },
     "table_aware": {
-      "n_chunks": 44021,
-      "mean_chunk_length_chars": 839.1057449853479,
-      "median_chunk_length_chars": 756,
-      "n_table_chunks": 7786,
+      "n_chunks": 44657,
+      "mean_chunk_length_chars": 751.5824842689835,
+      "median_chunk_length_chars": 754,
+      "n_table_chunks": 7966,
       "round_trip_mismatches": 0,
       "min_coverage_ratio_across_docs": 1.0,
       "table_handling": {
         "split": 0,
         "merged": 0,
-        "standalone": 7786,
-        "source_tables": 7786
+        "standalone": 7966,
+        "source_tables": 7966
       }
     }
   },

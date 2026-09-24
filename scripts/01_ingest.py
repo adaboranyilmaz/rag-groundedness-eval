@@ -25,7 +25,7 @@ from huggingface_hub import hf_hub_download
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.ingestion import edgar
-from src.ingestion.parser import ParsedDocument, parse_document
+from src.ingestion.parser import ParsedDocument, merge_documents, parse_document
 
 RAW_DIR = Path("data/raw")
 EDGAR_CACHE_DIR = RAW_DIR / "edgar_cache"
@@ -118,23 +118,57 @@ def main() -> None:
             }
             continue
 
+        # Parse the accession-keyed cache file itself. An earlier version parsed a
+        # doc_name-keyed copy written only if absent, so when a fetcher fix changed which
+        # filing a name resolved to, the stale copy was kept and parsed while this
+        # record showed the new accession (see DECISIONS.md, Phase 3).
         try:
-            doc_bytes = edgar.fetch_document(filing, EDGAR_CACHE_DIR, user_agent)
+            doc_path = edgar.fetch_document(filing, EDGAR_CACHE_DIR, user_agent)
         except Exception as exc:  # noqa: BLE001 - record and continue the batch
             outcomes[doc_name] = {"status": "fetch_error", "error": str(exc)}
             continue
 
-        suffix = Path(filing.primary_document).suffix or ".bin"
-        doc_path = EDGAR_CACHE_DIR / "documents" / f"{doc_name}{suffix}"
-        doc_path.parent.mkdir(parents=True, exist_ok=True)
-        if not doc_path.exists():
-            doc_path.write_bytes(doc_bytes)
+        # A 10-K that incorporates its financial statements by reference from the annual
+        # report to shareholders files that report as Exhibit 13 (SEC Reg. S-K Item 601);
+        # without it the corpus lacks the statements themselves (CVS's 2018 10-K did).
+        # If the filing index itself can't be read (EDGAR serves a persistent 503 for some
+        # index pages while the filing's documents download fine), keep the verified
+        # primary document and record the failed lookup rather than dropping the filing.
+        exhibits: list[str] = []
+        exhibit_paths: list[Path] = []
+        exhibit_lookup_error: str | None = None
+        if filing.form == "10-K":
+            try:
+                exhibits = edgar.find_exhibits(filing, "EX-13", EDGAR_CACHE_DIR, user_agent)
+            except Exception as exc:  # noqa: BLE001
+                exhibit_lookup_error = str(exc)
+                print(f"  [warn] {doc_name}: Exhibit 13 lookup failed ({exc})")
+        try:
+            exhibit_paths = [
+                edgar.fetch_exhibit(filing, ex, EDGAR_CACHE_DIR, user_agent) for ex in exhibits
+            ]
+        except Exception as exc:  # noqa: BLE001 - an EX-13 that exists but won't download
+            outcomes[doc_name] = {"status": "fetch_error", "error": f"exhibit: {exc}"}
+            continue
 
         try:
             parsed = parse_document(doc_path, doc_name)
+            if exhibit_paths:
+                parsed = merge_documents(
+                    doc_name, [parsed, *(parse_document(p, doc_name) for p in exhibit_paths)]
+                )
         except Exception as exc:  # noqa: BLE001
             outcomes[doc_name] = {"status": "parse_error", "error": str(exc)}
             continue
+
+        # Independent check that the parsed document is the period EDGAR says it is:
+        # compare the cover page's stated period end with the filing's reportDate.
+        cover_date = edgar.cover_period_end(parsed.full_text)
+        period_check = (
+            "cover_not_found"
+            if cover_date is None
+            else ("match" if cover_date == filing.report_date else "mismatch")
+        )
 
         parsed_docs[doc_name] = parsed
         (PROCESSED_DIR / f"{doc_name}.json").write_text(
@@ -147,6 +181,12 @@ def main() -> None:
             "cik_method": resolution.method,
             "accession_number": filing.accession_number,
             "form": filing.form,
+            "report_date": filing.report_date,
+            "filing_date": filing.filing_date,
+            "exhibits_appended": exhibits,
+            "exhibit_lookup_error": exhibit_lookup_error,
+            "cover_period_end": cover_date,
+            "period_check": period_check,
             "n_blocks": len(parsed.blocks),
             "n_chars": len(parsed.full_text),
         }
@@ -154,6 +194,16 @@ def main() -> None:
 
     status_counts = Counter(o["status"] for o in outcomes.values())
     print("\nIngestion outcomes:", dict(status_counts))
+    period_checks = Counter(o["period_check"] for o in outcomes.values() if o["status"] == "ok")
+    lookup_failed = sorted(n for n, o in outcomes.items() if o.get("exhibit_lookup_error"))
+    print("Exhibit 13 lookups failed (primary document kept):", lookup_failed or "none")
+    print("Cover-page period checks:", dict(period_checks))
+    for name, o in sorted(outcomes.items()):
+        if o.get("period_check") == "mismatch":
+            print(
+                f"  PERIOD MISMATCH {name}: cover says {o['cover_period_end']}, "
+                f"EDGAR reportDate {o['report_date']}"
+            )
 
     n_pages = 0
     n_words = 0
@@ -178,6 +228,8 @@ def main() -> None:
         "table_block_density": (n_table_blocks / n_total_blocks) if n_total_blocks else 0.0,
         "ingestion_outcomes": outcomes,
         "status_counts": dict(status_counts),
+        "period_check_counts": dict(period_checks),
+        "exhibit_lookup_failed": lookup_failed,
     }
     out_path = RESULTS_DIR / "corpus_stats.json"
     out_path.write_text(json.dumps(corpus_stats, indent=2), encoding="utf-8")

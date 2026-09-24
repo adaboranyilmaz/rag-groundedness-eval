@@ -62,6 +62,22 @@ def _assemble(doc_id: str, source_path: str, raw_blocks: list[tuple]) -> ParsedD
     return ParsedDocument(doc_id, source_path, full_text, tuple(blocks))
 
 
+def merge_documents(doc_id: str, parts: list[ParsedDocument]) -> ParsedDocument:
+    """Concatenate parsed documents (a 10-K's primary document followed by its Exhibit 13)
+    into one, re-deriving offsets. Page numbers continue across parts rather than
+    restarting, so (doc_id, page) stays unique within the merged document."""
+    raw_blocks: list[tuple] = []
+    page_offset = 0
+    for part in parts:
+        pages = [b.page for b in part.blocks if b.page is not None]
+        raw_blocks.extend(
+            (b.text, None if b.page is None else b.page + page_offset, b.section, b.is_table)
+            for b in part.blocks
+        )
+        page_offset += max(pages, default=0)
+    return _assemble(doc_id, " + ".join(p.source_path for p in parts), raw_blocks)
+
+
 def _serialize_table(rows: list[list[str | None]]) -> str:
     """Render a table's rows as pipe-delimited text so numbers stay row/column-attached."""
     lines = []
@@ -170,6 +186,40 @@ def _has_page_break(el, before: bool) -> bool:
     return prop in style and "always" in style
 
 
+_DISPLAY_NONE_RE = re.compile(r"display\s*:\s*none", re.IGNORECASE)
+_NON_RENDERED_TAGS = {"ix:header", "script", "style"}
+
+
+def _prune_non_rendered(root) -> None:
+    """Remove subtrees a browser never renders, before any text is extracted.
+
+    Inline-XBRL filings (2019 onward) open the body with
+    `<div style="display:none"><ix:header>...` holding machine-readable contexts and
+    member names — up to ~160k characters per filing of strings like
+    "0000066740mmm:CityOfDecatur...Member2019-04-01". Left in, it became roughly a tenth
+    of the corpus's text and was chunked and embedded as if it were filing content.
+
+    Hidden table cells are deliberately kept: filings use thousands of empty
+    `display:none` `<td>` spacers, which carry no text, and dropping them would shift
+    column positions in serialized tables for no gain.
+    """
+    doomed = [
+        el
+        for el in root.iter()
+        if isinstance(el.tag, str)
+        and (
+            el.tag.lower() in _NON_RENDERED_TAGS
+            or (
+                el.tag not in ("td", "th")
+                and _DISPLAY_NONE_RE.search(el.get("style") or "") is not None
+            )
+        )
+    ]
+    for el in doomed:
+        if el.getparent() is not None:
+            el.drop_tree()  # keeps el.tail, which belongs to the visible parent
+
+
 def _leaf_block_elements(root) -> set:
     """Elements whose tag is block-level and which contain no block-level descendant —
     the units we extract narrative text from. One bottom-up pass, no recursion, so it's
@@ -253,6 +303,7 @@ def parse_html(path: Path, doc_id: str) -> ParsedDocument:
     body = tree.find("body")
     if body is None:
         body = tree
+    _prune_non_rendered(body)
 
     leaves = _leaf_block_elements(body)
     raw_blocks: list[tuple] = []

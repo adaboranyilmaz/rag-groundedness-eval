@@ -28,6 +28,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.retrieval import embedding_cache
 from src.retrieval.embeddings import MODEL_REGISTRY, EmbeddingModel
 from src.retrieval.vectorstore import get_vectorstore
 
@@ -52,18 +53,13 @@ def load_chunks(strategy: str) -> list[dict]:
 def get_or_build_embeddings(
     strategy: str, model_name: str, chunks: list[dict], embed_model: EmbeddingModel
 ) -> np.ndarray:
-    EMBEDDINGS_DIR.mkdir(parents=True, exist_ok=True)
+    """Content-addressed: only chunk texts not already cached are embedded (see
+    src/retrieval/embedding_cache.py). A previous row-count-only check would have reused
+    a stale cache whenever re-chunking happened to preserve the chunk count."""
     cache_path = EMBEDDINGS_DIR / f"{strategy}__{model_name}.npy"
-    if cache_path.exists():
-        vectors = np.load(cache_path)
-        if vectors.shape[0] == len(chunks):
-            return vectors
-        print(f"  cache size mismatch for {cache_path.name}, recomputing")
-
-    print(f"  embedding {len(chunks)} chunks with {model_name}...")
     texts = [c["text"] for c in chunks]
-    vectors = embed_model.encode_corpus(texts)
-    np.save(cache_path, vectors)
+    vectors, n_new = embedding_cache.get_or_embed(cache_path, texts, embed_model.encode_corpus)
+    print(f"  embeddings: {len(texts)} chunks, {n_new} distinct new texts embedded")
     return vectors
 
 

@@ -19,216 +19,216 @@
   "configs": {
     "fixed_size__bge-small-en-v1.5": {
       "faiss": {
-        "build_time_sec": 0.18694790000063222,
-        "n_vectors": 83499,
-        "index_size_bytes": 192612130,
+        "build_time_sec": 0.056376300053671,
+        "n_vectors": 75951,
+        "index_size_bytes": 175117576,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 8.43475000010585,
-          "p95_ms": 17.377500000293367
+          "p50_ms": 6.124050007201731,
+          "p95_ms": 8.265599957667291
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 73.20304750000014,
-        "n_vectors": 83499,
-        "index_size_bytes": 857967465,
+        "build_time_sec": 33.97539269994013,
+        "n_vectors": 75951,
+        "index_size_bytes": 1435430990,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 31.138499999542546,
-          "p95_ms": 34.13029999956052
+          "p50_ms": 8.021599962376058,
+          "p95_ms": 31.233199988491833
         },
         "n_latency_samples": 90
       }
     },
     "fixed_size__all-MiniLM-L6-v2": {
       "faiss": {
-        "build_time_sec": 0.04908109999996668,
-        "n_vectors": 83499,
-        "index_size_bytes": 192612130,
+        "build_time_sec": 0.0234608999453485,
+        "n_vectors": 75951,
+        "index_size_bytes": 175117576,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 7.419149999805086,
-          "p95_ms": 16.314100000272447
+          "p50_ms": 6.978249934036285,
+          "p95_ms": 8.594600018113852
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 77.40129960000013,
-        "n_vectors": 83499,
-        "index_size_bytes": 591492277,
+        "build_time_sec": 31.469875799957663,
+        "n_vectors": 75951,
+        "index_size_bytes": 1433974337,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 30.93090000038501,
-          "p95_ms": 33.52710000035586
+          "p50_ms": 7.840350037440658,
+          "p95_ms": 31.59229992888868
         },
         "n_latency_samples": 90
       }
     },
     "fixed_size__bge-base-en-v1.5": {
       "faiss": {
-        "build_time_sec": 0.05575760000010632,
-        "n_vectors": 83499,
-        "index_size_bytes": 320866594,
+        "build_time_sec": 0.0554198999889195,
+        "n_vectors": 75951,
+        "index_size_bytes": 291778312,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 14.085699999668577,
-          "p95_ms": 17.007100000228093
+          "p50_ms": 13.606549997348338,
+          "p95_ms": 16.605300013907254
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 64.69930899999963,
-        "n_vectors": 83499,
-        "index_size_bytes": 3539103473,
+        "build_time_sec": 58.115581699996255,
+        "n_vectors": 75951,
+        "index_size_bytes": 3185245891,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 17.088850000163802,
-          "p95_ms": 34.79689999949187
+          "p50_ms": 12.271650019101799,
+          "p95_ms": 33.86820002924651
         },
         "n_latency_samples": 90
       }
     },
     "recursive_structural__bge-small-en-v1.5": {
       "faiss": {
-        "build_time_sec": 0.010648800000126357,
-        "n_vectors": 39103,
-        "index_size_bytes": 108964971,
+        "build_time_sec": 0.011191600002348423,
+        "n_vectors": 39593,
+        "index_size_bytes": 106313651,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 3.3424499997636303,
-          "p95_ms": 3.6264000000301166
+          "p50_ms": 3.1407999922521412,
+          "p95_ms": 3.9693000726401806
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 17.586943899999824,
-        "n_vectors": 39103,
-        "index_size_bytes": 550351166,
+        "build_time_sec": 17.01244439999573,
+        "n_vectors": 39593,
+        "index_size_bytes": 550394175,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 12.815699999919161,
-          "p95_ms": 30.419099999562604
+          "p50_ms": 6.013149977661669,
+          "p95_ms": 29.752800008282065
         },
         "n_latency_samples": 90
       }
     },
     "recursive_structural__all-MiniLM-L6-v2": {
       "faiss": {
-        "build_time_sec": 0.00996720000057394,
-        "n_vectors": 39103,
-        "index_size_bytes": 108964971,
+        "build_time_sec": 0.009792999946512282,
+        "n_vectors": 39593,
+        "index_size_bytes": 106313651,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 3.480600000330014,
-          "p95_ms": 4.982100000233913
+          "p50_ms": 3.1930000404827297,
+          "p95_ms": 4.149400047026575
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 17.609372200000507,
-        "n_vectors": 39103,
-        "index_size_bytes": 550361919,
+        "build_time_sec": 15.86122369999066,
+        "n_vectors": 39593,
+        "index_size_bytes": 516893502,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 15.182549999735784,
-          "p95_ms": 30.60159999949974
+          "p50_ms": 5.545450083445758,
+          "p95_ms": 24.961600080132484
         },
         "n_latency_samples": 90
       }
     },
     "recursive_structural__bge-base-en-v1.5": {
       "faiss": {
-        "build_time_sec": 0.018421300001136842,
-        "n_vectors": 39103,
-        "index_size_bytes": 169027179,
+        "build_time_sec": 0.018040800001472235,
+        "n_vectors": 39593,
+        "index_size_bytes": 167128499,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 6.4276500006599235,
-          "p95_ms": 7.510600000387058
+          "p50_ms": 7.510000024922192,
+          "p95_ms": 9.614899987354875
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 28.31081489999997,
-        "n_vectors": 39103,
-        "index_size_bytes": 1566309673,
+        "build_time_sec": 28.451059499988332,
+        "n_vectors": 39593,
+        "index_size_bytes": 1566335651,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 28.94205000029615,
-          "p95_ms": 31.88669999872218
+          "p50_ms": 8.452750043943524,
+          "p95_ms": 31.61880001425743
         },
         "n_latency_samples": 90
       }
     },
     "table_aware__bge-small-en-v1.5": {
       "faiss": {
-        "build_time_sec": 0.011653899999146233,
-        "n_vectors": 44021,
-        "index_size_bytes": 116672135,
+        "build_time_sec": 0.010969899944029748,
+        "n_vectors": 44657,
+        "index_size_bytes": 114267466,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 3.3364000000801752,
-          "p95_ms": 4.482100001041545
+          "p50_ms": 3.920149989426136,
+          "p95_ms": 4.6851999359205365
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 18.40791259999969,
-        "n_vectors": 44021,
-        "index_size_bytes": 827271272,
+        "build_time_sec": 18.383398000034504,
+        "n_vectors": 44657,
+        "index_size_bytes": 826869490,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 7.9350999994858284,
-          "p95_ms": 30.524800000421237
+          "p50_ms": 8.361999993212521,
+          "p95_ms": 30.6777999503538
         },
         "n_latency_samples": 90
       }
     },
     "table_aware__all-MiniLM-L6-v2": {
       "faiss": {
-        "build_time_sec": 0.010329700000511366,
-        "n_vectors": 44021,
-        "index_size_bytes": 116672135,
+        "build_time_sec": 0.010601499932818115,
+        "n_vectors": 44657,
+        "index_size_bytes": 114267466,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 3.4355000007053604,
-          "p95_ms": 4.214099999444443
+          "p50_ms": 3.1257999944500625,
+          "p95_ms": 3.9543999591842294
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 18.40542060000007,
-        "n_vectors": 44021,
-        "index_size_bytes": 826118183,
+        "build_time_sec": 19.119715200038627,
+        "n_vectors": 44657,
+        "index_size_bytes": 860056805,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 8.33150000016758,
-          "p95_ms": 29.96300000086194
+          "p50_ms": 8.47019994398579,
+          "p95_ms": 31.53009992092848
         },
         "n_latency_samples": 90
       }
     },
     "table_aware__bge-base-en-v1.5": {
       "faiss": {
-        "build_time_sec": 0.027791000000433996,
-        "n_vectors": 44021,
-        "index_size_bytes": 184288391,
+        "build_time_sec": 0.0199537998996675,
+        "n_vectors": 44657,
+        "index_size_bytes": 182860618,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 7.618749999892316,
-          "p95_ms": 8.950000001277658
+          "p50_ms": 7.698850065935403,
+          "p95_ms": 10.452199960127473
         },
         "n_latency_samples": 90
       },
       "qdrant": {
-        "build_time_sec": 31.99188989999857,
-        "n_vectors": 44021,
-        "index_size_bytes": 1738379512,
+        "build_time_sec": 31.885872300015762,
+        "n_vectors": 44657,
+        "index_size_bytes": 1736843157,
         "index_size_note": null,
         "query_latency": {
-          "p50_ms": 10.038899999926798,
-          "p95_ms": 31.56719999969937
+          "p50_ms": 8.608599950093776,
+          "p95_ms": 30.7479000184685
         },
         "n_latency_samples": 90
       }
@@ -257,8 +257,8 @@
     },
     "recursive_structural__all-MiniLM-L6-v2": {
       "n_queries": 30,
-      "exact_top_k_matches": 30,
-      "match_rate": 1.0
+      "exact_top_k_matches": 29,
+      "match_rate": 0.9666666666666667
     },
     "recursive_structural__bge-base-en-v1.5": {
       "n_queries": 30,

@@ -2,10 +2,10 @@
   "financebench_questions": 150,
   "financebench_unique_docs": 84,
   "documents_ingested": 72,
-  "page_count": 8403,
-  "word_count": 5634337,
+  "page_count": 8514,
+  "word_count": 5688266,
   "word_count_method": "whitespace-split token approximation, not a specific model tokenizer",
-  "table_block_density": 0.05685660247843962,
+  "table_block_density": 0.05756861838206599,
   "ingestion_outcomes": {
     "3M_2018_10K": {
       "status": "ok",
@@ -14,6 +14,12 @@
       "cik_method": "title_exact",
       "accession_number": "0001558370-19-000470",
       "form": "10-K",
+      "report_date": "2018-12-31",
+      "filing_date": "2019-02-07",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2018-12-31",
+      "period_check": "match",
       "n_blocks": 2125,
       "n_chars": 559869
     },
@@ -24,8 +30,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000066740-23-000014",
       "form": "10-K",
-      "n_blocks": 1734,
-      "n_chars": 729936
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-08",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1733,
+      "n_chars": 568205
     },
     "3M_2023Q2_10Q": {
       "status": "ok",
@@ -34,8 +46,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000066740-23-000058",
       "form": "10-Q",
-      "n_blocks": 1137,
-      "n_chars": 447100
+      "report_date": "2023-06-30",
+      "filing_date": "2023-07-25",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-06-30",
+      "period_check": "match",
+      "n_blocks": 1136,
+      "n_chars": 384558
     },
     "ACTIVISIONBLIZZARD_2019_10K": {
       "status": "ok",
@@ -44,8 +62,14 @@
       "cik_method": "edgar_browse_prefix",
       "accession_number": "0000718877-20-000003",
       "form": "10-K",
-      "n_blocks": 2089,
-      "n_chars": 531377
+      "report_date": "2019-12-31",
+      "filing_date": "2020-02-27",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": "HTTP Error 503: Service Unavailable",
+      "cover_period_end": "2019-12-31",
+      "period_check": "match",
+      "n_blocks": 2088,
+      "n_chars": 457849
     },
     "ADOBE_2015_10K": {
       "status": "ok",
@@ -54,6 +78,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000796343-16-000224",
       "form": "10-K",
+      "report_date": "2015-11-27",
+      "filing_date": "2016-01-19",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2015-11-27",
+      "period_check": "match",
       "n_blocks": 2256,
       "n_chars": 450239
     },
@@ -64,6 +94,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000796343-17-000031",
       "form": "10-K",
+      "report_date": "2016-12-02",
+      "filing_date": "2017-01-20",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2016-12-02",
+      "period_check": "match",
       "n_blocks": 2031,
       "n_chars": 437923
     },
@@ -74,6 +110,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000796343-18-000015",
       "form": "10-K",
+      "report_date": "2017-12-01",
+      "filing_date": "2018-01-22",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2017-12-01",
+      "period_check": "match",
       "n_blocks": 2040,
       "n_chars": 423662
     },
@@ -84,8 +126,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000796343-23-000007",
       "form": "10-K",
-      "n_blocks": 1760,
-      "n_chars": 418492
+      "report_date": "2022-12-02",
+      "filing_date": "2023-01-17",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-02",
+      "period_check": "match",
+      "n_blocks": 1759,
+      "n_chars": 391833
     },
     "AES_2022_10K": {
       "status": "ok",
@@ -94,8 +142,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000874761-23-000010",
       "form": "10-K",
-      "n_blocks": 3516,
-      "n_chars": 1009678
+      "report_date": "2022-12-31",
+      "filing_date": "2023-03-01",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 3515,
+      "n_chars": 901185
     },
     "AMAZON_2017_10K": {
       "status": "ok",
@@ -104,6 +158,12 @@
       "cik_method": "title_substring",
       "accession_number": "0001018724-18-000005",
       "form": "10-K",
+      "report_date": "2017-12-31",
+      "filing_date": "2018-02-02",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2017-12-31",
+      "period_check": "match",
       "n_blocks": 1127,
       "n_chars": 297507
     },
@@ -114,8 +174,14 @@
       "cik_method": "title_substring",
       "accession_number": "0001018724-20-000004",
       "form": "10-K",
-      "n_blocks": 1132,
-      "n_chars": 322902
+      "report_date": "2019-12-31",
+      "filing_date": "2020-01-31",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2019-12-31",
+      "period_check": "match",
+      "n_blocks": 1131,
+      "n_chars": 282004
     },
     "AMCOR_2020_10K": {
       "status": "ok",
@@ -124,8 +190,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001748790-20-000025",
       "form": "10-K",
-      "n_blocks": 1746,
-      "n_chars": 454599
+      "report_date": "2020-06-30",
+      "filing_date": "2020-08-27",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-06-30",
+      "period_check": "match",
+      "n_blocks": 1745,
+      "n_chars": 402176
     },
     "AMCOR_2022_8K_dated-2022-07-01": {
       "status": "skipped_out_of_scope",
@@ -138,8 +210,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001748790-23-000007",
       "form": "10-Q",
-      "n_blocks": 510,
-      "n_chars": 166638
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-08",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 509,
+      "n_chars": 134492
     },
     "AMCOR_2023Q4_EARNINGS": {
       "status": "skipped_out_of_scope",
@@ -152,8 +230,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001748790-23-000030",
       "form": "10-K",
-      "n_blocks": 1430,
-      "n_chars": 421166
+      "report_date": "2023-06-30",
+      "filing_date": "2023-08-17",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-06-30",
+      "period_check": "match",
+      "n_blocks": 1429,
+      "n_chars": 369768
     },
     "AMD_2015_10K": {
       "status": "ok",
@@ -162,6 +246,12 @@
       "cik_method": "ticker_exact",
       "accession_number": "0000002488-16-000111",
       "form": "10-K",
+      "report_date": "2015-12-26",
+      "filing_date": "2016-02-18",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2015-12-26",
+      "period_check": "match",
       "n_blocks": 1783,
       "n_chars": 451701
     },
@@ -172,8 +262,14 @@
       "cik_method": "ticker_exact",
       "accession_number": "0000002488-23-000047",
       "form": "10-K",
-      "n_blocks": 1516,
-      "n_chars": 438735
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-27",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1515,
+      "n_chars": 408439
     },
     "AMERICANEXPRESS_2022_10K": {
       "status": "ok",
@@ -182,8 +278,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000004962-23-000006",
       "form": "10-K",
-      "n_blocks": 2087,
-      "n_chars": 664424
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-10",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 2086,
+      "n_chars": 615596
     },
     "AMERICANWATERWORKS_2020_10K": {
       "status": "ok",
@@ -192,8 +294,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001410636-21-000101",
       "form": "10-K",
-      "n_blocks": 1903,
-      "n_chars": 675583
+      "report_date": "2020-12-31",
+      "filing_date": "2021-02-24",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-12-31",
+      "period_check": "match",
+      "n_blocks": 1902,
+      "n_chars": 614639
     },
     "AMERICANWATERWORKS_2021_10K": {
       "status": "ok",
@@ -202,8 +310,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001410636-22-000048",
       "form": "10-K",
-      "n_blocks": 2018,
-      "n_chars": 694205
+      "report_date": "2021-12-31",
+      "filing_date": "2022-02-16",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-12-31",
+      "period_check": "match",
+      "n_blocks": 2017,
+      "n_chars": 630725
     },
     "AMERICANWATERWORKS_2022_10K": {
       "status": "ok",
@@ -212,8 +326,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001410636-23-000020",
       "form": "10-K",
-      "n_blocks": 1971,
-      "n_chars": 696392
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-15",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1970,
+      "n_chars": 621601
     },
     "BESTBUY_2017_10K": {
       "status": "ok",
@@ -222,6 +342,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000764478-17-000008",
       "form": "10-K",
+      "report_date": "2017-01-28",
+      "filing_date": "2017-03-24",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2017-01-28",
+      "period_check": "match",
       "n_blocks": 1818,
       "n_chars": 357206
     },
@@ -232,6 +358,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000764478-19-000009",
       "form": "10-K",
+      "report_date": "2019-02-02",
+      "filing_date": "2019-03-28",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2019-02-02",
+      "period_check": "match",
       "n_blocks": 1751,
       "n_chars": 363756
     },
@@ -242,8 +374,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000764478-23-000006",
       "form": "10-K",
-      "n_blocks": 1452,
-      "n_chars": 327920
+      "report_date": "2023-01-28",
+      "filing_date": "2023-03-17",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-01-28",
+      "period_check": "match",
+      "n_blocks": 1451,
+      "n_chars": 301719
     },
     "BESTBUY_2024Q2_10Q": {
       "status": "ok",
@@ -252,8 +390,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000764478-23-000041",
       "form": "10-Q",
-      "n_blocks": 436,
-      "n_chars": 103442
+      "report_date": "2023-07-29",
+      "filing_date": "2023-09-01",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-07-29",
+      "period_check": "match",
+      "n_blocks": 463,
+      "n_chars": 104211
     },
     "BLOCK_2016_10K": {
       "status": "ok",
@@ -262,6 +406,12 @@
       "cik_method": "title_exact",
       "accession_number": "0001628280-17-001754",
       "form": "10-K",
+      "report_date": "2016-12-31",
+      "filing_date": "2017-02-27",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2016-12-31",
+      "period_check": "match",
       "n_blocks": 1913,
       "n_chars": 371704
     },
@@ -272,8 +422,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001512673-21-000008",
       "form": "10-K",
-      "n_blocks": 2165,
-      "n_chars": 589850
+      "report_date": "2020-12-31",
+      "filing_date": "2021-02-23",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-12-31",
+      "period_check": "match",
+      "n_blocks": 2164,
+      "n_chars": 543984
     },
     "BOEING_2018_10K": {
       "status": "ok",
@@ -282,8 +438,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000012927-19-000010",
       "form": "10-K",
-      "n_blocks": 1432,
-      "n_chars": 492112
+      "report_date": "2018-12-31",
+      "filing_date": "2019-02-08",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": "HTTP Error 503: Service Unavailable",
+      "cover_period_end": "2018-12-31",
+      "period_check": "match",
+      "n_blocks": 1431,
+      "n_chars": 395505
     },
     "BOEING_2022_10K": {
       "status": "ok",
@@ -292,8 +454,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000012927-23-000007",
       "form": "10-K",
-      "n_blocks": 1438,
-      "n_chars": 485469
+      "report_date": "2022-12-31",
+      "filing_date": "2023-01-27",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1437,
+      "n_chars": 417512
     },
     "COCACOLA_2017_10K": {
       "status": "ok",
@@ -302,6 +470,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000021344-18-000008",
       "form": "10-K",
+      "report_date": "2017-12-31",
+      "filing_date": "2018-02-23",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2017-12-31",
+      "period_check": "match",
       "n_blocks": 2313,
       "n_chars": 727674
     },
@@ -312,8 +486,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000021344-22-000009",
       "form": "10-K",
-      "n_blocks": 1899,
-      "n_chars": 711198
+      "report_date": "2021-12-31",
+      "filing_date": "2022-02-22",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-12-31",
+      "period_check": "match",
+      "n_blocks": 1898,
+      "n_chars": 634760
     },
     "COCACOLA_2022_10K": {
       "status": "ok",
@@ -322,8 +502,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000021344-23-000011",
       "form": "10-K",
-      "n_blocks": 1877,
-      "n_chars": 705672
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-21",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1876,
+      "n_chars": 630863
     },
     "CORNING_2020_10K": {
       "status": "ok",
@@ -332,8 +518,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001562762-21-000023",
       "form": "10-K",
-      "n_blocks": 1696,
-      "n_chars": 507103
+      "report_date": "2020-12-31",
+      "filing_date": "2021-02-12",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-12-31",
+      "period_check": "match",
+      "n_blocks": 1695,
+      "n_chars": 441321
     },
     "CORNING_2021_10K": {
       "status": "ok",
@@ -342,8 +534,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001437749-22-003247",
       "form": "10-K",
-      "n_blocks": 1855,
-      "n_chars": 528637
+      "report_date": "2021-12-31",
+      "filing_date": "2022-02-14",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-12-31",
+      "period_check": "match",
+      "n_blocks": 1854,
+      "n_chars": 446938
     },
     "CORNING_2022_10K": {
       "status": "ok",
@@ -352,8 +550,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001437749-23-003123",
       "form": "10-K",
-      "n_blocks": 1613,
-      "n_chars": 460255
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-13",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1612,
+      "n_chars": 392022
     },
     "COSTCO_2021_10K": {
       "status": "ok",
@@ -362,8 +566,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000909832-21-000014",
       "form": "10-K",
-      "n_blocks": 1032,
-      "n_chars": 237103
+      "report_date": "2021-08-29",
+      "filing_date": "2021-10-06",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-08-29",
+      "period_check": "match",
+      "n_blocks": 1031,
+      "n_chars": 224014
     },
     "CVSHEALTH_2018_10K": {
       "status": "ok",
@@ -372,8 +582,16 @@
       "cik_method": "title_exact",
       "accession_number": "0000064803-19-000013",
       "form": "10-K",
-      "n_blocks": 1151,
-      "n_chars": 377380
+      "report_date": "2018-12-31",
+      "filing_date": "2019-02-28",
+      "exhibits_appended": [
+        "ex131.htm"
+      ],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2018-12-31",
+      "period_check": "match",
+      "n_blocks": 2719,
+      "n_chars": 825467
     },
     "CVSHEALTH_2022_10K": {
       "status": "ok",
@@ -382,8 +600,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000064803-23-000009",
       "form": "10-K",
-      "n_blocks": 2461,
-      "n_chars": 944140
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-08",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 2460,
+      "n_chars": 847001
     },
     "FOOTLOCKER_2022_8K_dated-2022-05-20": {
       "status": "skipped_out_of_scope",
@@ -400,6 +624,12 @@
       "cik_method": "title_exact",
       "accession_number": "0001193125-19-184675",
       "form": "10-K",
+      "report_date": "2019-05-26",
+      "filing_date": "2019-06-28",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2019-05-26",
+      "period_check": "match",
       "n_blocks": 2016,
       "n_chars": 395846
     },
@@ -410,8 +640,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001193125-20-186469",
       "form": "10-K",
-      "n_blocks": 1425,
-      "n_chars": 444730
+      "report_date": "2020-05-31",
+      "filing_date": "2020-07-02",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-05-31",
+      "period_check": "match",
+      "n_blocks": 1424,
+      "n_chars": 374832
     },
     "GENERALMILLS_2022_10K": {
       "status": "ok",
@@ -420,8 +656,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001193125-22-185257",
       "form": "10-K",
-      "n_blocks": 6659,
-      "n_chars": 150442
+      "report_date": "2022-05-29",
+      "filing_date": "2022-06-30",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-05-29",
+      "period_check": "match",
+      "n_blocks": 6658,
+      "n_chars": 83117
     },
     "JOHNSON_JOHNSON_2022Q4_EARNINGS": {
       "status": "skipped_out_of_scope",
@@ -432,10 +674,16 @@
       "company": "Johnson & Johnson",
       "cik": "0000200406",
       "cik_method": "title_exact",
-      "accession_number": "0000200406-22-000022",
+      "accession_number": "0000200406-23-000016",
       "form": "10-K",
-      "n_blocks": 1660,
-      "n_chars": 577424
+      "report_date": "2023-01-01",
+      "filing_date": "2023-02-16",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-01-01",
+      "period_check": "match",
+      "n_blocks": 1552,
+      "n_chars": 491855
     },
     "JOHNSON_JOHNSON_2023Q2_EARNINGS": {
       "status": "skipped_out_of_scope",
@@ -452,8 +700,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000019617-21-000292",
       "form": "10-Q",
-      "n_blocks": 2610,
-      "n_chars": 861867
+      "report_date": "2021-03-31",
+      "filing_date": "2021-05-04",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": null,
+      "period_check": "cover_not_found",
+      "n_blocks": 2609,
+      "n_chars": 691304
     },
     "JPMORGAN_2022Q2_10Q": {
       "status": "ok",
@@ -462,8 +716,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000019617-22-000422",
       "form": "10-Q",
-      "n_blocks": 2842,
-      "n_chars": 953259
+      "report_date": "2022-06-30",
+      "filing_date": "2022-08-03",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": null,
+      "period_check": "cover_not_found",
+      "n_blocks": 2841,
+      "n_chars": 747340
     },
     "JPMORGAN_2022_10K": {
       "status": "ok",
@@ -472,8 +732,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000019617-23-000231",
       "form": "10-K",
-      "n_blocks": 5203,
-      "n_chars": 1500670
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-21",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": null,
+      "period_check": "cover_not_found",
+      "n_blocks": 5202,
+      "n_chars": 1283502
     },
     "JPMORGAN_2023Q2_10Q": {
       "status": "ok",
@@ -482,8 +748,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000019617-23-000432",
       "form": "10-Q",
-      "n_blocks": 3381,
-      "n_chars": 1074596
+      "report_date": "2023-06-30",
+      "filing_date": "2023-08-03",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": null,
+      "period_check": "cover_not_found",
+      "n_blocks": 3380,
+      "n_chars": 841605
     },
     "KRAFTHEINZ_2019_10K": {
       "status": "ok",
@@ -492,8 +764,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001637459-20-000027",
       "form": "10-K",
-      "n_blocks": 1896,
-      "n_chars": 641285
+      "report_date": "2019-12-28",
+      "filing_date": "2020-02-14",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2019-12-28",
+      "period_check": "match",
+      "n_blocks": 1895,
+      "n_chars": 530237
     },
     "LOCKHEEDMARTIN_2020_10K": {
       "status": "ok",
@@ -502,8 +780,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000936468-21-000013",
       "form": "10-K",
-      "n_blocks": 1362,
-      "n_chars": 576241
+      "report_date": "2020-12-31",
+      "filing_date": "2021-01-28",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-12-31",
+      "period_check": "match",
+      "n_blocks": 1361,
+      "n_chars": 526588
     },
     "LOCKHEEDMARTIN_2021_10K": {
       "status": "ok",
@@ -512,8 +796,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000936468-22-000008",
       "form": "10-K",
-      "n_blocks": 1310,
-      "n_chars": 565600
+      "report_date": "2021-12-31",
+      "filing_date": "2022-01-25",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-12-31",
+      "period_check": "match",
+      "n_blocks": 1309,
+      "n_chars": 516491
     },
     "LOCKHEEDMARTIN_2022_10K": {
       "status": "ok",
@@ -522,8 +812,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000936468-23-000009",
       "form": "10-K",
-      "n_blocks": 1296,
-      "n_chars": 558732
+      "report_date": "2022-12-31",
+      "filing_date": "2023-01-26",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1295,
+      "n_chars": 506209
     },
     "MGMRESORTS_2018_10K": {
       "status": "ok",
@@ -532,6 +828,12 @@
       "cik_method": "title_substring",
       "accession_number": "0001564590-19-004807",
       "form": "10-K",
+      "report_date": "2018-12-31",
+      "filing_date": "2019-02-27",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2018-12-31",
+      "period_check": "match",
       "n_blocks": 1689,
       "n_chars": 481056
     },
@@ -542,8 +844,14 @@
       "cik_method": "title_substring",
       "accession_number": "0001564590-21-009205",
       "form": "10-K",
-      "n_blocks": 1873,
-      "n_chars": 635428
+      "report_date": "2020-12-31",
+      "filing_date": "2021-02-26",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-12-31",
+      "period_check": "match",
+      "n_blocks": 1872,
+      "n_chars": 524322
     },
     "MGMRESORTS_2022Q4_EARNINGS": {
       "status": "skipped_out_of_scope",
@@ -556,8 +864,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000789570-23-000008",
       "form": "10-K",
-      "n_blocks": 1515,
-      "n_chars": 517539
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-24",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1514,
+      "n_chars": 469715
     },
     "MGMRESORTS_2023Q2_10Q": {
       "status": "ok",
@@ -566,8 +880,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000789570-23-000019",
       "form": "10-Q",
-      "n_blocks": 493,
-      "n_chars": 188707
+      "report_date": "2023-06-30",
+      "filing_date": "2023-08-02",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-06-30",
+      "period_check": "match",
+      "n_blocks": 492,
+      "n_chars": 159962
     },
     "MICROSOFT_2016_10K": {
       "status": "ok",
@@ -576,6 +896,12 @@
       "cik_method": "title_exact",
       "accession_number": "0001193125-16-662209",
       "form": "10-K",
+      "report_date": "2016-06-30",
+      "filing_date": "2016-07-28",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2016-06-30",
+      "period_check": "match",
       "n_blocks": 1932,
       "n_chars": 382650
     },
@@ -586,8 +912,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000950170-23-035122",
       "form": "10-K",
-      "n_blocks": 1732,
-      "n_chars": 419192
+      "report_date": "2023-06-30",
+      "filing_date": "2023-07-27",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-06-30",
+      "period_check": "match",
+      "n_blocks": 1731,
+      "n_chars": 384616
     },
     "NETFLIX_2015_10K": {
       "status": "ok",
@@ -596,6 +928,12 @@
       "cik_method": "title_exact",
       "accession_number": "0001065280-16-000047",
       "form": "10-K",
+      "report_date": "2015-12-31",
+      "filing_date": "2016-01-28",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2015-12-31",
+      "period_check": "match",
       "n_blocks": 1046,
       "n_chars": 238429
     },
@@ -606,6 +944,12 @@
       "cik_method": "title_exact",
       "accession_number": "0001065280-18-000069",
       "form": "10-K",
+      "report_date": "2017-12-31",
+      "filing_date": "2018-01-29",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2017-12-31",
+      "period_check": "match",
       "n_blocks": 1066,
       "n_chars": 241666
     },
@@ -616,6 +960,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000320187-18-000142",
       "form": "10-K",
+      "report_date": "2018-05-31",
+      "filing_date": "2018-07-25",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2018-05-31",
+      "period_check": "match",
       "n_blocks": 1207,
       "n_chars": 390148
     },
@@ -626,6 +976,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000320187-19-000051",
       "form": "10-K",
+      "report_date": "2019-05-31",
+      "filing_date": "2019-07-23",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2019-05-31",
+      "period_check": "match",
       "n_blocks": 1188,
       "n_chars": 367322
     },
@@ -636,8 +992,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000320187-21-000028",
       "form": "10-K",
-      "n_blocks": 1313,
-      "n_chars": 472061
+      "report_date": "2021-05-31",
+      "filing_date": "2021-07-20",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-05-31",
+      "period_check": "match",
+      "n_blocks": 1312,
+      "n_chars": 412261
     },
     "NIKE_2023_10K": {
       "status": "ok",
@@ -646,8 +1008,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000320187-23-000039",
       "form": "10-K",
-      "n_blocks": 1285,
-      "n_chars": 433344
+      "report_date": "2023-05-31",
+      "filing_date": "2023-07-20",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-05-31",
+      "period_check": "match",
+      "n_blocks": 1284,
+      "n_chars": 383544
     },
     "PAYPAL_2022_10K": {
       "status": "ok",
@@ -656,8 +1024,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001633917-23-000033",
       "form": "10-K",
-      "n_blocks": 1757,
-      "n_chars": 567902
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-10",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1756,
+      "n_chars": 504386
     },
     "PEPSICO_2021_10K": {
       "status": "ok",
@@ -666,8 +1040,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000077476-22-000010",
       "form": "10-K",
-      "n_blocks": 1653,
-      "n_chars": 488575
+      "report_date": "2021-12-25",
+      "filing_date": "2022-02-10",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-12-25",
+      "period_check": "match",
+      "n_blocks": 1652,
+      "n_chars": 439102
     },
     "PEPSICO_2022_10K": {
       "status": "ok",
@@ -676,8 +1056,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000077476-23-000007",
       "form": "10-K",
-      "n_blocks": 1660,
-      "n_chars": 506809
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-09",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1659,
+      "n_chars": 455878
     },
     "PEPSICO_2023Q1_EARNINGS": {
       "status": "skipped_out_of_scope",
@@ -698,8 +1084,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000078003-22-000027",
       "form": "10-K",
-      "n_blocks": 2486,
-      "n_chars": 799806
+      "report_date": "2021-12-31",
+      "filing_date": "2022-02-24",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-12-31",
+      "period_check": "match",
+      "n_blocks": 2485,
+      "n_chars": 684560
     },
     "Pfizer_2023Q2_10Q": {
       "status": "ok",
@@ -708,8 +1100,14 @@
       "cik_method": "title_exact",
       "accession_number": "0000078003-23-000088",
       "form": "10-Q",
-      "n_blocks": 1509,
-      "n_chars": 352429
+      "report_date": "2023-07-02",
+      "filing_date": "2023-08-09",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-07-02",
+      "period_check": "match",
+      "n_blocks": 1508,
+      "n_chars": 292639
     },
     "ULTABEAUTY_2023Q4_EARNINGS": {
       "status": "skipped_out_of_scope",
@@ -722,8 +1120,14 @@
       "cik_method": "title_exact",
       "accession_number": "0001558370-23-004581",
       "form": "10-K",
-      "n_blocks": 7284,
-      "n_chars": 295299
+      "report_date": "2023-01-28",
+      "filing_date": "2023-03-24",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2023-01-28",
+      "period_check": "match",
+      "n_blocks": 7279,
+      "n_chars": 280683
     },
     "VERIZON_2021_10K": {
       "status": "ok",
@@ -732,8 +1136,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000732712-22-000008",
       "form": "10-K",
-      "n_blocks": 1930,
-      "n_chars": 592766
+      "report_date": "2021-12-31",
+      "filing_date": "2022-02-11",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2021-12-31",
+      "period_check": "match",
+      "n_blocks": 1929,
+      "n_chars": 506174
     },
     "VERIZON_2022_10K": {
       "status": "ok",
@@ -742,8 +1152,14 @@
       "cik_method": "title_substring",
       "accession_number": "0000732712-23-000012",
       "form": "10-K",
-      "n_blocks": 1940,
-      "n_chars": 601577
+      "report_date": "2022-12-31",
+      "filing_date": "2023-02-10",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2022-12-31",
+      "period_check": "match",
+      "n_blocks": 1939,
+      "n_chars": 506453
     },
     "WALMART_2018_10K": {
       "status": "ok",
@@ -752,6 +1168,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000104169-18-000028",
       "form": "10-K",
+      "report_date": "2018-01-31",
+      "filing_date": "2018-03-30",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2018-01-31",
+      "period_check": "match",
       "n_blocks": 1611,
       "n_chars": 387339
     },
@@ -762,6 +1184,12 @@
       "cik_method": "title_exact",
       "accession_number": "0000104169-19-000016",
       "form": "10-K",
+      "report_date": "2019-01-31",
+      "filing_date": "2019-03-28",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2019-01-31",
+      "period_check": "match",
       "n_blocks": 1436,
       "n_chars": 382353
     },
@@ -772,12 +1200,26 @@
       "cik_method": "title_exact",
       "accession_number": "0000104169-20-000011",
       "form": "10-K",
-      "n_blocks": 1463,
-      "n_chars": 400334
+      "report_date": "2020-01-31",
+      "filing_date": "2020-03-20",
+      "exhibits_appended": [],
+      "exhibit_lookup_error": null,
+      "cover_period_end": "2020-01-31",
+      "period_check": "match",
+      "n_blocks": 1462,
+      "n_chars": 358777
     }
   },
   "status_counts": {
     "ok": 72,
     "skipped_out_of_scope": 12
-  }
+  },
+  "period_check_counts": {
+    "match": 68,
+    "cover_not_found": 4
+  },
+  "exhibit_lookup_failed": [
+    "ACTIVISIONBLIZZARD_2019_10K",
+    "BOEING_2018_10K"
+  ]
 }

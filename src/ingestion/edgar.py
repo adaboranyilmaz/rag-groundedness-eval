@@ -16,7 +16,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from xml.etree import ElementTree
 
+import lxml.html
+
 MIN_REQUEST_INTERVAL_S = 0.11  # SEC allows 10 req/s; stay comfortably under that
+MAX_ATTEMPTS = 5
+RETRY_STATUSES = {429, 500, 502, 503, 504}
+RETRY_BASE_DELAY_S = 2.0  # 2, 4, 8, 16 s between attempts
 _last_request_at = 0.0
 
 TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
@@ -64,14 +69,23 @@ def _get(url: str, user_agent: str, cache_path: Path | None = None) -> bytes:
         )
 
     global _last_request_at
-    elapsed = time.monotonic() - _last_request_at
-    if elapsed < MIN_REQUEST_INTERVAL_S:
-        time.sleep(MIN_REQUEST_INTERVAL_S - elapsed)
-
     request = urllib.request.Request(url, headers={"User-Agent": user_agent})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        data = response.read()
-    _last_request_at = time.monotonic()
+    for attempt in range(MAX_ATTEMPTS):
+        elapsed = time.monotonic() - _last_request_at
+        if elapsed < MIN_REQUEST_INTERVAL_S:
+            time.sleep(MIN_REQUEST_INTERVAL_S - elapsed)
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                data = response.read()
+            _last_request_at = time.monotonic()
+            break
+        except urllib.error.HTTPError as exc:
+            _last_request_at = time.monotonic()
+            # EDGAR answers bursts with 429/503; back off and retry. Other statuses
+            # (404 etc.) are real answers and are raised immediately.
+            if exc.code not in RETRY_STATUSES or attempt == MAX_ATTEMPTS - 1:
+                raise
+            time.sleep(RETRY_BASE_DELAY_S * 2**attempt)
 
     if cache_path is not None:
         cache_path.parent.mkdir(parents=True, exist_ok=True)
@@ -250,6 +264,31 @@ def parse_doc_name(doc_name: str) -> ParsedDocName | None:
     return ParsedDocName(match["company"], form, int(match["year"]), quarter)
 
 
+# A 52/53-week fiscal year ending on the Saturday/Sunday nearest December 31 can end in
+# the first days of January (Johnson & Johnson's fiscal 2022 ended January 1, 2023).
+# Such a year is named for the calendar year it almost entirely covers, so a period end
+# in this window belongs to the previous year. Filers whose year ends in late January or
+# February (Walmart, Best Buy, Ulta) name the year by its end date and are unaffected.
+_EARLY_JANUARY_LAST_DAY = 7
+
+
+def _is_early_january(month: int, day: int) -> bool:
+    return month == 1 and day <= _EARLY_JANUARY_LAST_DAY
+
+
+def fiscal_year_label(report_date: str) -> int:
+    """The fiscal-year label (FinanceBench's `year`) for a 10-K with this `reportDate`."""
+    year, month, day = (int(p) for p in report_date.split("-"))
+    return year - 1 if _is_early_january(month, day) else year
+
+
+def effective_year_end_month(fiscal_year_end: str) -> int:
+    """Month in which the fiscal year effectively ends, from EDGAR's "MMDD"
+    `fiscalYearEnd`; an early-January year end counts as December."""
+    month, day = int(fiscal_year_end[:2]), int(fiscal_year_end[2:])
+    return 12 if _is_early_january(month, day) else month
+
+
 def find_filing(
     parsed: ParsedDocName, cik: str, company_filings: CompanyFilings
 ) -> FilingRef | None:
@@ -257,20 +296,22 @@ def find_filing(
 
     FinanceBench's `year` label is the fiscal year the report falls in, per that
     company's own calendar — not necessarily the calendar year of the reportDate. For a
-    10-K this is a non-issue (a fiscal year's annual report always carries a reportDate
-    in the calendar year the spec's `year` names, whatever the fiscal year end is). For
-    a 10-Q we have to derive the expected quarter-end month/year from the company's
-    actual `fiscalYearEnd` (e.g. Amcor's is June 30, so its "FY2023 Q2" quarter end is
-    December 2022, not a calendar Q2) — assuming calendar-aligned quarters silently
-    misses every non-calendar-fiscal-year filer.
+    10-K the label is the reportDate's calendar year, except for a 52/53-week year that
+    ends in the first days of January, which carries the previous year's label (see
+    `fiscal_year_label`; matching on the raw reportDate year once fetched J&J's fiscal
+    2021 10-K for "JOHNSON_JOHNSON_2022_10K"). For a 10-Q we have to derive the expected
+    quarter-end month/year from the company's actual `fiscalYearEnd` (e.g. Amcor's is
+    June 30, so its "FY2023 Q2" quarter end is December 2022, not a calendar Q2) —
+    assuming calendar-aligned quarters silently misses every non-calendar-fiscal-year
+    filer.
     """
     filings = company_filings.entries
     candidates = [f for f in filings if f["form"] == parsed.form and f["reportDate"]]
 
     if parsed.form == "10-K":
-        matches = [f for f in candidates if f["reportDate"].startswith(str(parsed.year))]
+        matches = [f for f in candidates if fiscal_year_label(f["reportDate"]) == parsed.year]
     else:
-        fye_month = int(company_filings.fiscal_year_end[:2])
+        fye_month = effective_year_end_month(company_filings.fiscal_year_end)
         raw_month = fye_month - 3 * (4 - parsed.quarter)
         if raw_month <= 0:
             expected_month, expected_year = raw_month + 12, parsed.year - 1
@@ -298,8 +339,106 @@ def find_filing(
     )
 
 
-def fetch_document(filing: FilingRef, cache_dir: Path, user_agent: str) -> bytes:
-    """Download (or read from cache) the primary document for a filing."""
+def document_cache_path(filing: FilingRef, cache_dir: Path) -> Path:
+    """Where a filing's primary document is cached. Keyed by CIK + accession number — the
+    filing's identity — never by FinanceBench `doc_name`: a name-keyed copy survives a
+    change in which filing the name resolves to, and silently keeps the old document."""
     suffix = Path(filing.primary_document).suffix or ".bin"
-    cache_path = cache_dir / "documents" / f"{filing.cik}_{filing.accession_nodash}{suffix}"
-    return _get(filing.document_url, user_agent, cache_path=cache_path)
+    return cache_dir / "documents" / f"{filing.cik}_{filing.accession_nodash}{suffix}"
+
+
+def fetch_document(filing: FilingRef, cache_dir: Path, user_agent: str) -> Path:
+    """Download (or find in cache) the primary document for a filing; return its path."""
+    cache_path = document_cache_path(filing, cache_dir)
+    _get(filing.document_url, user_agent, cache_path=cache_path)
+    return cache_path
+
+
+INDEX_URL = (
+    "https://www.sec.gov/Archives/edgar/data/{cik_int}/{accession_nodash}/{accession}-index.htm"
+)
+
+
+def parse_filing_index(index_html: bytes) -> list[tuple[str, str]]:
+    """(type, document filename) for every document row of an EDGAR filing index page.
+    The filename comes from the row's link, not the cell text, which for inline-XBRL
+    documents carries a trailing " iXBRL" marker."""
+    rows = []
+    for tr in lxml.html.fromstring(index_html).iter("tr"):
+        cells = [c.text_content().strip() for c in tr.iter("td")]
+        links = [a.get("href") for a in tr.iter("a") if a.get("href")]
+        if len(cells) >= 4 and cells[3] and links:
+            rows.append((cells[3], links[0].rsplit("/", 1)[-1]))
+    return rows
+
+
+def find_exhibits(
+    filing: FilingRef, exhibit_type: str, cache_dir: Path, user_agent: str
+) -> list[str]:
+    """Filenames of a filing's exhibits of `exhibit_type` (e.g. "EX-13" matches "EX-13"
+    and "EX-13.1", not "EX-10.13"), in index order."""
+    url = INDEX_URL.format(
+        cik_int=int(filing.cik),
+        accession_nodash=filing.accession_nodash,
+        accession=filing.accession_number,
+    )
+    cache_path = cache_dir / "index" / f"{filing.cik}_{filing.accession_nodash}-index.htm"
+    return select_exhibits(
+        parse_filing_index(_get(url, user_agent, cache_path=cache_path)), exhibit_type
+    )
+
+
+def select_exhibits(rows: list[tuple[str, str]], exhibit_type: str) -> list[str]:
+    """Filenames whose type is `exhibit_type` or a numbered variant of it ("EX-13.1")."""
+    return [doc for typ, doc in rows if typ == exhibit_type or typ.startswith(exhibit_type + ".")]
+
+
+def fetch_exhibit(filing: FilingRef, document: str, cache_dir: Path, user_agent: str) -> Path:
+    """Download (or find in cache) one exhibit of a filing; return its path. Keyed by
+    CIK + accession + exhibit filename, so it never collides with the primary document."""
+    cache_path = cache_dir / "documents" / f"{filing.cik}_{filing.accession_nodash}__{document}"
+    url = ARCHIVES_URL.format(
+        cik_int=int(filing.cik), accession_nodash=filing.accession_nodash, document=document
+    )
+    _get(url, user_agent, cache_path=cache_path)
+    return cache_path
+
+
+_MONTHS = {
+    m: i + 1
+    for i, m in enumerate(
+        [
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december",
+        ]
+    )
+}
+_COVER_PERIOD_RE = re.compile(
+    r"(?:fiscal\s+year|quarterly\s+period)\s+ended\s*:?\s*"
+    r"(?P<month>[A-Za-z]+)\s+(?P<day>\d{1,2})\s*,\s*(?P<year>\d{4})",
+    re.IGNORECASE,
+)
+
+
+def cover_period_end(full_text: str) -> str | None:
+    """The period-end date stated on a 10-K/10-Q cover page ("For the fiscal year ended
+    January 1, 2023", "For the quarterly period ended July 29, 2023") as ISO
+    "YYYY-MM-DD", or None if the cover wording isn't found. Only the first ~5,000
+    characters are searched: the cover page, not later narrative mentioning other
+    periods."""
+    head = full_text[:5000].replace("\xa0", " ")
+    match = _COVER_PERIOD_RE.search(head)
+    if not match or match["month"].lower() not in _MONTHS:
+        return None
+    month = _MONTHS[match["month"].lower()]
+    return f"{int(match['year']):04d}-{month:02d}-{int(match['day']):02d}"

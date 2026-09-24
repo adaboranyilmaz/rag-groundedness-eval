@@ -5,15 +5,15 @@ re-running `scripts/02_chunk.py` rather than editing it by hand.
 
 ## fixed_size
 
-83499 chunks, mean length 507 chars (median 509). Of 7786 source table blocks in the corpus: 6702 were split across more than one chunk, 1084 were merged into a chunk alongside adjacent narrative text, and 0 were preserved as their own standalone chunk.
+75951 chunks, mean length 507 chars (median 508). Of 7966 source table blocks in the corpus: 6831 were split across more than one chunk, 1135 were merged into a chunk alongside adjacent narrative text, and 0 were preserved as their own standalone chunk.
 
 ## recursive_structural
 
-39103 chunks, mean length 945 chars (median 849). Of 7786 source table blocks in the corpus: 0 were split across more than one chunk, 5013 were merged into a chunk alongside adjacent narrative text, and 2773 were preserved as their own standalone chunk.
+39593 chunks, mean length 848 chars (median 849). Of 7966 source table blocks in the corpus: 0 were split across more than one chunk, 5146 were merged into a chunk alongside adjacent narrative text, and 2820 were preserved as their own standalone chunk.
 
 ## table_aware
 
-44021 chunks, mean length 839 chars (median 756). Of 7786 source table blocks in the corpus: 0 were split across more than one chunk, 0 were merged into a chunk alongside adjacent narrative text, and 7786 were preserved as their own standalone chunk.
+44657 chunks, mean length 752 chars (median 754). Of 7966 source table blocks in the corpus: 0 were split across more than one chunk, 0 were merged into a chunk alongside adjacent narrative text, and 7966 were preserved as their own standalone chunk.
 
 `fixed_size` is a blind character window, so a table that happens to fall near a window boundary gets sliced mid-row — that split count is the direct cost of ignoring document structure. `recursive_structural` respects block boundaries so it never cuts a table mid-row, but it can still pack a small table into the same chunk as surrounding prose, diluting it. `table_aware` forces every detected table into its own chunk regardless of size, at the cost of sometimes producing a very small or very large standalone chunk.
 
