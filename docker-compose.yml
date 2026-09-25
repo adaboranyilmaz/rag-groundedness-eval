@@ -1,5 +1,24 @@
-# Phase 2: Qdrant only. Phase 7 extends this with the `api` and `mlflow` services.
+# The stack: the API, Qdrant (the second vector-store backend) and the MLflow tracking server.
+#   docker compose up -d --build
+#   curl http://localhost:8000/health     # the API, with Qdrant's and MLflow's reachability
+#   open  http://localhost:5000           # MLflow UI; fill it with
+#         MLFLOW_TRACKING_URI=http://localhost:5000 uv run python scripts/09_track_experiments.py track
 services:
+  api:
+    build: .
+    image: rag-groundedness-eval-api:latest
+    ports:
+      - "8000:8000"
+    environment:
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: "6333"
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    depends_on:
+      qdrant:
+        condition: service_healthy
+      mlflow:
+        condition: service_healthy
+
   qdrant:
     image: qdrant/qdrant:v1.19.1 # match qdrant-client==1.19.0 in pyproject.toml
     ports:
@@ -7,6 +26,34 @@ services:
       - "6334:6334" # gRPC
     volumes:
       - qdrant_storage:/qdrant/storage
+    healthcheck: # the image has no curl; open a TCP connection to the REST port instead
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.16.0 # match mlflow==3.16.0 in uv.lock
+    command: >
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts --serve-artifacts
+      --allowed-hosts "localhost:*,127.0.0.1:*,mlflow:*"
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlflow
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
 volumes:
   qdrant_storage:
+  mlflow_data:

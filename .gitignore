@@ -12,8 +12,11 @@ data/indices/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/indices/.gitkeep
-# LLM response cache (replay source; DVC-tracked in Phase 7)
-data/cache/
+# the DVC pointer files for the pipeline's roots are committed (dvc.yaml)
+!data/raw/*.dvc
+# LLM response cache (the replay source; DVC-tracked)
+data/cache/*
+!data/cache/*.dvc
 
 # --- Python ---
 __pycache__/
@@ -48,3 +51,6 @@ results/labels/*.html
 # adversarial-set review working file; its decisions are applied to questions.jsonl
 # (scripts/07a_adversarial_set.py review / apply)
 data/adversarial/review_candidates.md
+
+# smoke-evaluation workspace (scripts/10_smoke_eval.py; CI)
+smoke-workspace/

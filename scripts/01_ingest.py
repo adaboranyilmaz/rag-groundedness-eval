@@ -28,7 +28,8 @@ from src.ingestion import edgar
 from src.ingestion.parser import ParsedDocument, merge_documents, parse_document
 
 RAW_DIR = Path("data/raw")
-EDGAR_CACHE_DIR = RAW_DIR / "edgar_cache"
+# Overridable so the smoke evaluation (scripts/10_smoke_eval.py) can read the main cache.
+EDGAR_CACHE_DIR = Path(os.environ.get("EDGAR_CACHE_DIR", RAW_DIR / "edgar_cache"))
 FINANCEBENCH_DIR = RAW_DIR / "financebench"
 PROCESSED_DIR = Path("data/processed/parsed")
 RESULTS_DIR = Path("results/metrics")
@@ -38,13 +39,18 @@ WORD_RE = re.compile(r"\S+")
 
 
 def load_financebench_rows() -> list[dict]:
-    FINANCEBENCH_DIR.mkdir(parents=True, exist_ok=True)
-    local_path = hf_hub_download(
-        repo_id="PatronusAI/financebench",
-        repo_type="dataset",
-        filename="financebench_merged.jsonl",
-        local_dir=FINANCEBENCH_DIR,
-    )
+    """The local copy when there is one (it is DVC-versioned raw data); the Hub only for a
+    first download. Checking the Hub on every run would let an upstream revision of the
+    dataset silently replace the questions the reported numbers were computed on."""
+    local_path = FINANCEBENCH_DIR / "financebench_merged.jsonl"
+    if not local_path.exists():
+        FINANCEBENCH_DIR.mkdir(parents=True, exist_ok=True)
+        local_path = hf_hub_download(
+            repo_id="PatronusAI/financebench",
+            repo_type="dataset",
+            filename="financebench_merged.jsonl",
+            local_dir=FINANCEBENCH_DIR,
+        )
     with open(local_path, encoding="utf-8") as f:
         return [json.loads(line) for line in f]
 
@@ -61,7 +67,7 @@ def parsed_document_to_dict(doc: ParsedDocument) -> dict:
 def main() -> None:
     load_dotenv()
     user_agent = os.environ.get("EDGAR_USER_AGENT", "")
-    if not user_agent:
+    if not user_agent and os.environ.get("EDGAR_OFFLINE") != "1":  # offline reads the cache only
         raise SystemExit("EDGAR_USER_AGENT is not set in .env — see .env.example.")
 
     EDGAR_CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -124,6 +130,8 @@ def main() -> None:
         # record showed the new accession (see DECISIONS.md, Phase 3).
         try:
             doc_path = edgar.fetch_document(filing, EDGAR_CACHE_DIR, user_agent)
+        except edgar.EdgarOffline:
+            raise  # a rebuild missing raw data must stop, not record a fetch error
         except Exception as exc:  # noqa: BLE001 - record and continue the batch
             outcomes[doc_name] = {"status": "fetch_error", "error": str(exc)}
             continue
@@ -140,6 +148,8 @@ def main() -> None:
         if filing.form == "10-K":
             try:
                 exhibits = edgar.find_exhibits(filing, "EX-13", EDGAR_CACHE_DIR, user_agent)
+            except edgar.EdgarOffline:
+                raise
             except Exception as exc:  # noqa: BLE001
                 exhibit_lookup_error = str(exc)
                 print(f"  [warn] {doc_name}: Exhibit 13 lookup failed ({exc})")
@@ -147,6 +157,8 @@ def main() -> None:
             exhibit_paths = [
                 edgar.fetch_exhibit(filing, ex, EDGAR_CACHE_DIR, user_agent) for ex in exhibits
             ]
+        except edgar.EdgarOffline:
+            raise
         except Exception as exc:  # noqa: BLE001 - an EX-13 that exists but won't download
             outcomes[doc_name] = {"status": "fetch_error", "error": f"exhibit: {exc}"}
             continue

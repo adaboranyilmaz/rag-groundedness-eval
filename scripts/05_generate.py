@@ -55,16 +55,15 @@ from dotenv import load_dotenv
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.generation.llm import (
-    AnthropicBackend,
     BudgetExceeded,
-    GenerationRequest,
-    OllamaBackend,
     ResponseCache,
     SpendLedger,
     generate_cached,
+    replay_only,
 )
 from src.generation.parsing import parse_output
-from src.generation.prompts import PromptTemplate, load_registry, render
+from src.generation.prompts import load_registry
+from src.generation.requests import build_request, make_backend, request_params  # noqa: F401
 from src.generation.trace import (
     TRACES_DIR,
     build_trace,
@@ -171,12 +170,13 @@ def build_contexts(
         by_doc.setdefault(c["doc_id"], []).append(p3.chunk_span(c))
 
     phase3 = {}
-    for line in PHASE3_PER_QUESTION.read_text(encoding="utf-8").splitlines():
-        row = json.loads(line)
-        if row["cell"] == cell:
-            phase3[row["financebench_id"]] = row
-    if not phase3:
-        raise ValueError(f"no Phase 3 results for {cell}")
+    if "retrieved" in conditions:  # the oracle condition does not use Phase 3's rankings
+        for line in PHASE3_PER_QUESTION.read_text(encoding="utf-8").splitlines():
+            row = json.loads(line)
+            if row["cell"] == cell:
+                phase3[row["financebench_id"]] = row
+        if not phase3:
+            raise ValueError(f"no Phase 3 results for {cell}")
 
     embed = EmbeddingModel(rc["embedding"])
     index = ScopedFaissIndex(INDICES_DIR / f"{rc['chunking']}__{rc['embedding']}__faiss")
@@ -260,37 +260,6 @@ def build_contexts(
 
 # --------------------------------------------------------------------------------------
 # Generation
-
-
-def make_backend(model_cfg: dict):
-    if model_cfg["backend"] == "anthropic":
-        return AnthropicBackend()
-    if model_cfg["backend"] == "ollama":
-        return OllamaBackend()
-    raise ValueError(f"unknown backend {model_cfg['backend']!r}")
-
-
-def request_params(model_cfg: dict) -> dict:
-    if model_cfg["backend"] == "anthropic":
-        return AnthropicBackend.request_params(thinking=model_cfg["thinking"])
-    return OllamaBackend.request_params(
-        temperature=model_cfg["temperature"], seed=model_cfg["seed"], num_ctx=model_cfg["num_ctx"]
-    )
-
-
-def build_request(
-    model_cfg: dict, max_tokens: int, template: PromptTemplate, question: dict, chunks: list[dict]
-) -> tuple[GenerationRequest, str]:
-    rendered = render(template, question["question"], chunks)
-    req = GenerationRequest(
-        backend=model_cfg["backend"],
-        model=model_cfg["model"],
-        system=rendered.system,
-        user=rendered.user,
-        max_tokens=max_tokens,
-        params=request_params(model_cfg),
-    )
-    return req, rendered.sha256
 
 
 def percentile(values: list[float], q: float) -> float | None:
@@ -441,7 +410,9 @@ def environment_meta(cfg: dict, selected_models: list[str]) -> dict:
         "anthropic": pkg_version("anthropic"),
         "ollama_client": pkg_version("ollama"),
     }
-    if any(cfg["models"][m]["backend"] == "ollama" for m in selected_models):
+    if replay_only():
+        meta["ollama_server"] = "not queried (replay only)"
+    elif any(cfg["models"][m]["backend"] == "ollama" for m in selected_models):
         try:
             import os
 
@@ -457,6 +428,17 @@ def environment_meta(cfg: dict, selected_models: list[str]) -> dict:
     except ImportError:
         meta["gpu"] = None
     return meta
+
+
+def arm_model_digest(backend, model: str, traces: list[dict]) -> str | None:
+    """The local model's weight digest for an arm. Replaying, it is the one each cached
+    response recorded (no Ollama server is needed); otherwise the server is asked."""
+    if not replay_only():
+        return backend.digest(model)
+    digests = {t["generation"]["extra"].get("digest") for t in traces}
+    if len(digests) != 1:
+        raise ValueError(f"traces of one arm record {len(digests)} model digests: {digests}")
+    return digests.pop()
 
 
 # --------------------------------------------------------------------------------------
@@ -713,7 +695,7 @@ def main() -> None:
                     }
                 )
                 if mc["backend"] == "ollama":
-                    arm["model_digest"] = backend.digest(mc["model"])
+                    arm["model_digest"] = arm_model_digest(backend, mc["model"], traces)
                 summary["arms"][f"{condition}__{model_key}__{pid}"] = arm
                 print(
                     f"    parse {arm['parse_status']}  "

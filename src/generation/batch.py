@@ -33,9 +33,11 @@ from typing import Any
 from src.generation.llm import (
     AnthropicBackend,
     BudgetExceeded,
+    CacheMiss,
     GenerationRequest,
     ResponseCache,
     SpendLedger,
+    replay_only,
     response_from_message,
 )
 
@@ -90,6 +92,10 @@ def run_batch_cached(
     out.n_requested = len(unique)
     todo = {k: r for k, r in unique.items() if not cache.has(k)}
     out.n_cached_before = out.n_requested - len(todo)
+    if todo and replay_only():
+        raise CacheMiss(
+            f"{len(todo)} batch requests are not in the response cache (RAG_REPLAY_ONLY=1)"
+        )
 
     in_flight = pending_records(batch_dir)
     for rec in in_flight:

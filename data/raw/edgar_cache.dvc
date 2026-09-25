@@ -1,0 +1,6 @@
+outs:
+- md5: 3a222ae019fed1b1d1363f24d5084bdc.dir
+  size: 415408353
+  nfiles: 293
+  hash: md5
+  path: edgar_cache

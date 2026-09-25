@@ -1,0 +1,19 @@
+# The image needs pyproject.toml, uv.lock, src/, configs/, prompts/ and one results file.
+.git
+.github
+.venv
+.env
+.dvc/cache
+.dvc/tmp
+.pytest_cache
+.ruff_cache
+**/__pycache__
+data
+mlruns
+mlartifacts
+mlflow.db
+results/traces
+results/plots
+results/labels
+tests
+*.md

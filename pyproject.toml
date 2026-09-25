@@ -19,6 +19,8 @@ dependencies = [
     "anthropic>=1.8.0",
     "ollama>=0.6.2",
     "matplotlib>=3.11",
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
 ]
 
 [dependency-groups]
@@ -28,14 +30,24 @@ dev = [
     "pre-commit>=3.8",
 ]
 
-# CPU-only wheel is the PyPI default; RTX 3050 4GB (spec §4 hardware budget) needs the
-# CUDA build for embedding to actually use the GPU, not fall back to CPU silently.
+# CPU-only wheel is the PyPI default on Windows; the RTX 3050 4GB (spec §4 hardware budget)
+# needs the CUDA build for embedding to actually use the GPU, not fall back to CPU silently.
+# Linux (the Docker image and CI) has no GPU, and PyPI's Linux wheel pulls ~3 GB of CUDA
+# libraries, so it takes the CPU build instead.
 [tool.uv.sources]
-torch = [{ index = "pytorch-cu126" }]
+torch = [
+    { index = "pytorch-cu126", marker = "sys_platform == 'win32'" },
+    { index = "pytorch-cpu", marker = "sys_platform == 'linux'" },
+]
 
 [[tool.uv.index]]
 name = "pytorch-cu126"
 url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [tool.ruff]
@@ -47,3 +59,5 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["integration: the full pipeline on the smoke questions (minutes; `pytest -m integration`)"]
+addopts = "-m 'not integration'"

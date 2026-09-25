@@ -418,7 +418,7 @@ def cmd_generate(cfg: dict, gen: dict, ev: dict) -> None:
             }
         )
         if mc["backend"] == "ollama":
-            arm["model_digest"] = backend.digest(mc["model"])
+            arm["model_digest"] = g5.arm_model_digest(backend, mc["model"], traces)
         summary["arms"][f"{condition}__{model_key}__{pid}"] = arm
         print(f"    parse {arm['parse_status']}  abstain-token {arm['abstained_token_rate']:.2f}")
     summary["meta"] = {

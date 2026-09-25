@@ -17,6 +17,7 @@ Usage:
     uv run python scripts/04_eval_retrieval.py
     uv run python scripts/04_eval_retrieval.py --max-questions 5   # smoke run
     uv run python scripts/04_eval_retrieval.py --analyse-only       # re-derive analysis
+    uv run python scripts/04_eval_retrieval.py --align-only         # alignment file only
 """
 
 from __future__ import annotations
@@ -238,6 +239,11 @@ def main() -> None:
         action="store_true",
         help="recompute selection + decomposition from saved per-question results",
     )
+    parser.add_argument(
+        "--align-only",
+        action="store_true",
+        help="write the gold-evidence alignment and stop (used by the smoke evaluation)",
+    )
     args = parser.parse_args()
 
     cfg = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
@@ -263,6 +269,8 @@ def main() -> None:
     (RESULTS_DIR / f"gold_span_alignment{suffix}.json").write_text(
         json.dumps(alignment_report, indent=2), encoding="utf-8"
     )
+    if args.align_only:
+        return
     scored = [q for q in questions if golds[q["financebench_id"]]]
     print(f"{len(scored)} questions have >=1 aligned gold span and are scored")
 

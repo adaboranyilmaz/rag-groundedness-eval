@@ -1,0 +1,6 @@
+outs:
+- md5: d5f26d0310b207e9f441fde093cf758d.dir
+  size: 958387
+  nfiles: 4
+  hash: md5
+  path: financebench

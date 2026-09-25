@@ -1,0 +1,32 @@
+{
+  "questions": [
+    "financebench_id_00216",
+    "financebench_id_00720",
+    "financebench_id_01077",
+    "financebench_id_01148",
+    "financebench_id_01319",
+    "financebench_id_01351",
+    "financebench_id_04302",
+    "financebench_id_04980",
+    "financebench_id_06655",
+    "financebench_id_10285"
+  ],
+  "condition": "oracle",
+  "arms": [
+    "claude-sonnet-5__v1_zero_shot",
+    "qwen2.5-3b__v1_zero_shot"
+  ],
+  "n_traces": 20,
+  "n_responses": 75,
+  "doc_names": [
+    "AES_2022_10K",
+    "AMAZON_2017_10K",
+    "AMCOR_2023_10K",
+    "AMERICANEXPRESS_2022_10K",
+    "BESTBUY_2023_10K",
+    "BOEING_2018_10K",
+    "NIKE_2018_10K",
+    "PEPSICO_2021_10K",
+    "VERIZON_2022_10K"
+  ]
+}

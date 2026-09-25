@@ -51,8 +51,12 @@ def get_or_embed(
     embed: Callable[[list[str]], np.ndarray],
 ) -> tuple[np.ndarray, int]:
     """Vectors for `texts` in order, embedding only texts not already cached; rewrites
-    the cache to exactly `texts`. Returns (vectors, number of texts newly embedded)."""
+    the cache to exactly `texts` when that changes it (and only then, so a caller that only
+    reads, such as the index build, leaves the files byte-identical). Returns (vectors,
+    number of texts newly embedded)."""
     cached = load(npy_path)
+    kp = keys_path(npy_path)
+    stored_keys = json.loads(kp.read_text(encoding="utf-8")) if cached else None
     keys = [text_key(t) for t in texts]
     missing = sorted({i for i, k in enumerate(keys) if k not in cached})
     # Embed each distinct missing text once, even if it recurs (boilerplate chunks do).
@@ -64,5 +68,6 @@ def get_or_embed(
         cached.update(zip(first_of.keys(), new_vectors, strict=True))
     vectors = np.stack([cached[k] for k in keys]) if keys else np.zeros((0, 0), np.float32)
     vectors = np.ascontiguousarray(vectors, dtype=np.float32)
-    save(npy_path, vectors, texts)
+    if first_of or stored_keys != keys:
+        save(npy_path, vectors, texts)
     return vectors, len(first_of)
