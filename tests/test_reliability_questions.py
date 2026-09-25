@@ -547,3 +547,50 @@ class TestQ4:
         md = "\n".join(script.q4_markdown(q4_adversarial(make_adv_rows(False), 200, 0)))
         assert "| human | not done |" in md
         assert script.q4_markdown({"status": "not_run"})[-1] == "Not run yet."
+
+
+def test_strict_bounds_in_the_observed_option():
+    from src.evaluation.reliability_questions import option_contains
+
+    assert option_contains("< 50%", 0.4999) and not option_contains("< 50%", 0.5)
+    assert option_contains("50-80%", 0.5) and option_contains("<= -0.2", -0.2)
+    assert option_contains("> 75%", 0.76) and not option_contains("> 75%", 0.75)
+    text = "- P2.5 Judge right: [ ] < 50% · [x] 50-80% · [ ] > 80%\n"
+    res = {"q2_review": {"judge_right": {"value": 0.5, "ci95": [0.29, 0.71]}}}
+    (c,) = check_predictions(text, res)
+    assert c["observed"] == "50-80%" and c["unexpected"] is False
+
+
+def test_adversarial_plot_renders(tmp_path):
+    from src.evaluation.plots import plot_adversarial
+
+    # with the author's premise labels, and while they are pending
+    for human_done in (True, False):
+        path = tmp_path / f"adv_{human_done}.png"
+        plot_adversarial(q4_adversarial(make_adv_rows(human_done), 100, 0), [SONNET, QWEN], path)
+        assert path.stat().st_size > 10_000
+
+
+def test_labels_made_after_seeing_the_judge_leave_the_agreement_statistic():
+    rows = make_adv_rows()
+    # the author agrees with the judge everywhere, except on two answers they saw the
+    # judge's verdict for and then labelled differently
+    seen = [r for r in rows if r["category"] == "d"][:2]
+    for r in rows:
+        r["label_saw_judge"] = r in seen
+    for r in seen:
+        r["premise_human"] = "declines_without_addressing"
+    ag = q4_adversarial(rows, 100, 0)["premise_agreement"]
+    assert ag["raw_agreement"] == 1.0 and ag["n"] == 78
+    assert ag["all_labelled"]["n"] == 80 and ag["all_labelled"]["raw_agreement"] < 1.0
+
+
+def test_rule_decided_premise_rows_do_not_count_as_agreement():
+    rows = make_adv_rows()
+    d = [r for r in rows if r["category"] == "d"]
+    for r in d[:10]:  # decided by rule: both raters get the same label without judgement
+        r["premise_source"] = "rule"
+    for r in d[10:]:
+        r["premise_source"] = "judge"
+    ag = q4_adversarial(rows, 100, 0)["premise_agreement"]
+    assert ag["n"] == len(d) - 10

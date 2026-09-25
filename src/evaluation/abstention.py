@@ -111,11 +111,20 @@ def needs_judge(parsed: dict) -> bool:
     return answer is not None and not is_bare_token(answer)
 
 
-def answerability(condition: str, in_corpus: bool, context_metrics: dict | None, k: int) -> str:
+def answerability(
+    condition: str,
+    in_corpus: bool,
+    context_metrics: dict | None,
+    k: int,
+    answerable_elsewhere: bool = False,
+) -> str:
+    """`answerable_elsewhere`: the question's source filing is not in the corpus, but another
+    filing in it holds the answer (the Phase 6 audit), so declining is not the right response
+    to it; it has no aligned gold evidence, so evidence present / absent is not known."""
     if condition == "oracle":
         return "answerable"
     if not in_corpus:
-        return "unanswerable"
+        return "answerable_elsewhere" if answerable_elsewhere else "unanswerable"
     if context_metrics is None:
         return "no_gold"
     return "evidence_present" if context_metrics[f"recall@{k}"] > 0 else "evidence_absent"

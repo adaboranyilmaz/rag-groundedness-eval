@@ -1,0 +1,12 @@
+{
+ "trace_ids": [
+  "retrieved__claude-sonnet-5__v1_zero_shot__adv_d04",
+  "retrieved__claude-sonnet-5__v2_citation_required__adv_d09",
+  "retrieved__claude-sonnet-5__v2_citation_required__adv_d12",
+  "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d06",
+  "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d07",
+  "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d09",
+  "retrieved__qwen2.5-3b__v1_zero_shot__adv_d04",
+  "retrieved__qwen2.5-3b__v1_zero_shot__adv_d05"
+ ]
+}

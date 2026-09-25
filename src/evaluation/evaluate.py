@@ -68,6 +68,8 @@ PHASE = "phase5_evaluation"
 FINANCEBENCH_PATH = Path("data/raw/financebench/financebench_merged.jsonl")
 GOLD_ALIGNMENT_PATH = Path("results/metrics/gold_span_alignment.json")
 RETRIEVAL_CONFIG_PATH = Path("configs/retrieval_grid.yaml")
+# Phase 6 audit of the out-of-corpus questions; applied only once its status is "approved".
+OUT_OF_CORPUS_AUDIT_PATH = Path("results/labels/out_of_corpus_audit.json")
 CORRECTNESS_LABELS = (
     "correct",
     "partially_correct",
@@ -91,6 +93,8 @@ class Inputs:
     gold_spans: dict[str, list[GoldSpan]]
     min_overlap_frac: float
     evidence: dict[str, list[str]] = field(default_factory=dict)  # trace_id -> labels
+    # out-of-corpus questions a filing in the corpus answers (approved audit), else empty
+    answerable_elsewhere: frozenset[str] = frozenset()
 
 
 def trace_paths(cfg: dict) -> list[Path]:
@@ -114,6 +118,19 @@ def load_gold_spans(path: Path = GOLD_ALIGNMENT_PATH) -> dict[str, list[GoldSpan
     return spans
 
 
+def load_answerable_elsewhere(path: Path = OUT_OF_CORPUS_AUDIT_PATH) -> frozenset[str]:
+    """Question ids whose source filing is not in the corpus but whose answer another
+    filing in the corpus holds. Empty unless the audit exists and has been approved."""
+    if not path.exists():
+        return frozenset()
+    audit = json.loads(path.read_text(encoding="utf-8"))
+    if audit["meta"]["status"] != "approved":
+        return frozenset()
+    return frozenset(
+        it["financebench_id"] for it in audit["items"] if it["status"] == "answerable_elsewhere"
+    )
+
+
 def load_inputs(cfg: dict) -> Inputs:
     traces = [t for p in trace_paths(cfg) for t in read_traces(p)]
     rows = [json.loads(x) for x in FINANCEBENCH_PATH.read_text(encoding="utf-8").splitlines()]
@@ -126,7 +143,9 @@ def load_inputs(cfg: dict) -> Inputs:
     min_ov = yaml.safe_load(RETRIEVAL_CONFIG_PATH.read_text(encoding="utf-8"))["relevance"][
         "min_overlap_frac"
     ]
-    inputs = Inputs(traces, gold_rows, numeric, load_gold_spans(), min_ov)
+    inputs = Inputs(
+        traces, gold_rows, numeric, load_gold_spans(), min_ov, {}, load_answerable_elsewhere()
+    )
     check_evidence(inputs)
     return inputs
 
@@ -410,7 +429,11 @@ def evaluate_trace(
         "question_type": q["question_type"],
         "in_corpus": q["in_corpus"],
         "answerability": answerability(
-            r["condition"], q["in_corpus"], r["context_metrics"], r["k"]
+            r["condition"],
+            q["in_corpus"],
+            r["context_metrics"],
+            r["k"],
+            answerable_elsewhere=fid in inputs.answerable_elsewhere,
         ),
         "answer": answer,
         "parse_status": parsed["status"],

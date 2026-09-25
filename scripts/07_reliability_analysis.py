@@ -31,6 +31,7 @@ import hashlib
 import json
 import random
 import sys
+from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -41,6 +42,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.evaluation.evaluate import trace_paths
 from src.evaluation.labeling_page import render_review_page
 from src.evaluation.plots import (
+    plot_adversarial,
     plot_prompt_effect,
     plot_quadrants,
     plot_retrieval_vs_groundedness,
@@ -153,6 +155,12 @@ def adversarial_rows(cfg: dict) -> list[dict] | None:
     if not path.exists():
         return None
     human: dict[str, str] = {}
+    pilot_path = Path(inp["premise_pilot"])
+    seen = (
+        set(json.loads(pilot_path.read_text(encoding="utf-8"))["trace_ids"])
+        if pilot_path.exists()
+        else set()
+    )
     sample_path, labels_path = Path(inp["premise_sample"]), Path(inp["premise_labels"])
     if sample_path.exists() and labels_path.exists():
         sample = json.loads(sample_path.read_text(encoding="utf-8"))
@@ -193,6 +201,10 @@ def adversarial_rows(cfg: dict) -> list[dict] | None:
                 "premise_human": (human_label if human else None)
                 if adv["category"] == "d"
                 else None,
+                "label_saw_judge": rec["trace_id"] in seen,
+                # "judge" or "rule" (a bare decline token or failed parse, decided for both
+                # raters without judgement, so it cannot count as agreement)
+                "premise_source": premise.get("source") if adv["category"] == "d" else None,
             }
         )
     return rows
@@ -305,6 +317,24 @@ def review_summary(sample: dict, cfg: dict, rows_by_trace: dict[str, dict]) -> d
             for it, _ in decided
             if review["items"][it["review_id"]].get("note")
         },
+        **review_categories(cfg, sample),
+    }
+
+
+def review_categories(cfg: dict, sample: dict) -> dict:
+    """The author's categories for the answers where the judge was wrong: A, the judge broke
+    its own written rules; B, the judge applied them and the author disagrees with the rule."""
+    path = Path(cfg["inputs"]["review_categories"])
+    if not path.exists():
+        return {}
+    cats = json.loads(path.read_text(encoding="utf-8"))
+    if cats["meta"]["sample_sha256"] != sample["sample_sha256"]:
+        raise RuntimeError(f"{path} belongs to a different review sample")
+    return {
+        "judge_wrong_categories": {
+            "definitions": cats["meta"]["categories"],
+            "counts": dict(sorted(Counter(i["category"] for i in cats["items"]).items())),
+        }
     }
 
 
@@ -380,10 +410,7 @@ def q4_markdown(q4: dict) -> list[str]:
                 out.append(f"| {model} | {rater} | not done | | | | | |")
                 continue
             pp = b["rejected"]["per_prompt"]
-            cells = [
-                f"{v['k']}/{v['n']}"
-                for p, v in sorted(pp.items())
-            ]
+            cells = [f"{v['k']}/{v['n']}" for p, v in sorted(pp.items())]
             out.append(
                 f"| {model} | {rater} | {_est(b['rejected']['pooled'])} | "
                 + " | ".join(cells)
@@ -393,9 +420,13 @@ def q4_markdown(q4: dict) -> list[str]:
     if ag.get("status") != "not_done":
         out += [
             "",
-            f"Author vs premise judge on {ag['n']} judged answers: kappa "
-            f"{_f(ag['kappa_3class'])} (three classes), {_f(ag['kappa_rejects'])} (rejects vs "
-            f"not); raw agreement {_f(ag['raw_agreement'])}.",
+            f"Author vs premise judge on the {ag['n']} judged answers labelled blind to the "
+            f"judge: kappa {_f(ag['kappa_3class'])} (three classes), "
+            f"{_f(ag['kappa_rejects'])} (rejects vs not); raw agreement "
+            f"{_f(ag['raw_agreement'])}. Including the "
+            f"{ag['all_labelled']['n'] - ag['n']} pilot answers, whose verdicts the author saw "
+            f"before labelling: kappa {_f(ag['all_labelled']['kappa_3class'])}, raw "
+            f"{_f(ag['all_labelled']['raw_agreement'])}.",
         ]
     return out
 
@@ -549,6 +580,14 @@ def report_markdown(res: dict) -> str:
             )
             + "."
         )
+        cats = rv.get("judge_wrong_categories")
+        if cats:
+            n = cats["counts"]
+            out.append(
+                f"Of the answers where the judge was wrong, {n.get('A', 0)} are the judge "
+                f"breaking its own written rules and {n.get('B', 0)} are the author disagreeing "
+                "with a rule the judge applied (`quadrant_review_categories.json`)."
+            )
 
     out += [
         "",
@@ -636,8 +675,17 @@ def report_markdown(res: dict) -> str:
         "3. **An empty box typed `[]`** (P4.1) is read as an unmarked option; the prediction "
         "itself was unambiguous.",
         "4. **Added, post hoc:** the human-label check per generator (pooled, it mixes a "
-        "generator with near-constant confidence with one whose confidence varies), and the "
-        "G-NS split by question type below.",
+        "generator with near-constant confidence with one whose confidence varies), the G-NS "
+        "split by question type, and the right-answer-wrong-reasons split by question type "
+        "(both below).",
+        '5. **A point estimate on a strict bound** (0.50 against "< 50%") was shown in the '
+        "wrong option; strict bounds are now strict. Display only: verdicts use intervals.",
+        "6. **Author vs premise judge agreement** is computed on the answers the judge "
+        "actually judged, and made blind: the first computation also counted the answers "
+        "decided by rule for both raters (bare decline tokens, failed parses), which agree by "
+        "construction, and the 8 premise-judge pilot answers, whose verdicts were shown to the "
+        "author before labelling (their labels stay in the measurement; they enter only the "
+        "all-labelled row).",
         "",
         "## Post hoc, exploratory (added after the first run)",
         "",
@@ -653,6 +701,21 @@ def report_markdown(res: dict) -> str:
         for qtype, v in c.get("post_hoc_G_NS_by_question_type", {}).items():
             rho = _pair_cell({"status": "ok", **v["spearman"]}) if v["spearman"] else "–"
             out.append(f"| {cell} | {qtype} | {v['n']} | {rho} |")
+    out += [
+        "",
+        "Right answer, wrong reasons by FinanceBench question type (added after the author's "
+        "review of the quadrant, where several disagreements were about evaluative conclusions "
+        "that the groundedness rules count as unsupported unless an excerpt states them). "
+        "Domain-relevant questions ask for such judgments.",
+        "",
+        "| Cell | Question type | Correct answers | Not fully grounded |",
+        "|---|---|---|---|",
+    ]
+    for cell, c in res["q2"]["cells"].items():
+        for qtype, v in c.get("post_hoc_by_question_type", {}).items():
+            out.append(
+                f"| {cell} | {qtype} | {v['n_correct']} | {_est(v['ungrounded_given_correct'])} |"
+            )
     return "\n".join(out) + "\n"
 
 
@@ -697,6 +760,9 @@ def write_plots(res: dict, models: list[str], plots_dir: Path) -> None:
     plot_quadrants(res["q2"], CONDITIONS, models, plots_dir / "correct_vs_grounded.png")
     plot_signal_agreement(res["q3"], CONDITIONS, models, plots_dir / "signal_agreement.png")
     plot_prompt_effect(res["q5"], CONDITIONS, models, plots_dir / "prompt_effect.png")
+    q4 = res.get("q4")
+    if q4 and q4.get("status") != "not_run":
+        plot_adversarial(q4, models, plots_dir / "adversarial_breakdown.png")
 
 
 # --------------------------------------------------------------------------------------

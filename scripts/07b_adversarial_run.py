@@ -71,6 +71,9 @@ CONTEXTS_PATH = RESULTS_DIR / "adversarial_contexts.json"
 RUNS_PATH = RESULTS_DIR / "generation_runs_adversarial.json"
 ESTIMATE_PATH = RESULTS_DIR / "adversarial_cost_estimate.json"
 PILOT_PATH = RESULTS_DIR / "premise_judge_pilot.md"
+# The pilot answers were shown with the judge's verdicts before the author labelled them, so
+# their labels are not blind to the judge (excluded from the agreement statistic).
+PILOT_IDS_PATH = RESULTS_DIR / "premise_judge_pilot.json"
 EVAL_PATH = RESULTS_DIR / "eval_adversarial_per_trace.jsonl"
 PREMISE_SAMPLE_PATH = LABELS_DIR / "premise_sample.json"
 PREMISE_PAGE_PATH = LABELS_DIR / "premise_labeling.html"
@@ -517,7 +520,11 @@ def cmd_premise_pilot(cfg: dict, ev: dict) -> None:
             f"- **Judge:** {res.get('handling', o.get('error'))} — {res.get('reason', '')}",
         ]
     PILOT_PATH.write_text("\n".join(out) + "\n", encoding="utf-8")
-    print(f"wrote {PILOT_PATH}")
+    PILOT_IDS_PATH.write_text(
+        json.dumps({"trace_ids": sorted(t["trace_id"] for t in sample)}, indent=1) + "\n",
+        encoding="utf-8",
+    )
+    print(f"wrote {PILOT_PATH}, {PILOT_IDS_PATH}")
 
 
 def cmd_evaluate(cfg: dict, gen: dict, ev: dict, offline: bool) -> None:

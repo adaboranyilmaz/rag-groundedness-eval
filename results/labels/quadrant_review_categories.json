@@ -1,0 +1,97 @@
+{
+ "meta": {
+  "created_utc": "2026-09-25T16:48:15+00:00",
+  "sample_sha256": "da69101bee16e0eff1996015cc3fb5a87fcd8def6b9e6ae37798ea26a5f58677",
+  "categories": {
+   "A": "the judge broke its own written rules (the author is right under the rules)",
+   "B": "the judge applied the rules; the author disagrees with the rule for this answer"
+  },
+  "basis": "categories proposed in the review discussion and confirmed item by item by the author; 01328 was left open in the proposal and set to B by the author; 01091 (Boeing, unit not shown) was considered for B and confirmed as A by the author after checking rule 2 of the verification prompt, which accepts a plausible unit"
+ },
+ "items": [
+  {
+   "review_id": "335644cc32cc",
+   "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_00956",
+   "category": "B",
+   "basis": "an evaluative conclusion ('not a high-growth company') that no excerpt states"
+  },
+  {
+   "review_id": "dfe09ad574d7",
+   "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00723",
+   "category": "B",
+   "basis": "background facts (a financial-services company) that no excerpt states"
+  },
+  {
+   "review_id": "86d019487a2b",
+   "trace_id": "oracle__claude-sonnet-5__v1_zero_shot__financebench_id_01902",
+   "category": "A",
+   "basis": "comparable-sales growth treated as not 'top line'"
+  },
+  {
+   "review_id": "ad9ba122b83c",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_01319",
+   "category": "A",
+   "basis": "a 'state 0' answer, a statement about what the excerpts contain, decomposed and judged as a fact about the company"
+  },
+  {
+   "review_id": "34f9768c61cd",
+   "trace_id": "oracle__claude-sonnet-5__v1_zero_shot__financebench_id_00685",
+   "category": "A",
+   "basis": "margins computed from excerpt figures and compared with the question's own threshold: arithmetic the rules allow"
+  },
+  {
+   "review_id": "f45c59ed4345",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_01328",
+   "category": "B",
+   "basis": "the figure is in the notes, not on the income statement the question names; the judge's call follows the rule, the author accepts the answer"
+  },
+  {
+   "review_id": "39be0523ec78",
+   "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_01009",
+   "category": "A",
+   "basis": "the question's word 'primarily' copied into every claim, which the answer never asserted"
+  },
+  {
+   "review_id": "5cc00a0f02cf",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_01319",
+   "category": "A",
+   "basis": "as above"
+  },
+  {
+   "review_id": "7dbdc3369b0d",
+   "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_01091",
+   "category": "A",
+   "basis": "unit not shown in the excerpt; the rules accept a plausible unit"
+  },
+  {
+   "review_id": "f0e1ee7c4ba9",
+   "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_01981",
+   "category": "B",
+   "basis": "an inference (fee growth implies member growth) the excerpts do not make"
+  },
+  {
+   "review_id": "e64a2f183adb",
+   "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00222",
+   "category": "B",
+   "basis": "an evaluative conclusion (quick ratio above 1 means healthy liquidity)"
+  },
+  {
+   "review_id": "3f5eb0974fe9",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_03882",
+   "category": "A",
+   "basis": "the 2020 figure read as the 2019 column (balance sheet columns are 2020 | 2019)"
+  },
+  {
+   "review_id": "2d197ae0273b",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_01319",
+   "category": "A",
+   "basis": "as above"
+  },
+  {
+   "review_id": "88a4f0a93802",
+   "trace_id": "oracle__claude-sonnet-5__v3_chain_of_thought__financebench_id_01009",
+   "category": "A",
+   "basis": "the verdict contradicts the judge's own reason ('generally supported')"
+  }
+ ]
+}

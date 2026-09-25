@@ -1,0 +1,200 @@
+{
+ "sample_sha256": "9ae015338b93330361ee9d5e55a5995096f984d64c738f92d3cecfcdf419ef04",
+ "exported_utc": "2026-09-25T16:28:29.687Z",
+ "n_complete": 48,
+ "items": {
+  "68f97077c5df": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "ae9cbe45ea8c": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "0a49b79b4a92": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "f23e56bb840f": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "7e2994c9a744": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "b42e5747d1bf": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "20ad53f735e9": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "c6bf01cc3b06": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "108ed5bc1b28": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "2f007bac952c": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "ab07546ec839": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "17fa1cc77166": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "10dd31d842b0": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "2b4b77cc0973": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "5e67a493803c": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "ba715677371e": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "ea7447424a7b": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "b11925c77542": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "b7bab3173699": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "0de363054c42": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "7fe6d3eeb59b": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "97e58032496d": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "115ff4fd3f56": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "6d76cdeadc5d": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "518038248905": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "a4e62c2dbcbe": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "a52ce932b33b": {
+   "decision": "declines_without_addressing",
+   "note": "It answers as [C1], which is not meaningful."
+  },
+  "b67bf9801a32": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "6677ab77083b": {
+   "decision": "declines_without_addressing",
+   "note": "It says no information, but there is."
+  },
+  "74718f2e8044": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "a65ddf44ac89": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "c39dc7af489e": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "2df1223bdea5": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "38c527ae86fe": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "31223ba13dc7": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "1a616b06634b": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "9aff6e736dc9": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "b9a425c667da": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "4fe308f10b41": {
+   "decision": "rejects_premise",
+   "note": ""
+  },
+  "595265ead8da": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "e63efd1fcd32": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "a1b6b93f4697": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "51eb57527dc9": {
+   "decision": "accepts_premise",
+   "note": ""
+  },
+  "78c061604d50": {
+   "decision": "declines_without_addressing",
+   "note": "The answer is not meaningful, ([C1],[C3])"
+  },
+  "33bd89d17b75": {
+   "decision": "declines_without_addressing",
+   "note": ""
+  },
+  "58331ed7f765": {
+   "decision": "rejects_premise",
+   "note": "labelled separately, after the premise-judge pilot had shown this answer with the judge's verdict (not blind to the judge)"
+  },
+  "289f45469c2c": {
+   "decision": "declines_without_addressing",
+   "note": "labelled separately, after the premise-judge pilot had shown this answer with the judge's verdict (not blind to the judge)"
+  },
+  "11c7eb7cb0bd": {
+   "decision": "rejects_premise",
+   "note": "labelled separately, after the premise-judge pilot had shown this answer with the judge's verdict (not blind to the judge)"
+  }
+ },
+ "last_three_labelled_utc": "2026-09-25T16:47:46+00:00"
+}

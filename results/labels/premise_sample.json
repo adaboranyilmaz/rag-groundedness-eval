@@ -1,0 +1,202 @@
+{
+ "meta": {
+  "created_utc": "2026-09-25T15:15:59+00:00",
+  "rule": "every (d) answer with answer text; bare decline tokens and failed parses are labelled by rule",
+  "seed": 0
+ },
+ "sample_sha256": "9ae015338b93330361ee9d5e55a5995096f984d64c738f92d3cecfcdf419ef04",
+ "items": [
+  {
+   "label_id": "68f97077c5df",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d02"
+  },
+  {
+   "label_id": "ae9cbe45ea8c",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__adv_d06"
+  },
+  {
+   "label_id": "0a49b79b4a92",
+   "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__adv_d02"
+  },
+  {
+   "label_id": "f23e56bb840f",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d01"
+  },
+  {
+   "label_id": "7e2994c9a744",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d01"
+  },
+  {
+   "label_id": "b42e5747d1bf",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d05"
+  },
+  {
+   "label_id": "20ad53f735e9",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d06"
+  },
+  {
+   "label_id": "c6bf01cc3b06",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d04"
+  },
+  {
+   "label_id": "108ed5bc1b28",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d10"
+  },
+  {
+   "label_id": "2f007bac952c",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d11"
+  },
+  {
+   "label_id": "ab07546ec839",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__adv_d05"
+  },
+  {
+   "label_id": "17fa1cc77166",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__adv_d12"
+  },
+  {
+   "label_id": "10dd31d842b0",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__adv_d09"
+  },
+  {
+   "label_id": "2b4b77cc0973",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d07"
+  },
+  {
+   "label_id": "5e67a493803c",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__adv_d02"
+  },
+  {
+   "label_id": "ba715677371e",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d02"
+  },
+  {
+   "label_id": "ea7447424a7b",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d02"
+  },
+  {
+   "label_id": "b11925c77542",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d10"
+  },
+  {
+   "label_id": "b7bab3173699",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d07"
+  },
+  {
+   "label_id": "0de363054c42",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d01"
+  },
+  {
+   "label_id": "7fe6d3eeb59b",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__adv_d06"
+  },
+  {
+   "label_id": "97e58032496d",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d05"
+  },
+  {
+   "label_id": "115ff4fd3f56",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d12"
+  },
+  {
+   "label_id": "6d76cdeadc5d",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d06"
+  },
+  {
+   "label_id": "518038248905",
+   "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__adv_d06"
+  },
+  {
+   "label_id": "a4e62c2dbcbe",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d12"
+  },
+  {
+   "label_id": "a52ce932b33b",
+   "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__adv_d05"
+  },
+  {
+   "label_id": "b67bf9801a32",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d10"
+  },
+  {
+   "label_id": "6677ab77083b",
+   "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__adv_d01"
+  },
+  {
+   "label_id": "74718f2e8044",
+   "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__adv_d12"
+  },
+  {
+   "label_id": "a65ddf44ac89",
+   "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__adv_d10"
+  },
+  {
+   "label_id": "c39dc7af489e",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d09"
+  },
+  {
+   "label_id": "2df1223bdea5",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__adv_d10"
+  },
+  {
+   "label_id": "38c527ae86fe",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d11"
+  },
+  {
+   "label_id": "31223ba13dc7",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d11"
+  },
+  {
+   "label_id": "1a616b06634b",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__adv_d04"
+  },
+  {
+   "label_id": "9aff6e736dc9",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d05"
+  },
+  {
+   "label_id": "b9a425c667da",
+   "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__adv_d04"
+  },
+  {
+   "label_id": "4fe308f10b41",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d04"
+  },
+  {
+   "label_id": "595265ead8da",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__adv_d02"
+  },
+  {
+   "label_id": "e63efd1fcd32",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d12"
+  },
+  {
+   "label_id": "a1b6b93f4697",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d07"
+  },
+  {
+   "label_id": "51eb57527dc9",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__adv_d04"
+  },
+  {
+   "label_id": "78c061604d50",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__adv_d05"
+  },
+  {
+   "label_id": "33bd89d17b75",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__adv_d09"
+  },
+  {
+   "label_id": "58331ed7f765",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__adv_d04"
+  },
+  {
+   "label_id": "289f45469c2c",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d09"
+  },
+  {
+   "label_id": "11c7eb7cb0bd",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__adv_d06"
+  }
+ ]
+}

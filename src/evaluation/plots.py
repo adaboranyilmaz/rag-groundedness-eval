@@ -520,3 +520,57 @@ def plot_prompt_effect(q5: dict, conditions: list[str], models: list[str], path:
             _title(ax, CONDITION_LABELS[cond], f"{label} against v1, paired by question")
     _legend(fig, _model_handles(models))
     _save(fig, path, top=0.95)
+
+
+def plot_adversarial(q4: dict, models: list[str], path: Path) -> None:
+    """Q4. One panel per adversarial category, each showing the behaviour that category
+    rewards: accuracy for (a) and (b), declining for (c), rejecting the premise for (d)
+    (the author's labels only; the panel says so while they are pending). Rows are generator
+    x context condition; intervals resample questions (10 per category)."""
+    panels = [
+        ("a", "accuracy_all", "(a) One filing: answered correctly"),
+        ("b", "accuracy_all", "(b) Two filings: answered correctly"),
+        ("c", "declined", "(c) Unanswerable from the corpus: declined"),
+        ("d", None, "(d) False premise: rejected (author's labels)"),
+    ]
+    fig, axes = plt.subplots(2, 2, figsize=(9.6, 6.4))
+    fig.patch.set_facecolor(SURFACE)
+    # the right-hand panels have the same rows as their left neighbours
+    for i, (ax, (cat, key, title)) in enumerate(zip(axes.flat, panels, strict=True)):
+        _style(ax, grid_axis="x")
+        rows = []
+        for m in models:
+            for cond in ("retrieved", "oracle"):
+                if cat == "d":
+                    if cond != "retrieved":
+                        continue
+                    block = q4.get("premise", {}).get(m, {}).get("human", {})
+                    est = None if block.get("status") == "not_done" else block["rejected"]["pooled"]
+                else:
+                    e = q4["by_category"].get(cat, {}).get(cond, {}).get(m)
+                    if e is None:
+                        continue
+                    est = e[key]["pooled"]
+                rows.append((f"{MODEL_LABELS[m]}, {cond}", m, est))
+        ax.set_xlim(-0.03, 1.03)
+        ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
+        ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
+        ax.set_ylim(len(rows) - 0.5, -0.5)
+        ax.set_yticks(range(len(rows)))
+        ax.set_yticklabels([r[0] for r in rows] if i % 2 == 0 else [])
+        for y, (_, m, est) in enumerate(rows):
+            if est is None:
+                ax.text(
+                    0.5, y, "labelling pending", ha="center", va="center", fontsize=8.5, color=MUTED
+                )
+                continue
+            if est["ci95"]:
+                ax.plot(
+                    est["ci95"], [y, y], color=SERIES[m], lw=2, solid_capstyle="round", zorder=3
+                )
+            ax.scatter(
+                [est["mean"]], [y], s=60, color=SERIES[m], edgecolor=SURFACE, linewidth=2, zorder=4
+            )
+        _title(ax, title)
+    _legend(fig, _model_handles(models))
+    _save(fig, path, top=0.95)

@@ -1,0 +1,127 @@
+{
+ "sample_sha256": "da69101bee16e0eff1996015cc3fb5a87fcd8def6b9e6ae37798ea26a5f58677",
+ "exported_utc": "2026-09-25T15:02:13.468Z",
+ "n_complete": 30,
+ "items": {
+  "4824a9b13695": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "526d878fc7df": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "ca90fa46e152": {
+   "decision": "unclear",
+   "note": "Although the claims are not strictly based on the excerpts, they are not dismissable as wrong so clearly."
+  },
+  "9af039dcd515": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "335644cc32cc": {
+   "decision": "judge_wrong",
+   "note": "The claim of the companies growth rate being significantly lower than before is a reasonable thinking to answer the question, even though it isn't stated exactly in the excerpts."
+  },
+  "dfe09ad574d7": {
+   "decision": "judge_wrong",
+   "note": "The question asks a thinking and opinion based question, and only claims that are not grounded in the excerpts are these claims, therefore I wouldn't say these are wrong since the question requires an answer that is interpretable."
+  },
+  "7b004f009e01": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "26fa24225d05": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "feeec7ffba46": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "86d019487a2b": {
+   "decision": "judge_wrong",
+   "note": ""
+  },
+  "ad9ba122b83c": {
+   "decision": "judge_wrong",
+   "note": "The question states to answer as 0 if restructuring costs are not explicitly outlined, and it did answer as 0. But the judge didn't understand the answer."
+  },
+  "92033e27eda8": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "c7c871521a7d": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "34f9768c61cd": {
+   "decision": "judge_wrong",
+   "note": "The question is interpretable, so the model shouldn't be penalized for not sticking to the excerpts for its thinking."
+  },
+  "f45c59ed4345": {
+   "decision": "judge_wrong",
+   "note": "Too picky, it is clear that the answer is correct."
+  },
+  "39be0523ec78": {
+   "decision": "judge_wrong",
+   "note": "The question asks for a primarily operation and the judge claims the excerpts never state primarily, but this feels too picky again. Let me know your thoughts."
+  },
+  "5cc00a0f02cf": {
+   "decision": "judge_wrong",
+   "note": "Judge doesn't read the question."
+  },
+  "7dbdc3369b0d": {
+   "decision": "judge_wrong",
+   "note": "Too picky, it is clear that it's in millions"
+  },
+  "f0e1ee7c4ba9": {
+   "decision": "judge_wrong",
+   "note": "Too picky."
+  },
+  "950a54b56d40": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "e64a2f183adb": {
+   "decision": "judge_wrong",
+   "note": "The question is interpretive, so not every claim is in the excerpts."
+  },
+  "3f5eb0974fe9": {
+   "decision": "judge_wrong",
+   "note": ""
+  },
+  "7032b755aa3f": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "2d197ae0273b": {
+   "decision": "judge_wrong",
+   "note": ""
+  },
+  "5bbf8f845de5": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "de9cb26b3c0f": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "88a4f0a93802": {
+   "decision": "judge_wrong",
+   "note": ""
+  },
+  "8eb537b940a8": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "f44305504cc8": {
+   "decision": "judge_right",
+   "note": ""
+  },
+  "1cbc0dc7e159": {
+   "decision": "judge_right",
+   "note": ""
+  }
+ }
+}

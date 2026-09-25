@@ -1,6 +1,86 @@
 {
-  "run_utc": "2026-09-24T15:16:54+00:00",
+  "run_utc": "2026-09-25T15:14:59+00:00",
   "files": {
+    "adversarial/oracle/claude-sonnet-5__v1_zero_shot.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/oracle/claude-sonnet-5__v2_citation_required.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/oracle/claude-sonnet-5__v3_chain_of_thought.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/oracle/claude-sonnet-5__v4_abstention.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/oracle/qwen2.5-3b__v1_zero_shot.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/oracle/qwen2.5-3b__v2_citation_required.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/oracle/qwen2.5-3b__v3_chain_of_thought.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/oracle/qwen2.5-3b__v4_abstention.jsonl": {
+      "n": 20,
+      "ok": 20,
+      "output_source_cache": 20
+    },
+    "adversarial/retrieved/claude-sonnet-5__v1_zero_shot.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
+    "adversarial/retrieved/claude-sonnet-5__v2_citation_required.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
+    "adversarial/retrieved/claude-sonnet-5__v3_chain_of_thought.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
+    "adversarial/retrieved/claude-sonnet-5__v4_abstention.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
+    "adversarial/retrieved/qwen2.5-3b__v1_zero_shot.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
+    "adversarial/retrieved/qwen2.5-3b__v2_citation_required.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
+    "adversarial/retrieved/qwen2.5-3b__v3_chain_of_thought.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
+    "adversarial/retrieved/qwen2.5-3b__v4_abstention.jsonl": {
+      "n": 40,
+      "ok": 40,
+      "output_source_cache": 40
+    },
     "oracle/claude-sonnet-5__v1_zero_shot.jsonl": {
       "n": 126,
       "ok": 126,
@@ -163,7 +243,7 @@
     }
   },
   "failures": [],
-  "n_traces": 2352,
-  "n_ok": 2352,
-  "n_output_checked_against_cache": 2352
+  "n_traces": 2832,
+  "n_ok": 2832,
+  "n_output_checked_against_cache": 2832
 }

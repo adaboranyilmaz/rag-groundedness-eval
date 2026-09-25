@@ -59,6 +59,7 @@ EVIDENCE_GROUPS = {
     "evidence_present": "gold_evidence_retrieved",
     "evidence_absent": "gold_evidence_not_retrieved",
     "unanswerable": "filing_not_in_corpus",
+    "answerable_elsewhere": "filing_not_in_corpus_answer_in_another",
     "no_gold": "no_aligned_gold",
 }
 
@@ -263,6 +264,23 @@ def q2_quadrants(
                 "not_all_in_context": _share([r["numeric_in_context"] < 1 for r in fr]),
             }
         entry["figures_in_context"] = figs
+        # Post hoc (added after the author's review of the quadrant): right answer, wrong
+        # reasons by FinanceBench question type. Domain-relevant questions ask for judgments
+        # ("is X capital intensive?"), whose evaluative conclusions the groundedness rules
+        # count as unsupported unless an excerpt states them.
+        by_type = {}
+        for qtype in sorted({r["question_type"] for r in cr}):
+            correct = [r for r in cr if r["question_type"] == qtype and is_correct(r["label"])]
+            by_type[qtype] = {
+                "n_correct": len(correct),
+                "ungrounded_given_correct": mean_with_ci(
+                    [float(not r["fully_grounded"]) for r in correct],
+                    [r["question_id"] for r in correct],
+                    nb,
+                    seed,
+                ),
+            }
+        entry["post_hoc_by_question_type"] = by_type
         out["cells"][cell_key(cond, model)] = entry
         out["examples"][cell_key(cond, model)] = {
             q: [
@@ -642,12 +660,22 @@ def parse_range(option: str) -> tuple[float, float]:
     raise ValueError(f"not a range: {option!r}")
 
 
+def option_contains(option: str, value: float) -> bool:
+    """Whether a point estimate falls in an option, honouring strict bounds ("< 50%" excludes
+    0.50, which then falls in "50-80%")."""
+    lo, hi = parse_range(option)
+    s = option.strip()
+    if s.startswith("<") and not s.startswith("<="):
+        return value < hi
+    if s.startswith(">") and not s.startswith(">="):
+        return value > lo
+    return lo <= value <= hi
+
+
 def _range_check(predicted: str, options: list[str], value, ci) -> dict:
     lo, hi = parse_range(predicted)
     observed = (
-        next((o for o in options if (b := parse_range(o))[0] <= value <= b[1]), None)
-        if value is not None
-        else None
+        next((o for o in options if option_contains(o, value)), None) if value is not None else None
     )
     if ci is None:
         return {"observed": observed, "unexpected": None, "note": "no interval"}
@@ -939,22 +967,34 @@ def q4_adversarial(rows: list[dict], nb: int, seed: int) -> dict:
                 ),
             }
         out["premise"][model] = block
-    both = [
-        r for r in d if r["premise_human"] is not None and r["premise_judge"] in PREMISE_HANDLINGS
+    judged = [
+        r
+        for r in d
+        if r["premise_human"] is not None
+        and r["premise_judge"] in PREMISE_HANDLINGS
+        and r.get("premise_source", "judge") == "judge"  # rule-decided rows agree by construction
     ]
-    out["premise_agreement"] = (
-        {
-            "n": len(both),
+
+    def agreement(rs: list[dict]) -> dict:
+        return {
+            "n": len(rs),
             "kappa_3class": cohen_kappa(
-                [r["premise_human"] for r in both], [r["premise_judge"] for r in both]
+                [r["premise_human"] for r in rs], [r["premise_judge"] for r in rs]
             ),
             "kappa_rejects": kappa(
-                [r["premise_human"] == "rejects_premise" for r in both],
-                [r["premise_judge"] == "rejects_premise" for r in both],
+                [r["premise_human"] == "rejects_premise" for r in rs],
+                [r["premise_judge"] == "rejects_premise" for r in rs],
             ),
-            "raw_agreement": _share([r["premise_human"] == r["premise_judge"] for r in both]),
+            "raw_agreement": _share([r["premise_human"] == r["premise_judge"] for r in rs]),
         }
-        if both
+
+    # Primary: labels made blind to the judge. The pilot's answers were shown with the
+    # judge's verdicts before the author labelled them; those labels stay in the measurement
+    # but would inflate agreement, so they enter only the all-labelled row.
+    blind = [r for r in judged if not r.get("label_saw_judge")]
+    out["premise_agreement"] = (
+        {**agreement(blind), "all_labelled": agreement(judged)}
+        if judged
         else {"status": "not_done"}
     )
 

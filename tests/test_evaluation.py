@@ -255,6 +255,35 @@ class TestAbstention:
         assert answerability("retrieved", True, None, 5) == "no_gold"
         assert answerability("retrieved", True, m, 5) == "evidence_present"
         assert answerability("retrieved", True, {"recall@5": 0.0}, 5) == "evidence_absent"
+        # the audited out-of-corpus questions another filing answers
+        assert (
+            answerability("retrieved", False, None, 5, answerable_elsewhere=True)
+            == "answerable_elsewhere"
+        )
+        # the flag only matters for out-of-corpus questions
+        assert answerability("retrieved", True, m, 5, answerable_elsewhere=True) == (
+            "evidence_present"
+        )
+
+    def test_audit_applies_only_once_approved(self, tmp_path):
+        import json
+
+        from src.evaluation.evaluate import load_answerable_elsewhere
+
+        path = tmp_path / "audit.json"
+        assert load_answerable_elsewhere(path) == frozenset()  # no audit
+        audit = {
+            "meta": {"status": "proposed"},
+            "items": [
+                {"financebench_id": "q1", "status": "answerable_elsewhere"},
+                {"financebench_id": "q2", "status": "unanswerable"},
+            ],
+        }
+        path.write_text(json.dumps(audit), encoding="utf-8")
+        assert load_answerable_elsewhere(path) == frozenset()
+        audit["meta"]["status"] = "approved"
+        path.write_text(json.dumps(audit), encoding="utf-8")
+        assert load_answerable_elsewhere(path) == frozenset({"q1"})
 
 
 # --------------------------------------------------------------------------------------

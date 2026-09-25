@@ -1,6 +1,6 @@
 {
  "meta": {
-  "updated_utc": "2026-09-25T14:29:11+00:00",
+  "updated_utc": "2026-09-25T17:02:23+00:00",
   "single_run": true,
   "n_traces": 2208,
   "config": {
@@ -12,9 +12,11 @@
     "human_labels": "results/labels/groundedness_human.json",
     "review_sample": "results/labels/quadrant_review_sample.json",
     "review_labels": "results/labels/quadrant_review_human.json",
+    "review_categories": "results/labels/quadrant_review_categories.json",
     "adversarial_eval": "results/metrics/eval_adversarial_per_trace.jsonl",
     "premise_sample": "results/labels/premise_sample.json",
-    "premise_labels": "results/labels/premise_human.json"
+    "premise_labels": "results/labels/premise_human.json",
+    "premise_pilot": "results/metrics/premise_judge_pilot.json"
    },
    "bootstrap": {
     "n_resamples": 10000,
@@ -35,12 +37,18 @@
    }
   },
   "inputs_sha256": {
-   "eval_per_trace": "0af8c897c12ec56a4ca566f2b48263222165b59a8ef8c4766cf09278a27dd30c",
+   "eval_per_trace": "d6febe218d5a80ae65c06422fdf560ae066e6df295ac21d38b82e449e832ef23",
    "eval_config": "d4b8a35949494e43846afa7293172fe30474f6ca51ce392946b565156931a6f6",
    "preregistration": "d979926d7fa641714218c29fcbb7783bb0429bae74f871ed0ff88b1ac62062bb",
    "validation_sample": "e3813dca125f5876c786a8f2ed44f38763a4270a47222f31dcc3b9bfcdec9139",
    "human_labels": "cc383f188772c46484c35582f3bc4d0e02bb2b719632fb9b02962c9bbc79a02e",
-   "review_sample": "5752bf0dcbbde8e48b4488799e1e1d0363a442f1d4e55788972cd17833809c37"
+   "review_sample": "5752bf0dcbbde8e48b4488799e1e1d0363a442f1d4e55788972cd17833809c37",
+   "review_labels": "96ff080349ecf2d8df6445f583c61b41e4668c6718464ee66079fc928151b571",
+   "review_categories": "6bcbd47bdca8115c9f635d4545fdc1f63a1a085873535284e4db19f2c6367aba",
+   "adversarial_eval": "828fdec3d85450b8d133c6bfbe907a6daee76f8acc61d68321cd215f37662c51",
+   "premise_sample": "0fa312d98790eff9fc24244d019574ea8e7179f99e8429850368d25362d3b58d",
+   "premise_labels": "cf03b25325a99a884a5b24696c71e4d2215e5d2f8614add3d524e296f2f1d7f1",
+   "premise_pilot": "4c7985f4809766e082b8324d3553b595b585ff8a5b2d24e2650cff0ec2fdf25c"
   }
  },
  "predictions": [
@@ -157,9 +165,8 @@
     "> 80%"
    ],
    "predicted": "50-80%",
-   "observed": null,
-   "unexpected": null,
-   "note": "no interval"
+   "observed": "50-80%",
+   "unexpected": false
   },
   {
    "id": "P3.1",
@@ -221,9 +228,8 @@
     "> 75%"
    ],
    "predicted": "25-50%",
-   "observed": null,
-   "unexpected": null,
-   "note": "no interval"
+   "observed": "25-50%",
+   "unexpected": false
   },
   {
    "id": "P4.2",
@@ -235,9 +241,8 @@
     "> 75%"
    ],
    "predicted": "< 25%",
-   "observed": null,
-   "unexpected": null,
-   "note": "no interval"
+   "observed": "< 25%",
+   "unexpected": false
   },
   {
    "id": "P4.3",
@@ -247,9 +252,9 @@
     "no"
    ],
    "predicted": "yes",
-   "observed": null,
-   "unexpected": null,
-   "note": "not computable"
+   "observed": "no",
+   "unexpected": true,
+   "kind": "named"
   },
   {
    "id": "P4.4",
@@ -261,9 +266,8 @@
     "> 75%"
    ],
    "predicted": "50-75%",
-   "observed": null,
-   "unexpected": null,
-   "note": "no interval"
+   "observed": "< 25%",
+   "unexpected": true
   },
   {
    "id": "P4.5",
@@ -274,9 +278,9 @@
     "(b) higher"
    ],
    "predicted": "(b) higher",
-   "observed": null,
-   "unexpected": null,
-   "note": "not computable"
+   "observed": "(b) clearly lower",
+   "unexpected": true,
+   "kind": "named"
   },
   {
    "id": "P5.1",
@@ -2397,6 +2401,44 @@
       "none_in_context": 0.1336405529953917,
       "not_all_in_context": 0.423963133640553
      }
+    },
+    "post_hoc_by_question_type": {
+     "domain-relevant": {
+      "n_correct": 139,
+      "ungrounded_given_correct": {
+       "n": 139,
+       "n_questions": 39,
+       "mean": 0.5251798561151079,
+       "ci95": [
+        0.40145985401459855,
+        0.6518518518518519
+       ]
+      }
+     },
+     "metrics-generated": {
+      "n_correct": 122,
+      "ungrounded_given_correct": {
+       "n": 122,
+       "n_questions": 35,
+       "mean": 0.13114754098360656,
+       "ci95": [
+        0.05263157894736842,
+        0.23809523809523808
+       ]
+      }
+     },
+     "novel-generated": {
+      "n_correct": 90,
+      "ungrounded_given_correct": {
+       "n": 90,
+       "n_questions": 24,
+       "mean": 0.23333333333333334,
+       "ci95": [
+        0.11235955056179775,
+        0.3723404255319149
+       ]
+      }
+     }
     }
    },
    "oracle__qwen2.5-3b": {
@@ -2541,6 +2583,44 @@
       "n_with_figures": 52,
       "none_in_context": 0.15384615384615385,
       "not_all_in_context": 0.23076923076923078
+     }
+    },
+    "post_hoc_by_question_type": {
+     "domain-relevant": {
+      "n_correct": 32,
+      "ungrounded_given_correct": {
+       "n": 32,
+       "n_questions": 16,
+       "mean": 0.5,
+       "ci95": [
+        0.24242424242424243,
+        0.8095982142857132
+       ]
+      }
+     },
+     "metrics-generated": {
+      "n_correct": 39,
+      "ungrounded_given_correct": {
+       "n": 39,
+       "n_questions": 18,
+       "mean": 0.05128205128205128,
+       "ci95": [
+        0.0,
+        0.16666666666666666
+       ]
+      }
+     },
+     "novel-generated": {
+      "n_correct": 21,
+      "ungrounded_given_correct": {
+       "n": 21,
+       "n_questions": 9,
+       "mean": 0.19047619047619047,
+       "ci95": [
+        0.0399615384615385,
+        0.3684210526315789
+       ]
+      }
      }
     }
    },
@@ -2687,6 +2767,44 @@
       "none_in_context": 0.0,
       "not_all_in_context": 0.4722222222222222
      }
+    },
+    "post_hoc_by_question_type": {
+     "domain-relevant": {
+      "n_correct": 31,
+      "ungrounded_given_correct": {
+       "n": 31,
+       "n_questions": 10,
+       "mean": 0.25806451612903225,
+       "ci95": [
+        0.058823529411764705,
+        0.56
+       ]
+      }
+     },
+     "metrics-generated": {
+      "n_correct": 6,
+      "ungrounded_given_correct": {
+       "n": 6,
+       "n_questions": 2,
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ]
+      }
+     },
+     "novel-generated": {
+      "n_correct": 21,
+      "ungrounded_given_correct": {
+       "n": 21,
+       "n_questions": 6,
+       "mean": 0.2857142857142857,
+       "ci95": [
+        0.08333333333333333,
+        0.5714285714285714
+       ]
+      }
+     }
     }
    },
    "retrieved__qwen2.5-3b": {
@@ -2832,6 +2950,44 @@
       "none_in_context": 0.25,
       "not_all_in_context": 0.75
      }
+    },
+    "post_hoc_by_question_type": {
+     "domain-relevant": {
+      "n_correct": 12,
+      "ungrounded_given_correct": {
+       "n": 12,
+       "n_questions": 5,
+       "mean": 0.75,
+       "ci95": [
+        0.14285714285714285,
+        1.0
+       ]
+      }
+     },
+     "metrics-generated": {
+      "n_correct": 7,
+      "ungrounded_given_correct": {
+       "n": 7,
+       "n_questions": 3,
+       "mean": 0.7142857142857143,
+       "ci95": [
+        0.0,
+        1.0
+       ]
+      }
+     },
+     "novel-generated": {
+      "n_correct": 15,
+      "ungrounded_given_correct": {
+       "n": 15,
+       "n_questions": 6,
+       "mean": 0.4,
+       "ci95": [
+        0.11764705882352941,
+        0.7692307692307693
+       ]
+      }
+     }
     }
    }
   },
@@ -2904,6 +3060,10 @@
      "not_fully_grounded": 12
     },
     "filing_not_in_corpus": {
+     "fully_grounded": 0,
+     "not_fully_grounded": 0
+    },
+    "filing_not_in_corpus_answer_in_another": {
      "fully_grounded": 4,
      "not_fully_grounded": 0
     },
@@ -2922,8 +3082,12 @@
      "not_fully_grounded": 10
     },
     "filing_not_in_corpus": {
-     "fully_grounded": 3,
+     "fully_grounded": 0,
      "not_fully_grounded": 2
+    },
+    "filing_not_in_corpus_answer_in_another": {
+     "fully_grounded": 3,
+     "not_fully_grounded": 0
     },
     "no_aligned_gold": {
      "fully_grounded": 0,
@@ -2975,8 +3139,51 @@
   }
  },
  "q2_review": {
-  "status": "not_done",
-  "n": 30
+  "status": "complete",
+  "n": 30,
+  "counts_by_condition": {
+   "oracle": {
+    "judge_right": 6,
+    "judge_wrong": 9,
+    "unclear": 0
+   },
+   "retrieved": {
+    "judge_right": 9,
+    "judge_wrong": 5,
+    "unclear": 1
+   }
+  },
+  "judge_right": {
+   "value": 0.5,
+   "ci95": [
+    0.2857142857142857,
+    0.7059436274509795
+   ],
+   "n": 30
+  },
+  "notes": {
+   "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_00790": "Although the claims are not strictly based on the excerpts, they are not dismissable as wrong so clearly.",
+   "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_00956": "The claim of the companies growth rate being significantly lower than before is a reasonable thinking to answer the question, even though it isn't stated exactly in the excerpts.",
+   "oracle__claude-sonnet-5__v4_abstention__financebench_id_00723": "The question asks a thinking and opinion based question, and only claims that are not grounded in the excerpts are these claims, therefore I wouldn't say these are wrong since the question requires an answer that is interpretable.",
+   "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_01319": "The question states to answer as 0 if restructuring costs are not explicitly outlined, and it did answer as 0. But the judge didn't understand the answer.",
+   "oracle__claude-sonnet-5__v1_zero_shot__financebench_id_00685": "The question is interpretable, so the model shouldn't be penalized for not sticking to the excerpts for its thinking.",
+   "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_01328": "Too picky, it is clear that the answer is correct.",
+   "oracle__qwen2.5-3b__v4_abstention__financebench_id_01009": "The question asks for a primarily operation and the judge claims the excerpts never state primarily, but this feels too picky again. Let me know your thoughts.",
+   "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_01319": "Judge doesn't read the question.",
+   "oracle__claude-sonnet-5__v4_abstention__financebench_id_01091": "Too picky, it is clear that it's in millions",
+   "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_01981": "Too picky.",
+   "oracle__claude-sonnet-5__v4_abstention__financebench_id_00222": "The question is interpretive, so not every claim is in the excerpts."
+  },
+  "judge_wrong_categories": {
+   "definitions": {
+    "A": "the judge broke its own written rules (the author is right under the rules)",
+    "B": "the judge applied the rules; the author disagrees with the rule for this answer"
+   },
+   "counts": {
+    "A": 9,
+    "B": 5
+   }
+  }
  },
  "q3": {
   "oracle__claude-sonnet-5": {
@@ -5237,7 +5444,1725 @@
   }
  },
  "q4": {
-  "status": "not_run"
+  "n_traces": 480,
+  "by_category": {
+   "a": {
+    "oracle": {
+     "claude-sonnet-5": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.0,
+        "ci95": [
+         0.0,
+         0.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.9949999999999999,
+       "ci95": [
+        0.9850000000000001,
+        1.0
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 1.0,
+        "ci95": [
+         1.0,
+         1.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ]
+      }
+     },
+     "qwen2.5-3b": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.0,
+        "ci95": [
+         0.0,
+         0.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.825,
+       "ci95": [
+        0.575,
+        1.0
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.675,
+        "ci95": [
+         0.4,
+         0.925
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 7,
+         "rate": 0.7,
+         "ci95": [
+          0.3475471499400026,
+          0.9332604888222655
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 6,
+         "rate": 0.6,
+         "ci95": [
+          0.2623780766069451,
+          0.8784477418801728
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 6,
+         "rate": 0.6,
+         "ci95": [
+          0.2623780766069451,
+          0.8784477418801728
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.675,
+       "ci95": [
+        0.4,
+        0.925
+       ]
+      }
+     }
+    },
+    "retrieved": {
+     "claude-sonnet-5": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.0,
+        "ci95": [
+         0.0,
+         0.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.975,
+       "ci95": [
+        0.925,
+        1.0
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.8,
+        "ci95": [
+         0.5,
+         1.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.8,
+       "ci95": [
+        0.5,
+        1.0
+       ]
+      }
+     },
+     "qwen2.5-3b": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.025,
+        "ci95": [
+         0.0,
+         0.075
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 39,
+       "n_questions": 10,
+       "mean": 0.6538461538461539,
+       "ci95": [
+        0.3918918918918919,
+        0.9125
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.65,
+        "ci95": [
+         0.4,
+         0.875
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 6,
+         "rate": 0.6,
+         "ci95": [
+          0.2623780766069451,
+          0.8784477418801728
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 6,
+         "rate": 0.6,
+         "ci95": [
+          0.2623780766069451,
+          0.8784477418801728
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 9,
+         "rate": 0.9,
+         "ci95": [
+          0.5549838829718043,
+          0.9974714214555382
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 5,
+         "rate": 0.5,
+         "ci95": [
+          0.18708602844739858,
+          0.8129139715526015
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 39,
+       "n_questions": 10,
+       "mean": 0.6666666666666666,
+       "ci95": [
+        0.41025641025641024,
+        0.9210526315789473
+       ]
+      }
+     }
+    }
+   },
+   "b": {
+    "oracle": {
+     "claude-sonnet-5": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.0,
+        "ci95": [
+         0.0,
+         0.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 1.0,
+        "ci95": [
+         1.0,
+         1.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ]
+      }
+     },
+     "qwen2.5-3b": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.025,
+        "ci95": [
+         0.0,
+         0.075
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 39,
+       "n_questions": 10,
+       "mean": 0.19230769230769232,
+       "ci95": [
+        0.02702702702702703,
+        0.3875
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.1,
+        "ci95": [
+         0.0,
+         0.225
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 2,
+         "rate": 0.2,
+         "ci95": [
+          0.025210726326833355,
+          0.5560954623076415
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 39,
+       "n_questions": 10,
+       "mean": 0.10256410256410256,
+       "ci95": [
+        0.0,
+        0.225
+       ]
+      }
+     }
+    },
+    "retrieved": {
+     "claude-sonnet-5": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.8,
+        "ci95": [
+         0.55,
+         1.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 7,
+         "rate": 0.7,
+         "ci95": [
+          0.3475471499400026,
+          0.9332604888222655
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 9,
+         "rate": 0.9,
+         "ci95": [
+          0.5549838829718043,
+          0.9974714214555382
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 8,
+       "n_questions": 3,
+       "mean": 0.78125,
+       "ci95": [
+        0.4166666666666667,
+        1.0
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.1,
+        "ci95": [
+         0.0,
+         0.3
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 8,
+       "n_questions": 3,
+       "mean": 0.5,
+       "ci95": [
+        0.0,
+        1.0
+       ]
+      }
+     },
+     "qwen2.5-3b": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.25,
+        "ci95": [
+         0.075,
+         0.45
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 1,
+         "rate": 0.1,
+         "ci95": [
+          0.0025285785444618125,
+          0.4450161170281953
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 3,
+         "rate": 0.3,
+         "ci95": [
+          0.06673951117773441,
+          0.6524528500599973
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 5,
+         "rate": 0.5,
+         "ci95": [
+          0.18708602844739858,
+          0.8129139715526015
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 30,
+       "n_questions": 9,
+       "mean": 0.058333333333333334,
+       "ci95": [
+        0.0,
+        0.13392857142857142
+       ]
+      },
+      "accuracy_all": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.0,
+        "ci95": [
+         0.0,
+         0.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.3084971078187607
+         ]
+        }
+       }
+      },
+      "accuracy_answered": {
+       "n": 30,
+       "n_questions": 9,
+       "mean": 0.0,
+       "ci95": [
+        0.0,
+        0.0
+       ]
+      }
+     }
+    }
+   },
+   "c": {
+    "retrieved": {
+     "claude-sonnet-5": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.95,
+        "ci95": [
+         0.85,
+         1.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 9,
+         "rate": 0.9,
+         "ci95": [
+          0.5549838829718043,
+          0.9974714214555382
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 9,
+         "rate": 0.9,
+         "ci95": [
+          0.5549838829718043,
+          0.9974714214555382
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 2,
+       "n_questions": 1,
+       "mean": 1.0,
+       "ci95": [
+        1.0,
+        1.0
+       ]
+      },
+      "answered_not_disclosed": {
+       "pooled": {
+        "n": 20,
+        "n_questions": 5,
+        "mean": 0.1,
+        "ci95": [
+         0.0,
+         0.3
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        },
+        "v2_citation_required": {
+         "n": 5,
+         "k": 1,
+         "rate": 0.2,
+         "ci95": [
+          0.005050763379468026,
+          0.7164179361180896
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 5,
+         "k": 1,
+         "rate": 0.2,
+         "ci95": [
+          0.005050763379468026,
+          0.7164179361180896
+         ]
+        },
+        "v4_abstention": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        }
+       }
+      },
+      "answered_filing_not_in_corpus": {
+       "pooled": {
+        "n": 20,
+        "n_questions": 5,
+        "mean": 0.0,
+        "ci95": [
+         0.0,
+         0.0
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        },
+        "v2_citation_required": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        },
+        "v4_abstention": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        }
+       }
+      }
+     },
+     "qwen2.5-3b": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.725,
+        "ci95": [
+         0.575,
+         0.875
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 8,
+         "rate": 0.8,
+         "ci95": [
+          0.4439045376923586,
+          0.9747892736731667
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 3,
+         "rate": 0.3,
+         "ci95": [
+          0.06673951117773441,
+          0.6524528500599973
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 9,
+         "rate": 0.9,
+         "ci95": [
+          0.5549838829718043,
+          0.9974714214555382
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 9,
+         "rate": 0.9,
+         "ci95": [
+          0.5549838829718043,
+          0.9974714214555382
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 11,
+       "n_questions": 7,
+       "mean": 0.022727272727272728,
+       "ci95": [
+        0.0,
+        0.06818181818181818
+       ]
+      },
+      "answered_not_disclosed": {
+       "pooled": {
+        "n": 20,
+        "n_questions": 5,
+        "mean": 0.35,
+        "ci95": [
+         0.15,
+         0.6
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 5,
+         "k": 1,
+         "rate": 0.2,
+         "ci95": [
+          0.005050763379468026,
+          0.7164179361180896
+         ]
+        },
+        "v2_citation_required": {
+         "n": 5,
+         "k": 4,
+         "rate": 0.8,
+         "ci95": [
+          0.28358206388191054,
+          0.9949492366205319
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 5,
+         "k": 1,
+         "rate": 0.2,
+         "ci95": [
+          0.005050763379468026,
+          0.7164179361180896
+         ]
+        },
+        "v4_abstention": {
+         "n": 5,
+         "k": 1,
+         "rate": 0.2,
+         "ci95": [
+          0.005050763379468026,
+          0.7164179361180896
+         ]
+        }
+       }
+      },
+      "answered_filing_not_in_corpus": {
+       "pooled": {
+        "n": 20,
+        "n_questions": 5,
+        "mean": 0.2,
+        "ci95": [
+         0.05,
+         0.35
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 5,
+         "k": 1,
+         "rate": 0.2,
+         "ci95": [
+          0.005050763379468026,
+          0.7164179361180896
+         ]
+        },
+        "v2_citation_required": {
+         "n": 5,
+         "k": 3,
+         "rate": 0.6,
+         "ci95": [
+          0.14663279963467307,
+          0.9472550494736831
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        },
+        "v4_abstention": {
+         "n": 5,
+         "k": 0,
+         "rate": 0.0,
+         "ci95": [
+          0.0,
+          0.5218237501049816
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "d": {
+    "retrieved": {
+     "claude-sonnet-5": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.725,
+        "ci95": [
+         0.5,
+         0.925
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 6,
+         "rate": 0.6,
+         "ci95": [
+          0.2623780766069451,
+          0.8784477418801728
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 7,
+         "rate": 0.7,
+         "ci95": [
+          0.3475471499400026,
+          0.9332604888222655
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 6,
+         "rate": 0.6,
+         "ci95": [
+          0.2623780766069451,
+          0.8784477418801728
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 11,
+       "n_questions": 4,
+       "mean": 0.9586776859504131,
+       "ci95": [
+        0.9242424242424242,
+        1.0
+       ]
+      }
+     },
+     "qwen2.5-3b": {
+      "n": 40,
+      "n_questions": 10,
+      "declined": {
+       "pooled": {
+        "n": 40,
+        "n_questions": 10,
+        "mean": 0.625,
+        "ci95": [
+         0.45,
+         0.8
+        ]
+       },
+       "per_prompt": {
+        "v1_zero_shot": {
+         "n": 10,
+         "k": 6,
+         "rate": 0.6,
+         "ci95": [
+          0.2623780766069451,
+          0.8784477418801728
+         ]
+        },
+        "v2_citation_required": {
+         "n": 10,
+         "k": 5,
+         "rate": 0.5,
+         "ci95": [
+          0.18708602844739858,
+          0.8129139715526015
+         ]
+        },
+        "v3_chain_of_thought": {
+         "n": 10,
+         "k": 4,
+         "rate": 0.4,
+         "ci95": [
+          0.12155225811982712,
+          0.737621923393055
+         ]
+        },
+        "v4_abstention": {
+         "n": 10,
+         "k": 10,
+         "rate": 1.0,
+         "ci95": [
+          0.6915028921812392,
+          1.0
+         ]
+        }
+       }
+      },
+      "groundedness_answered": {
+       "n": 15,
+       "n_questions": 7,
+       "mean": 0.25142857142857145,
+       "ci95": [
+        0.05904761904761904,
+        0.4897959183673469
+       ]
+      }
+     }
+    }
+   }
+  },
+  "premise": {
+   "claude-sonnet-5": {
+    "human": {
+     "counts": {
+      "declines_without_addressing": 28,
+      "rejects_premise": 12
+     },
+     "rejected": {
+      "pooled": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.3,
+       "ci95": [
+        0.075,
+        0.525
+       ]
+      },
+      "per_prompt": {
+       "v1_zero_shot": {
+        "n": 10,
+        "k": 4,
+        "rate": 0.4,
+        "ci95": [
+         0.12155225811982712,
+         0.737621923393055
+        ]
+       },
+       "v2_citation_required": {
+        "n": 10,
+        "k": 4,
+        "rate": 0.4,
+        "ci95": [
+         0.12155225811982712,
+         0.737621923393055
+        ]
+       },
+       "v3_chain_of_thought": {
+        "n": 10,
+        "k": 4,
+        "rate": 0.4,
+        "ci95": [
+         0.12155225811982712,
+         0.737621923393055
+        ]
+       },
+       "v4_abstention": {
+        "n": 10,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+         0.0,
+         0.3084971078187607
+        ]
+       }
+      }
+     }
+    },
+    "judge": {
+     "counts": {
+      "declines_without_addressing": 22,
+      "rejects_premise": 18
+     },
+     "rejected": {
+      "pooled": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.45,
+       "ci95": [
+        0.25,
+        0.65
+       ]
+      },
+      "per_prompt": {
+       "v1_zero_shot": {
+        "n": 10,
+        "k": 6,
+        "rate": 0.6,
+        "ci95": [
+         0.2623780766069451,
+         0.8784477418801728
+        ]
+       },
+       "v2_citation_required": {
+        "n": 10,
+        "k": 5,
+        "rate": 0.5,
+        "ci95": [
+         0.18708602844739858,
+         0.8129139715526015
+        ]
+       },
+       "v3_chain_of_thought": {
+        "n": 10,
+        "k": 7,
+        "rate": 0.7,
+        "ci95": [
+         0.3475471499400026,
+         0.9332604888222655
+        ]
+       },
+       "v4_abstention": {
+        "n": 10,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+         0.0,
+         0.3084971078187607
+        ]
+       }
+      }
+     }
+    }
+   },
+   "qwen2.5-3b": {
+    "human": {
+     "counts": {
+      "declines_without_addressing": 25,
+      "accepts_premise": 13,
+      "rejects_premise": 2
+     },
+     "rejected": {
+      "pooled": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.05,
+       "ci95": [
+        0.0,
+        0.15
+       ]
+      },
+      "per_prompt": {
+       "v1_zero_shot": {
+        "n": 10,
+        "k": 1,
+        "rate": 0.1,
+        "ci95": [
+         0.0025285785444618125,
+         0.4450161170281953
+        ]
+       },
+       "v2_citation_required": {
+        "n": 10,
+        "k": 1,
+        "rate": 0.1,
+        "ci95": [
+         0.0025285785444618125,
+         0.4450161170281953
+        ]
+       },
+       "v3_chain_of_thought": {
+        "n": 10,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+         0.0,
+         0.3084971078187607
+        ]
+       },
+       "v4_abstention": {
+        "n": 10,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+         0.0,
+         0.3084971078187607
+        ]
+       }
+      }
+     }
+    },
+    "judge": {
+     "counts": {
+      "declines_without_addressing": 26,
+      "accepts_premise": 12,
+      "rejects_premise": 2
+     },
+     "rejected": {
+      "pooled": {
+       "n": 40,
+       "n_questions": 10,
+       "mean": 0.05,
+       "ci95": [
+        0.0,
+        0.15
+       ]
+      },
+      "per_prompt": {
+       "v1_zero_shot": {
+        "n": 10,
+        "k": 1,
+        "rate": 0.1,
+        "ci95": [
+         0.0025285785444618125,
+         0.4450161170281953
+        ]
+       },
+       "v2_citation_required": {
+        "n": 10,
+        "k": 1,
+        "rate": 0.1,
+        "ci95": [
+         0.0025285785444618125,
+         0.4450161170281953
+        ]
+       },
+       "v3_chain_of_thought": {
+        "n": 10,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+         0.0,
+         0.3084971078187607
+        ]
+       },
+       "v4_abstention": {
+        "n": 10,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+         0.0,
+         0.3084971078187607
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  "premise_agreement": {
+   "n": 40,
+   "kappa_3class": 0.8127340823970037,
+   "kappa_rejects": 0.782608695652174,
+   "raw_agreement": 0.875,
+   "all_labelled": {
+    "n": 48,
+    "kappa_3class": 0.7806788511749346,
+    "kappa_rejects": 0.7313432835820897,
+    "raw_agreement": 0.8541666666666666
+   }
+  },
+  "premise_rejected": {
+   "claude-sonnet-5": {
+    "value": 0.3,
+    "ci95": [
+     0.075,
+     0.525
+    ]
+   },
+   "qwen2.5-3b": {
+    "value": 0.05,
+    "ci95": [
+     0.0,
+     0.15
+    ]
+   }
+  },
+  "v4_raises_rejection": {
+   "claude-sonnet-5": "no",
+   "qwen2.5-3b": "no"
+  },
+  "out_of_corpus_answered_from_memory": {
+   "claude-sonnet-5": {
+    "value": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "qwen2.5-3b": {
+    "value": 0.2,
+    "ci95": [
+     0.05,
+     0.35
+    ]
+   }
+  },
+  "two_filing_minus_one_filing_accuracy": {
+   "claude-sonnet-5": {
+    "value": -0.7000000000000001,
+    "ci95": [
+     -1.0,
+     -0.3434343434343434
+    ]
+   },
+   "qwen2.5-3b": {
+    "value": -0.65,
+    "ci95": [
+     -0.8888888888888888,
+     -0.39285714285714285
+    ]
+   }
+  }
  },
  "q5": {
   "oracle__claude-sonnet-5": {

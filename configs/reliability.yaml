@@ -10,9 +10,11 @@ inputs:
   human_labels: results/labels/groundedness_human.json # blind labels, not the adjudicated ones
   review_sample: results/labels/quadrant_review_sample.json # written by this script
   review_labels: results/labels/quadrant_review_human.json # the author's review, when done
+  review_categories: results/labels/quadrant_review_categories.json # A/B split of judge-wrong
   adversarial_eval: results/metrics/eval_adversarial_per_trace.jsonl # Q4, when run
   premise_sample: results/labels/premise_sample.json
   premise_labels: results/labels/premise_human.json # the author's blind labels, when done
+  premise_pilot: results/metrics/premise_judge_pilot.json # answers shown with verdicts first
 
 # Question-level bootstrap intervals, and the permutation baseline (same count and seed).
 bootstrap:
