@@ -26,39 +26,46 @@ import re
 import sys
 from pathlib import Path
 
-# (file glob, regex on the dotted field path, reason): a difference between two runs of the
-# same pipeline that is allowed. Paths look like `.configs.x.qdrant.index_size_bytes`, with
-# `[i]` for list items (JSONL files are lists of records).
-EXEMPT: list[tuple[str, str, str]] = [
-    ("*", r"\.(updated_utc|run_utc)$", "when the run happened"),
+# A difference between two runs of the same pipeline that is allowed: files (glob), field
+# (regex on the dotted field path; `<bytes>` for a non-JSON file), reason, and abs_tol: None
+# allows any value, a number allows a numeric difference up to it and nothing more. Paths look
+# like `.configs.x.qdrant.index_size_bytes`, with `[i]` for list items (a JSONL file is a list
+# of records).
+EXEMPT: list[tuple[str, str, str, float | None]] = [
+    ("*", r"\.(updated_utc|run_utc)$", "when the run happened", None),
     (
         "metrics/generation_runs*.json",
         r"\.meta\.api_spend_to_date_usd$",
         "a snapshot of the project's cumulative API spend ledger at run time, including "
         "spend by later phases; not a property of the run",
+        None,
     ),
     (
         "metrics/generation_runs*.json",
         r"\.this_run\.(cache_hits|new_calls|new_cost_usd)$",
         "what that invocation took from the response cache versus paid for; a rebuild "
         "takes every response from the cache",
+        None,
     ),
     (
         "metrics/generation_runs*.json",
         r"\.meta\.environment\.ollama_server$",
         "the Ollama server version asked at run time; a replay does not query the server "
         "(the weights digest per arm comes from the cached responses and is compared)",
+        None,
     ),
     (
         "metrics/index_stats.json",
         r"\.(build_time_sec|query_latency\.p\d+_ms)$",
         "measured wall-clock time",
+        None,
     ),
     (
         "metrics/index_stats.json",
         r"\.qdrant\.index_size_bytes$",
         "Qdrant's on-disk size (du of its storage) depends on segment and write-ahead-log "
         "state when measured; the FAISS index sizes are compared",
+        None,
     ),
     (
         "metrics/index_stats.json",
@@ -66,11 +73,44 @@ EXEMPT: list[tuple[str, str, str]] = [
         "FAISS-vs-Qdrant exact-order agreement on 30 queries: Qdrant orders exactly tied "
         "scores arbitrarily between builds, so a tied pair flips it between 29 and 30 "
         "(DECISIONS.md, Phases 2 and 7)",
+        None,
     ),
     (
         "metrics/retrieval_grid.json",
         r"\.(latency\.(mean|p50|p95)_ms|bm25_build_sec)$",
         "measured wall-clock time",
+        None,
+    ),
+    # Embeddings computed from scratch are not bit-identical to the committed ones: GPU
+    # arithmetic depends on how texts are batched, and the committed vectors were embedded
+    # in several increments (DECISIONS.md, Phase 3). Rows agree to <= 1.5e-6 (cosine
+    # >= 0.99999976), which moves a score stored to 6 decimals by 1e-6.
+    (
+        "traces/*",
+        r"\.retrieval\.chunks\[\d+\]\.score$",
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their "
+        "order are compared exactly",
+        1e-5,
+    ),
+    (
+        "metrics/reliability_analysis.json",
+        r"\.units\[\d+\]\.top1_score$",
+        "a question's top-1 retrieval score (6 decimals); the Q1 statistics are compared",
+        1e-5,
+    ),
+    (
+        "metrics/retrieval_per_question.jsonl",
+        r"^\[\d+\]\.top_ids\[[5-9]\]$",
+        "stored ranking beyond the top 5: a near-tied pair (score gap < 1e-7) can swap "
+        "places; every metric of the row is compared and must match",
+        None,
+    ),
+    (
+        "plots/retrieval_vs_groundedness.png",
+        r"^<bytes>$",
+        "draws the top-1 scores above; one marker's anti-aliasing moves (the plotted values "
+        "come from reliability_analysis.json, which is compared)",
+        None,
     ),
 ]
 
@@ -85,32 +125,37 @@ SKIP_FILES = {
 }
 
 
-def differences(a, b, path: str = "") -> list[tuple[str, str]]:
-    """Every (field path, description) at which two JSON values differ."""
+def differences(a, b, path: str = "") -> list[tuple[str, object, object, str]]:
+    """Every (field path, value a, value b, description) at which two JSON values differ."""
     numbers = isinstance(a, int | float) and isinstance(b, int | float)
     if type(a) is not type(b) and not numbers:
-        return [(path, f"type {type(a).__name__} vs {type(b).__name__}")]
+        return [(path, a, b, f"type {type(a).__name__} vs {type(b).__name__}")]
     if isinstance(a, dict):
         out = []
         for k in sorted(set(a) | set(b)):
             if k not in a or k not in b:
-                out.append((f"{path}.{k}", "present in only one"))
+                out.append((f"{path}.{k}", a.get(k), b.get(k), "present in only one"))
             else:
                 out += differences(a[k], b[k], f"{path}.{k}")
         return out
     if isinstance(a, list):
         if len(a) != len(b):
-            return [(path, f"length {len(a)} vs {len(b)}")]
+            return [(path, a, b, f"length {len(a)} vs {len(b)}")]
         out = []
         for i, (x, y) in enumerate(zip(a, b, strict=True)):
             out += differences(x, y, f"{path}[{i}]")
         return out
-    return [] if a == b else [(path, f"{a!r} vs {b!r}"[:200])]
+    return [] if a == b else [(path, a, b, f"{a!r} vs {b!r}"[:200])]
 
 
-def exemption(rel: str, path: str) -> str | None:
-    for glob, pattern, reason in EXEMPT:
-        if fnmatch.fnmatch(rel, glob) and re.search(pattern, path):
+def exemption(rel: str, path: str, a=None, b=None) -> str | None:
+    for glob, pattern, reason, tol in EXEMPT:
+        if not (fnmatch.fnmatch(rel, glob) and re.search(pattern, path)):
+            continue
+        if tol is None:
+            return reason
+        numeric = isinstance(a, int | float) and isinstance(b, int | float)
+        if numeric and abs(a - b) <= tol:
             return reason
     return None
 
@@ -126,14 +171,17 @@ def compare_file(rel: str, base: Path, cur: Path) -> dict:
     if base.read_bytes() == cur.read_bytes():
         return {"status": "identical"}
     if base.suffix not in (".json", ".jsonl"):
+        reason = exemption(rel, "<bytes>")
+        if reason:
+            return {"status": "exempt_only", "n_fields": 1, "reasons": [reason]}
         return {"status": "different", "detail": ["bytes differ"]}
     diffs = differences(load(base), load(cur))
     if not diffs:  # same content, different formatting
         return {"status": "identical"}
-    unexplained = [f"{p}: {d}" for p, d in diffs if exemption(rel, p) is None]
+    unexplained = [f"{p}: {d}" for p, a, b, d in diffs if exemption(rel, p, a, b) is None]
     if unexplained:
         return {"status": "different", "n": len(unexplained), "detail": unexplained[:20]}
-    reasons = sorted({exemption(rel, p) for p, _ in diffs})
+    reasons = sorted({exemption(rel, p, a, b) for p, a, b, _ in diffs})
     return {"status": "exempt_only", "n_fields": len(diffs), "reasons": reasons}
 
 
@@ -168,7 +216,9 @@ def main() -> None:
     out = {
         "meta": {
             "baseline": "results/ as committed, copied before the rebuild",
-            "exempt": [{"files": g, "field": f, "reason": r} for g, f, r in EXEMPT],
+            "exempt": [
+                {"files": g, "field": f, "reason": r, "abs_tol": t} for g, f, r, t in EXEMPT
+            ],
             "baseline_sha256_of_file_list": hashlib.sha256(
                 "\n".join(sorted(base_files)).encode()
             ).hexdigest(),

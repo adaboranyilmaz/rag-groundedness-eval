@@ -5,8 +5,7 @@
 #         MLFLOW_TRACKING_URI=http://localhost:5000 uv run python scripts/09_track_experiments.py track
 services:
   api:
-    build: .
-    image: rag-groundedness-eval-api:latest
+    build: . # no fixed image name: each checkout builds and runs its own image
     ports:
       - "8000:8000"
     environment:

@@ -6,7 +6,10 @@
 
 FROM python:3.12-slim AS builder
 COPY --from=ghcr.io/astral-sh/uv:0.11.3 /uv /usr/local/bin/uv
+# UV_HTTP_TIMEOUT: a clean build downloads ~2 GB of wheels; uv's 30 s default failed one on a
+# slow connection during the clean-machine check.
 ENV UV_COMPILE_BYTECODE=1 \
+    UV_HTTP_TIMEOUT=300 \
     UV_LINK_MODE=copy \
     UV_PYTHON_DOWNLOADS=0 \
     UV_PROJECT_ENVIRONMENT=/app/.venv

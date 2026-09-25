@@ -1,0 +1,422 @@
+{
+  "meta": {
+    "baseline": "results/ as committed, from a fresh clone of the phase-7-mlops commit, copied before dvc repro rebuilt every stage from the four DVC roots",
+    "exempt": [
+      {
+        "files": "*",
+        "field": "\\.(updated_utc|run_utc)$",
+        "reason": "when the run happened",
+        "abs_tol": null
+      },
+      {
+        "files": "metrics/generation_runs*.json",
+        "field": "\\.meta\\.api_spend_to_date_usd$",
+        "reason": "a snapshot of the project's cumulative API spend ledger at run time, including spend by later phases; not a property of the run",
+        "abs_tol": null
+      },
+      {
+        "files": "metrics/generation_runs*.json",
+        "field": "\\.this_run\\.(cache_hits|new_calls|new_cost_usd)$",
+        "reason": "what that invocation took from the response cache versus paid for; a rebuild takes every response from the cache",
+        "abs_tol": null
+      },
+      {
+        "files": "metrics/generation_runs*.json",
+        "field": "\\.meta\\.environment\\.ollama_server$",
+        "reason": "the Ollama server version asked at run time; a replay does not query the server (the weights digest per arm comes from the cached responses and is compared)",
+        "abs_tol": null
+      },
+      {
+        "files": "metrics/index_stats.json",
+        "field": "\\.(build_time_sec|query_latency\\.p\\d+_ms)$",
+        "reason": "measured wall-clock time",
+        "abs_tol": null
+      },
+      {
+        "files": "metrics/index_stats.json",
+        "field": "\\.qdrant\\.index_size_bytes$",
+        "reason": "Qdrant's on-disk size (du of its storage) depends on segment and write-ahead-log state when measured; the FAISS index sizes are compared",
+        "abs_tol": null
+      },
+      {
+        "files": "metrics/index_stats.json",
+        "field": "\\.equivalence_check\\.[^.]+\\.(exact_top_k_matches|match_rate)$",
+        "reason": "FAISS-vs-Qdrant exact-order agreement on 30 queries: Qdrant orders exactly tied scores arbitrarily between builds, so a tied pair flips it between 29 and 30 (DECISIONS.md, Phases 2 and 7)",
+        "abs_tol": null
+      },
+      {
+        "files": "metrics/retrieval_grid.json",
+        "field": "\\.(latency\\.(mean|p50|p95)_ms|bm25_build_sec)$",
+        "reason": "measured wall-clock time",
+        "abs_tol": null
+      },
+      {
+        "files": "traces/*",
+        "field": "\\.retrieval\\.chunks\\[\\d+\\]\\.score$",
+        "reason": "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly",
+        "abs_tol": 1e-05
+      },
+      {
+        "files": "metrics/reliability_analysis.json",
+        "field": "\\.units\\[\\d+\\]\\.top1_score$",
+        "reason": "a question's top-1 retrieval score (6 decimals); the Q1 statistics are compared",
+        "abs_tol": 1e-05
+      },
+      {
+        "files": "metrics/retrieval_per_question.jsonl",
+        "field": "^\\[\\d+\\]\\.top_ids\\[[5-9]\\]$",
+        "reason": "stored ranking beyond the top 5: a near-tied pair (score gap < 1e-7) can swap places; every metric of the row is compared and must match",
+        "abs_tol": null
+      },
+      {
+        "files": "plots/retrieval_vs_groundedness.png",
+        "field": "^<bytes>$",
+        "reason": "draws the top-1 scores above; one marker's anti-aliasing moves (the plotted values come from reliability_analysis.json, which is compared)",
+        "abs_tol": null
+      }
+    ],
+    "baseline_sha256_of_file_list": "0ee7fa90b9adcef2ea2050486897aa0f7fa81c32f54bce83c0ab6f954a5eab23",
+    "rebuild": {
+      "command": "dvc pull <the four roots>; dvc repro",
+      "stages": 27,
+      "wall_clock": "1 h 53 min (RTX 3050)",
+      "embedding_bit_identical": false,
+      "embedding_max_abs_diff": 1.49e-06,
+      "embedding_min_cosine": 0.99999976
+    }
+  },
+  "counts": {
+    "identical": 54,
+    "exempt_only": 45
+  },
+  "passed": true,
+  "failures": {},
+  "exempt_only": {
+    "metrics/adversarial_contexts.json": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "when the run happened"
+      ]
+    },
+    "metrics/eval_main.json": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "when the run happened"
+      ]
+    },
+    "metrics/generation_replay_check.json": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "when the run happened"
+      ]
+    },
+    "metrics/generation_runs.json": {
+      "status": "exempt_only",
+      "n_fields": 3,
+      "reasons": [
+        "a snapshot of the project's cumulative API spend ledger at run time, including spend by later phases; not a property of the run",
+        "the Ollama server version asked at run time; a replay does not query the server (the weights digest per arm comes from the cached responses and is compared)",
+        "when the run happened"
+      ]
+    },
+    "metrics/generation_runs_adversarial.json": {
+      "status": "exempt_only",
+      "n_fields": 43,
+      "reasons": [
+        "a snapshot of the project's cumulative API spend ledger at run time, including spend by later phases; not a property of the run",
+        "the Ollama server version asked at run time; a replay does not query the server (the weights digest per arm comes from the cached responses and is compared)",
+        "what that invocation took from the response cache versus paid for; a rebuild takes every response from the cache",
+        "when the run happened"
+      ]
+    },
+    "metrics/generation_runs_pilot.json": {
+      "status": "exempt_only",
+      "n_fields": 3,
+      "reasons": [
+        "a snapshot of the project's cumulative API spend ledger at run time, including spend by later phases; not a property of the run",
+        "the Ollama server version asked at run time; a replay does not query the server (the weights digest per arm comes from the cached responses and is compared)",
+        "when the run happened"
+      ]
+    },
+    "metrics/index_stats.json": {
+      "status": "exempt_only",
+      "n_fields": 65,
+      "reasons": [
+        "FAISS-vs-Qdrant exact-order agreement on 30 queries: Qdrant orders exactly tied scores arbitrarily between builds, so a tied pair flips it between 29 and 30 (DECISIONS.md, Phases 2 and 7)",
+        "Qdrant's on-disk size (du of its storage) depends on segment and write-ahead-log state when measured; the FAISS index sizes are compared",
+        "measured wall-clock time"
+      ]
+    },
+    "metrics/judge_agreement.json": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "when the run happened"
+      ]
+    },
+    "metrics/reliability_analysis.json": {
+      "status": "exempt_only",
+      "n_fields": 4,
+      "reasons": [
+        "a question's top-1 retrieval score (6 decimals); the Q1 statistics are compared",
+        "when the run happened"
+      ]
+    },
+    "metrics/retrieval_grid.json": {
+      "status": "exempt_only",
+      "n_fields": 112,
+      "reasons": [
+        "measured wall-clock time",
+        "when the run happened"
+      ]
+    },
+    "metrics/retrieval_per_question.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 2,
+      "reasons": [
+        "stored ranking beyond the top 5: a near-tied pair (score gap < 1e-7) can swap places; every metric of the row is compared and must match"
+      ]
+    },
+    "metrics/retrieval_scoped.json": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "when the run happened"
+      ]
+    },
+    "plots/retrieval_vs_groundedness.png": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "draws the top-1 scores above; one marker's anti-aliasing moves (the plotted values come from reliability_analysis.json, which is compared)"
+      ]
+    },
+    "traces/adversarial/oracle/claude-sonnet-5__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/oracle/claude-sonnet-5__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/oracle/claude-sonnet-5__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/oracle/claude-sonnet-5__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/oracle/qwen2.5-3b__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/oracle/qwen2.5-3b__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/oracle/qwen2.5-3b__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/oracle/qwen2.5-3b__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 1,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/claude-sonnet-5__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/claude-sonnet-5__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/claude-sonnet-5__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/claude-sonnet-5__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/qwen2.5-3b__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/qwen2.5-3b__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/qwen2.5-3b__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/adversarial/retrieved/qwen2.5-3b__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 6,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/claude-sonnet-5__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/claude-sonnet-5__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/claude-sonnet-5__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/claude-sonnet-5__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/qwen2.5-3b__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/qwen2.5-3b__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/qwen2.5-3b__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/oracle/qwen2.5-3b__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 9,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/claude-sonnet-5__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/claude-sonnet-5__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/claude-sonnet-5__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/claude-sonnet-5__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/qwen2.5-3b__v1_zero_shot.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/qwen2.5-3b__v2_citation_required.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/qwen2.5-3b__v3_chain_of_thought.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    },
+    "traces/retrieved/qwen2.5-3b__v4_abstention.jsonl": {
+      "status": "exempt_only",
+      "n_fields": 16,
+      "reasons": [
+        "retrieval score of a context chunk, stored to 6 decimals; the chunks and their order are compared exactly"
+      ]
+    }
+  }
+}
