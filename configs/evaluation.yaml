@@ -1,0 +1,75 @@
+# Phase 5 evaluation. See PROJECT_SPEC.md §6 Phase 5 and scripts/06_eval_generation.py.
+# Every value here is copied into results/metrics/eval_main.json.
+
+# The Phase 4 traces evaluated: every (condition, model, prompt) arm. Pilot traces are not.
+traces:
+  dir: results/traces
+  conditions: [retrieved, oracle]
+  models: [claude-sonnet-5, qwen2.5-3b]
+  prompts: [v1_zero_shot, v2_citation_required, v3_chain_of_thought, v4_abstention]
+
+judge:
+  model: claude-sonnet-5 # the judge for every metric (user decision)
+  prompts:
+    decompose: judge_decompose
+    verify: judge_verify
+    correctness: judge_correctness
+  # Output ceilings. Verdicts carry a one-sentence reason per claim; a long answer can
+  # have 20+ claims. A truncated output fails schema validation and is reported.
+  max_tokens:
+    decompose: 2048
+    verify: 4096
+    correctness: 1024
+  sync_concurrency: 4 # pilot and validation-sample calls (standard API)
+  models:
+    claude-sonnet-5:
+      backend: anthropic
+      model: claude-sonnet-5
+      thinking: disabled # same setting as generation; reasons are written in the output
+    claude-haiku-4-5: # second judge, validation sample only
+      backend: anthropic
+      model: claude-haiku-4-5
+      temperature: 0 # the one current model that still accepts it
+
+# Full run through the Message Batches API (50% price). Each batch reserves its worst case
+# in the ledger before submission, so batches are sized to fit under the caps.
+batch:
+  max_requests_per_batch: 500
+  poll_seconds: 30
+
+correctness:
+  rel_tol: 0.01 # numeric match: within 1%, or equal at the gold's rounding precision
+  sensitivity_rel_tols: [0.0, 0.001, 0.05]
+
+# Pilot (--pilot): a fixed sample of traces judged synchronously, for review before the
+# judge prompts are frozen. Its questions are excluded from the validation sample.
+pilot:
+  n_questions_in_corpus: 6 # with aligned gold evidence, so both conditions exist
+  n_questions_out_of_corpus: 2
+  traces_per_cell: 6 # per (condition, model), spread over the prompts
+  seed: 0
+
+# Judge validation (scripts/06b_judge_validation.py): answers hand-labelled by the author.
+validation:
+  n_per_generator: { claude-sonnet-5: 25, qwen2.5-3b: 25 }
+  seed: 0
+  second_judge: claude-haiku-4-5
+  retest_replicate: 1 # the primary judge re-run once, bypassing the cache
+
+bootstrap:
+  n_resamples: 10000
+  seed: 0
+
+reliability:
+  n_bins: 10 # equal-width stated-confidence bins over 0-100
+
+budget:
+  ledger: results/metrics/api_spend.json
+  project_cap_usd: 30.0 # spec §3.8: all LLM API calls, all phases
+  phase_cap_usd: 15.0 # this phase (user decision: $12, raised to $15 on 2026-09-25 when
+  # the measured estimate, $11.36 + $1.01 pilot spend, exceeded $12)
+  batch_discount: 0.5
+  prices_as_of: "2026-06-24"
+  prices_usd_per_mtok:
+    claude-sonnet-5: { input: 2.0, output: 10.0 }
+    claude-haiku-4-5: { input: 1.0, output: 5.0 }

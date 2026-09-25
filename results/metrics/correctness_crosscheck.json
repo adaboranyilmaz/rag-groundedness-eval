@@ -1,0 +1,174 @@
+{
+  "n": 470,
+  "table_numeric_by_judge": {
+    "correct|correct": 184,
+    "correct|incorrect": 5,
+    "correct|partially_correct": 1,
+    "incorrect|correct": 3,
+    "incorrect|incorrect": 262,
+    "incorrect|no_answer": 6,
+    "unit_error|correct": 5,
+    "unit_error|incorrect": 4
+  },
+  "binary_correct": {
+    "n": 470,
+    "n_clusters": 470,
+    "kappa": 0.9382623381497466,
+    "kappa_ci95": [
+      0.9038764114593061,
+      0.968775740880259
+    ],
+    "raw_agreement": 0.9702127659574468,
+    "marginals_a": {
+      "true": 190,
+      "false": 280
+    },
+    "marginals_b": {
+      "true": 192,
+      "false": 278
+    },
+    "confusion_rows_a": {
+      "true": {
+        "true": 184,
+        "false": 6
+      },
+      "false": {
+        "true": 8,
+        "false": 272
+      }
+    }
+  },
+  "unit_error_flags": {
+    "both": 8,
+    "numeric_only": 1,
+    "judge_only": 16
+  },
+  "disagreements": [
+    {
+      "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_03473",
+      "answer": "FY2017 ROA ≈ 1.42% (Net income of $1,248M / average total assets of $87,583M, where average is based on total assets of $87,896M in FY2017 and $87,270M in FY2016)",
+      "numeric": "correct",
+      "numeric_figure": "1.42%",
+      "judge": "incorrect",
+      "judge_unit_error": false,
+      "judge_reason": "The reference computes ROA ≈0.01 (1%), while the answer gives 1.42%, using different total asset figures - a mismatch in key figures and resulting conclusion."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v1_zero_shot__financebench_id_03282",
+      "answer": "5,466,312",
+      "numeric": "unit_error",
+      "numeric_figure": "5,466,312",
+      "judge": "correct",
+      "judge_unit_error": true,
+      "judge_reason": "The answer 5,466,312 (in thousands) equals $5,466 million, matching the reference figure exactly, just expressed in a different unit scale."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v1_zero_shot__financebench_id_09724",
+      "answer": "40.0%",
+      "numeric": "correct",
+      "numeric_figure": "40.0%",
+      "judge": "incorrect",
+      "judge_unit_error": false,
+      "judge_reason": "Reference computed COGS margin as 39.7%, while the answer gives 40.0%; though close, this exceeds acceptable rounding tolerance for a single figure at this precision."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v2_citation_required__financebench_id_03282",
+      "answer": "5,466,312",
+      "numeric": "unit_error",
+      "numeric_figure": "5,466,312",
+      "judge": "correct",
+      "judge_unit_error": true,
+      "judge_reason": "The answer 5,466,312 (in thousands) equals $5,466 million, matching the reference figure exactly, just expressed in a different unit scale."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v2_citation_required__financebench_id_07661",
+      "answer": "381,603",
+      "numeric": "unit_error",
+      "numeric_figure": "381,603",
+      "judge": "correct",
+      "judge_unit_error": false,
+      "judge_reason": "Answer of $381,603 thousand equals $381.6 million, which rounds to the reference figure of $382 million."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_04171",
+      "answer": "$302,578 million",
+      "numeric": "unit_error",
+      "numeric_figure": "$302,578 million",
+      "judge": "correct",
+      "judge_unit_error": true,
+      "judge_reason": "The digits (302,578 thousand = $302.578 million) match the reference's ~$303 million, but the answer mislabels the units as millions instead of thousands, resulting in a scale error."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_04302",
+      "answer": "55.3%",
+      "numeric": "correct",
+      "numeric_figure": "55.3%",
+      "judge": "partially_correct",
+      "judge_unit_error": false,
+      "judge_reason": "Reference computes 55.1% average COGS/revenue for FY16-18; answer gives 55.3%, close but not matching within rounding tolerance."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_04980",
+      "answer": "The FY2021 capital expenditure amount for PepsiCo is $4.625 billion.",
+      "numeric": "correct",
+      "numeric_figure": "$4.625 billion",
+      "judge": "incorrect",
+      "judge_unit_error": false,
+      "judge_reason": "Reference value is $4.60 billion (capital spending line); answer gives $4.625 billion, which is a different figure not rounding to 4.60."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_03029",
+      "answer": "-1,577",
+      "numeric": "incorrect",
+      "numeric_figure": "-1,577",
+      "judge": "correct",
+      "judge_unit_error": false,
+      "judge_reason": "The answer identifies the same figure of $1,577 million (with negative sign indicating cash outflow) matching the reference's capital expenditure amount."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_03282",
+      "answer": "5,466,312",
+      "numeric": "unit_error",
+      "numeric_figure": "5,466,312",
+      "judge": "correct",
+      "judge_unit_error": true,
+      "judge_reason": "The answer 5,466,312 (in thousands) equals $5,466 million, matching the reference figure exactly, just expressed in a different unit scale."
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_09724",
+      "answer": "40.0%",
+      "numeric": "correct",
+      "numeric_figure": "40.0%",
+      "judge": "incorrect",
+      "judge_unit_error": false,
+      "judge_reason": "Reference computed COGS margin as 39.7%, while the answer gives 40.0%; though close, this exceeds acceptable rounding tolerance for a single figure at this precision."
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_06272",
+      "answer": "0.81",
+      "numeric": "incorrect",
+      "numeric_figure": "0.81",
+      "judge": "correct",
+      "judge_unit_error": false,
+      "judge_reason": "0.81 rounds appropriately close to the reference 0.80 (7,616/9,542 = 0.798, rounds to 0.80); the answer's 0.81 is essentially the same figure within rounding tolerance, though slightly off."
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v4_abstention__financebench_id_03473",
+      "answer": "1.29%",
+      "numeric": "correct",
+      "numeric_figure": "1.29%",
+      "judge": "incorrect",
+      "judge_unit_error": false,
+      "judge_reason": "Reference computes ROA as ~0.01 (1%), likely due to using unusually low net income (from continuing operations impacted by tax reform) or different assets figure; answer gives 1.29%, which does not match the reference figure of 0.01 (1%)."
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v4_abstention__financebench_id_06272",
+      "answer": "0.81",
+      "numeric": "incorrect",
+      "numeric_figure": "0.81",
+      "judge": "correct",
+      "judge_unit_error": false,
+      "judge_reason": "0.81 rounds appropriately close to the reference 0.80 (7,616/9,542 = 0.798, rounds to 0.80); the answer's 0.81 is essentially the same figure within rounding tolerance, though slightly off."
+    }
+  ]
+}

@@ -18,6 +18,7 @@ dependencies = [
     "rank-bm25>=0.2.2",
     "anthropic>=1.8.0",
     "ollama>=0.6.2",
+    "matplotlib>=3.11",
 ]
 
 [dependency-groups]

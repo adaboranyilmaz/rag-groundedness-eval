@@ -12,6 +12,8 @@ data/indices/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/indices/.gitkeep
+# LLM response cache (replay source; DVC-tracked in Phase 7)
+data/cache/
 
 # --- Python ---
 __pycache__/
@@ -39,3 +41,6 @@ mlartifacts/
 dist/
 build/
 *.egg-info/
+
+# generated labelling page (regenerate with scripts/06b_judge_validation.py sample)
+results/labels/*.html

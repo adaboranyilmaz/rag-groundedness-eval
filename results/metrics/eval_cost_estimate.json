@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "run_utc": "2026-09-25T09:25:45+00:00",
+    "estimate": true,
+    "batch_discount": 0.5,
+    "prices_as_of": "2026-06-24",
+    "n_traces_needing_judge": 1702,
+    "n_not_declined_by_rule": 1311,
+    "pilot_share_with_claims": 1.0,
+    "pilot_claims_to_answer_chars": 1.609,
+    "n_pilot_traces": 24
+  },
+  "stages": {
+    "decompose": {
+      "calls_est": 1674,
+      "input_tokens_est": 2231413,
+      "tokens_per_char_measured": 0.4484,
+      "output_tokens_mean_pilot": 147.7,
+      "n_pilot_outputs": 24,
+      "expected_usd": 3.4677,
+      "worst_case_usd": 19.3732
+    },
+    "verify": {
+      "calls_est": 1702,
+      "input_tokens_est": 4127474,
+      "tokens_per_char_measured": 0.5199,
+      "output_tokens_mean_pilot": 229.3,
+      "n_pilot_outputs": 24,
+      "expected_usd": 6.0791,
+      "worst_case_usd": 38.9844
+    },
+    "correctness": {
+      "calls_est": 1290,
+      "input_tokens_est": 1319546,
+      "tokens_per_char_measured": 0.4757,
+      "output_tokens_mean_pilot": 75.9,
+      "n_pilot_outputs": 17,
+      "expected_usd": 1.8094,
+      "worst_case_usd": 7.9243
+    }
+  },
+  "total_expected_usd": 11.3562,
+  "total_worst_case_usd": 66.282,
+  "phase_spent_usd": 1.0117,
+  "project_spent_usd": 6.7379,
+  "caps": {
+    "project_usd": 30.0,
+    "phase_usd": 12.0
+  }
+}

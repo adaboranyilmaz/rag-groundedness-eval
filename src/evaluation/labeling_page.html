@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Groundedness labelling</title>
+<style>
+:root { --bg:#fcfcfb; --panel:#f3f2ef; --ink:#0b0b0b; --ink2:#52514e; --line:#dcdad5;
+        --accent:#2a78d6; --done:#0ca30c; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#1a1a19; --panel:#252523; --ink:#ffffff; --ink2:#c3c2b7; --line:#3d3d3a;
+          --accent:#3987e5; --done:#2fbf2f; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+       font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { position:sticky; top:0; z-index:2; background:var(--bg); border-bottom:1px solid var(--line);
+         padding:10px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+header .progress { font-weight:600; margin-right:auto; }
+button, select { font:inherit; padding:5px 10px; border:1px solid var(--line); border-radius:6px;
+                 background:var(--panel); color:var(--ink); cursor:pointer; }
+button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+main { max-width:1100px; margin:0 auto; padding:16px; }
+details.guide { background:var(--panel); border-radius:8px; padding:8px 14px; margin-bottom:16px; }
+details.guide li { margin:4px 0; }
+h2 { font-size:17px; margin:18px 0 6px; }
+.box { background:var(--panel); border-radius:8px; padding:10px 14px; }
+.excerpts { display:grid; gap:10px; }
+.excerpt pre { white-space:pre-wrap; word-break:break-word; margin:6px 0 0;
+               font:13px/1.45 ui-monospace, Consolas, monospace; max-height:340px; overflow:auto; }
+.excerpt .hdr { font-weight:600; font-size:13px; color:var(--ink2); }
+.claim { border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin:8px 0; }
+.claim.done { border-color:var(--done); }
+.claim .text { margin-bottom:6px; }
+.tag { font-size:12px; color:var(--ink2); border:1px solid var(--line); border-radius:10px;
+       padding:0 7px; margin-right:6px; }
+.choices label { margin-right:14px; white-space:nowrap; }
+.flag { color:var(--ink2); font-size:14px; }
+textarea { width:100%; min-height:48px; font:inherit; background:var(--panel); color:var(--ink);
+           border:1px solid var(--line); border-radius:6px; }
+.nav { display:flex; gap:8px; justify-content:space-between; margin:20px 0 40px; }
+.muted { color:var(--ink2); }
+</style>
+</head>
+<body>
+<header>
+  <span class="progress" id="progress"></span>
+  <select id="jump" aria-label="Go to item"></select>
+  <button id="prev" title="Previous item (Alt+Left)">&larr; Prev</button>
+  <button id="next" title="Next item (Alt+Right)">Next &rarr;</button>
+  <button id="export" class="primary">Export labels</button>
+  <label><button id="importBtn">Import</button>
+    <input id="import" type="file" accept="application/json" hidden></label>
+</header>
+<main>
+<details class="guide" open>
+<summary><strong>How to label</strong> (the same rules the judge follows)</summary>
+<ul>
+<li>Judge each claim <strong>using only the excerpts shown</strong>, never your own knowledge of the company.</li>
+<li><strong>Supported</strong>: the excerpts state it, or it follows from figures in them by straightforward arithmetic (sums, differences, ratios, percentages, averages), allowing for rounding.</li>
+<li><strong>Contradicted</strong>: the excerpts give a different figure or fact for the same item, company and period, or state the opposite.</li>
+<li><strong>Unsupported</strong>: neither. This includes claims that may well be true but are not in the excerpts.</li>
+<li>Company, period and line item must match; a figure for another company, year or item does not support a claim.</li>
+<li>A table's stated unit (e.g. "in millions") applies to its figures. If the unit is not visible in the excerpt, a plausible unit is fine; a unit that conflicts with a stated one is contradicted.</li>
+<li>A definition or formula is supported only if an excerpt states it.</li>
+<li>A claim about the excerpts themselves ("the excerpts do not give X") is supported if true of these excerpts, contradicted if an excerpt does give X or the figures to calculate it.</li>
+<li>Tick <em>misrepresents the answer</em> if a claim says something the answer does not say, or distorts it; still label the claim as written. Tick <em>claims miss something</em> if the answer asserts a fact no claim covers.</li>
+<li>The judge's verdicts, the gold answer, the model's citations and the model's identity are hidden on purpose. Progress is saved in this browser; export when done and save the file as <code>results/labels/groundedness_human.json</code>.</li>
+</ul>
+</details>
+<div id="item"></div>
+<div class="nav"><button id="prev2">&larr; Previous</button><button id="next2">Next &rarr;</button></div>
+</main>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const KEY = 'groundedness-labels:' + DATA.sample_sha256;
+const VERDICTS = ['supported', 'unsupported', 'contradicted'];
+let state = {items: {}};
+try { const s = localStorage.getItem(KEY); if (s) state = JSON.parse(s); } catch (e) {}
+let pos = 0;
+try { pos = Number(localStorage.getItem(KEY + ':pos')) || 0; } catch (e) {}
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); localStorage.setItem(KEY + ':pos', pos); }
+  catch (e) {}
+}
+function itemState(it) {
+  if (!state.items[it.item_id]) {
+    state.items[it.item_id] = {claims: it.claims.map(() => ({verdict: null, misrepresents: false})),
+                                misses_content: false, note: ''};
+  }
+  return state.items[it.item_id];
+}
+function complete(it) {
+  const s = state.items[it.item_id];
+  return !!s && s.claims.every(c => c.verdict);
+}
+function el(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === 'class') e.className = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  for (const k of kids) e.append(k);
+  return e;
+}
+function renderProgress() {
+  const n = DATA.items.filter(complete).length;
+  document.getElementById('progress').textContent =
+    `Item ${pos + 1} of ${DATA.items.length} · ${n} complete`;
+  const jump = document.getElementById('jump');
+  jump.replaceChildren(...DATA.items.map((it, i) =>
+    el('option', {value: i}, `${i + 1}${complete(it) ? ' ✓' : ''}`)));
+  jump.value = pos;
+}
+function render() {
+  const it = DATA.items[pos];
+  const st = itemState(it);
+  const root = document.getElementById('item');
+  const excerpts = it.excerpts.map(x =>
+    el('div', {class: 'excerpt box'}, el('div', {class: 'hdr'}, x.header), el('pre', {}, x.text)));
+  const claims = it.claims.map((c, j) => {
+    const cs = st.claims[j];
+    const box = el('div', {class: 'claim' + (cs.verdict ? ' done' : '')});
+    const choices = el('div', {class: 'choices'}, ...VERDICTS.map(v => {
+      const input = el('input', {type: 'radio', name: `c${j}`, value: v, onchange: () => {
+        cs.verdict = v; box.classList.add('done'); save(); renderProgress(); }});
+      if (cs.verdict === v) input.checked = true;
+      return el('label', {}, input, ' ' + v);
+    }));
+    const mis = el('input', {type: 'checkbox', onchange: e => { cs.misrepresents = e.target.checked; save(); }});
+    mis.checked = cs.misrepresents;
+    box.append(el('div', {class: 'text'}, el('span', {class: 'tag'}, c.kind), `${j + 1}. ${c.claim}`),
+               choices, el('label', {class: 'flag'}, mis, ' misrepresents the answer'));
+    return box;
+  });
+  const misses = el('input', {type: 'checkbox', onchange: e => { st.misses_content = e.target.checked; save(); }});
+  misses.checked = st.misses_content;
+  const note = el('textarea', {placeholder: 'Optional note', oninput: e => { st.note = e.target.value; save(); }});
+  note.value = st.note;
+  root.replaceChildren(
+    el('h2', {}, 'Question'), el('div', {class: 'box'}, it.question),
+    el('h2', {}, 'Excerpts the model was given'), el('div', {class: 'excerpts'}, ...excerpts),
+    el('h2', {}, 'Answer'), el('div', {class: 'box'}, it.answer),
+    el('h2', {}, `Claims (${it.claims.length})`), ...claims,
+    el('p', {}, el('label', {class: 'flag'}, misses, ' the claims miss something the answer asserts')),
+    note);
+  renderProgress();
+  save();
+}
+function go(i) { pos = Math.max(0, Math.min(DATA.items.length - 1, i)); render(); window.scrollTo(0, 0); }
+for (const id of ['prev', 'prev2']) document.getElementById(id).onclick = () => go(pos - 1);
+for (const id of ['next', 'next2']) document.getElementById(id).onclick = () => go(pos + 1);
+document.getElementById('jump').onchange = e => go(Number(e.target.value));
+document.addEventListener('keydown', e => {
+  if (e.altKey && e.key === 'ArrowLeft') go(pos - 1);
+  if (e.altKey && e.key === 'ArrowRight') go(pos + 1);
+});
+document.getElementById('export').onclick = () => {
+  DATA.items.forEach(itemState);
+  const out = {sample_sha256: DATA.sample_sha256, exported_utc: new Date().toISOString(),
+               n_complete: DATA.items.filter(complete).length, items: state.items};
+  const blob = new Blob([JSON.stringify(out, null, 1)], {type: 'application/json'});
+  const a = el('a', {href: URL.createObjectURL(blob), download: 'groundedness_human.json'});
+  document.body.append(a); a.click(); a.remove();
+};
+document.getElementById('importBtn').onclick = () => document.getElementById('import').click();
+document.getElementById('import').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const data = JSON.parse(await f.text());
+  if (data.sample_sha256 !== DATA.sample_sha256) { alert('These labels belong to a different sample.'); return; }
+  state = {items: data.items}; save(); render();
+};
+render();
+</script>
+</body>
+</html>

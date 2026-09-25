@@ -1,25 +1,40 @@
 {
-  "total_usd": 5.726233999999997,
-  "n_calls": 1140,
+  "total_usd": 18.146476999999965,
+  "n_calls": 5428,
   "by_phase": {
     "phase4_generation": {
       "usd": 5.726233999999997,
       "n_calls": 1140,
       "input_tokens": 1810582,
       "output_tokens": 210507
+    },
+    "phase5_evaluation": {
+      "usd": 12.42024300000001,
+      "n_calls": 4288,
+      "input_tokens": 7023536,
+      "output_tokens": 899770,
+      "n_batch_calls": 3889
     }
   },
   "by_model": {
     "claude-sonnet-5": {
-      "usd": 5.726233999999997,
-      "n_calls": 1140,
-      "input_tokens": 1810582,
-      "output_tokens": 210507
+      "usd": 17.986433999999964,
+      "n_calls": 5378,
+      "input_tokens": 8741350,
+      "output_tokens": 1096822,
+      "n_batch_calls": 3889
+    },
+    "claude-haiku-4-5": {
+      "usd": 0.160043,
+      "n_calls": 50,
+      "input_tokens": 92768,
+      "output_tokens": 13455
     }
   },
-  "updated_utc": "2026-09-24T14:52:36+00:00",
+  "updated_utc": "2026-09-25T12:04:21+00:00",
   "caps": {
     "project_usd": 30.0,
-    "phase4_generation_usd": 10.0
+    "phase4_generation_usd": 10.0,
+    "phase5_evaluation_usd": 15.0
   }
 }

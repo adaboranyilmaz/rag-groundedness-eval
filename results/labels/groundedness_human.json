@@ -1,0 +1,1115 @@
+{
+ "sample_sha256": "a04b4e3f1e27ce98f37fbd318fc6510686516800bec1562dde2e373a1b7d08d7",
+ "exported_utc": "2026-09-25T11:58:03.741Z",
+ "n_complete": 50,
+ "items": {
+  "d76f8f168399": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "caaf54bbb554": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    },
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    },
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "549279d7719b": {
+   "claims": [
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "7a9e64d63a83": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "22c4a317a870": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "49ee541aa4ed": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": true
+    }
+   ],
+   "misses_content": true,
+   "note": ""
+  },
+  "b0c74e616a06": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "f8431c4d83a7": {
+   "claims": [
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    },
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    },
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    },
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "d748b3584d3a": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "1d3800ef6f8c": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": true
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "f32f8b86ab65": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "0c9462621066": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "c3c279695aff": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "88ab6b62aa30": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "32d41a91b4d7": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "3f82d558383a": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "b1f9240492ce": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "d871d6438e10": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "e973ef71e5ce": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "cac9a22bccf1": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "1b025ad761f0": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "b924031edfda": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "1f46ad531d87": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "802138c7ac2b": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "e94cf791bd87": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "7703af005708": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "73742f675b56": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "d703145d9c72": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "6ccdef8511d9": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "96fabf8b302b": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "a7f98c0517dd": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "16e1856d0327": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "30134200b194": {
+   "claims": [
+    {
+     "verdict": "contradicted",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "1b65b8e43664": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "5813fc402766": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": true
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": true
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "aad1e83fb7b4": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "5e59b4e1ec18": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "19f9406dee4b": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "4eacfdf4b3ad": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "304c0a90db6b": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "b74342220567": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "5a1776ec25a6": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "5b4928d411bb": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "2340724bbbbf": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "f696361bfffe": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "bd657b7501a2": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "e107ece78cec": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "9297e455feae": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "79cf8d5e3a5b": {
+   "claims": [
+    {
+     "verdict": "unsupported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  },
+  "c4cc306b3250": {
+   "claims": [
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    },
+    {
+     "verdict": "supported",
+     "misrepresents": false
+    }
+   ],
+   "misses_content": false,
+   "note": ""
+  }
+ }
+}

@@ -10,6 +10,10 @@
   is sent. Reservations are thread-safe, so concurrent API calls cannot overshoot.
 - The Anthropic backend sends no sampling parameters (current models reject them) and
   disables thinking, so a prompt variant is the only source of explicit reasoning.
+  Request params whose names start with "_" are metadata: they are part of the cache key
+  but never sent (e.g. `_replicate`, which makes a deliberate re-run a cache miss).
+- Message Batches calls (src/generation/batch.py) are billed at `batch_discount` of the
+  standard price; the ledger records them with `batch=True`.
 - The Ollama backend runs at `temperature=0` with a fixed seed. Ollama silently drops the
   start of a prompt that exceeds `num_ctx`, so the request is refused beforehand if a
   deliberately pessimistic token estimate would not fit alongside `max_tokens` of output.
@@ -34,6 +38,8 @@ CACHE_DIR = Path("data/cache/llm")
 # table pipes): measured on this corpus, ~2.4 chars/token for Claude (mean) and down to
 # 2.5 for qwen2.5 (worst prompt of the pilot), so 1.5 over-estimates with a wide margin.
 PESSIMISTIC_CHARS_PER_TOKEN = 1.5
+# Removed from the SDK 1.x `messages.create()` signature; sent via `extra_body` instead.
+SAMPLING_PARAMS = ("temperature", "top_p", "top_k")
 
 
 def estimate_tokens_upper(text: str) -> int:
@@ -91,6 +97,9 @@ class ResponseCache:
     def _path(self, key: str) -> Path:
         return self.root / key[:2] / f"{key}.json"
 
+    def has(self, key: str) -> bool:
+        return self._path(key).exists()
+
     def get(self, key: str) -> GenerationResponse | None:
         path = self._path(key)
         if not path.exists():
@@ -129,12 +138,14 @@ class SpendLedger:
         project_cap_usd: float,
         phase: str,
         phase_cap_usd: float,
+        batch_discount: float = 0.5,
     ):
         self.path = Path(path)
         self.prices = prices
         self.project_cap_usd = project_cap_usd
         self.phase = phase
         self.phase_cap_usd = phase_cap_usd
+        self.batch_discount = batch_discount
         self._lock = threading.Lock()
         self._reserved = 0.0
         if self.path.exists():
@@ -142,19 +153,49 @@ class SpendLedger:
         else:
             self.state = {"total_usd": 0.0, "n_calls": 0, "by_phase": {}, "by_model": {}}
 
-    def cost(self, model: str, input_tokens: int, output_tokens: int) -> float:
+    def cost(self, model: str, input_tokens: int, output_tokens: int, batch: bool = False) -> float:
         if model not in self.prices:
             raise BudgetExceeded(f"no price configured for {model!r}; refusing to call it")
         p = self.prices[model]
-        return (input_tokens * p["input"] + output_tokens * p["output"]) / 1_000_000
+        usd = (input_tokens * p["input"] + output_tokens * p["output"]) / 1_000_000
+        return usd * self.batch_discount if batch else usd
 
     def phase_spent(self) -> float:
         return self.state["by_phase"].get(self.phase, {}).get("usd", 0.0)
 
-    def reserve(self, request: GenerationRequest) -> float:
-        worst = self.cost(
-            request.model, estimate_tokens_upper(request.system + request.user), request.max_tokens
+    def worst_case(self, request: GenerationRequest, batch: bool = False) -> float:
+        return self.cost(
+            request.model,
+            estimate_tokens_upper(request.system + request.user),
+            request.max_tokens,
+            batch,
         )
+
+    def headroom(self) -> float:
+        """How much more can be reserved before either cap would be exceeded."""
+        with self._lock:
+            return min(
+                self.project_cap_usd - self.state["total_usd"] - self._reserved,
+                self.phase_cap_usd - self.phase_spent() - self._reserved,
+            )
+
+    def reserve_amount(self, amount: float, force: bool = False) -> None:
+        """Reserve a known amount (a whole batch's worst case). `force` skips the cap check:
+        used only when re-attaching to a batch already submitted, whose cost is committed."""
+        with self._lock:
+            if not force:
+                over = min(
+                    self.project_cap_usd - self.state["total_usd"] - self._reserved,
+                    self.phase_cap_usd - self.phase_spent() - self._reserved,
+                )
+                if amount > over:
+                    raise BudgetExceeded(
+                        f"reserving ${amount:.4f} would exceed a cap (headroom ${over:.4f})"
+                    )
+            self._reserved += amount
+
+    def reserve(self, request: GenerationRequest) -> float:
+        worst = self.worst_case(request)
         with self._lock:
             project_after = self.state["total_usd"] + self._reserved + worst
             phase_after = self.phase_spent() + self._reserved + worst
@@ -173,8 +214,15 @@ class SpendLedger:
             self._reserved += worst
         return worst
 
-    def settle(self, reserved: float, model: str, input_tokens: int, output_tokens: int) -> float:
-        actual = self.cost(model, input_tokens, output_tokens)
+    def settle(
+        self,
+        reserved: float,
+        model: str,
+        input_tokens: int,
+        output_tokens: int,
+        batch: bool = False,
+    ) -> float:
+        actual = self.cost(model, input_tokens, output_tokens, batch)
         with self._lock:
             self._reserved -= reserved
             self.state["total_usd"] += actual
@@ -187,11 +235,12 @@ class SpendLedger:
                 b["n_calls"] += 1
                 b["input_tokens"] += input_tokens
                 b["output_tokens"] += output_tokens
+                if batch:
+                    b["n_batch_calls"] = b.get("n_batch_calls", 0) + 1
             self.state["updated_utc"] = datetime.now(UTC).isoformat(timespec="seconds")
-            self.state["caps"] = {
-                "project_usd": self.project_cap_usd,
-                f"{self.phase}_usd": self.phase_cap_usd,
-            }
+            caps = self.state.setdefault("caps", {})  # keep earlier phases' caps on record
+            caps["project_usd"] = self.project_cap_usd
+            caps[f"{self.phase}_usd"] = self.phase_cap_usd
             self.path.parent.mkdir(parents=True, exist_ok=True)
             self.path.write_text(json.dumps(self.state, indent=2), encoding="utf-8")
         return actual
@@ -224,34 +273,58 @@ class AnthropicBackend:
     def request_params(thinking: str = "disabled") -> dict[str, Any]:
         return {"thinking": {"type": thinking}}
 
+    @staticmethod
+    def call_params(request: GenerationRequest, direct: bool = False) -> dict[str, Any]:
+        """The Messages API parameters for a request, shared by direct and batch calls.
+        Params named with a leading "_" are cache-key metadata and are not sent.
+
+        SDK 1.x removed the sampling parameters from `messages.create()` (a TypeError),
+        though the API still honours them on the models that accept them (Haiku 4.5, the
+        second judge, at temperature 0). For a direct call they go in `extra_body`, which
+        is merged into the request JSON as-is; a batch request's params are sent as JSON
+        already, so they stay where they are. The request, and so its cache key, is the
+        same either way."""
+        params = {k: v for k, v in request.params.items() if not k.startswith("_")}
+        if direct:
+            sampling = {k: params.pop(k) for k in SAMPLING_PARAMS if k in params}
+            if sampling:
+                params["extra_body"] = {**params.get("extra_body", {}), **sampling}
+        return {
+            "model": request.model,
+            "max_tokens": request.max_tokens,
+            "system": request.system,
+            "messages": [{"role": "user", "content": request.user}],
+            **params,
+        }
+
     def generate(self, request: GenerationRequest) -> GenerationResponse:
         t0 = time.perf_counter()
-        msg = self.client.messages.create(
-            model=request.model,
-            max_tokens=request.max_tokens,
-            system=request.system,
-            messages=[{"role": "user", "content": request.user}],
-            **request.params,
-        )
+        msg = self.client.messages.create(**self.call_params(request, direct=True))
         latency = (time.perf_counter() - t0) * 1000
-        text = "".join(b.text for b in msg.content if getattr(b, "type", None) == "text")
-        extra: dict[str, Any] = {}
-        if msg.stop_reason == "refusal" and getattr(msg, "stop_details", None) is not None:
-            extra["stop_details"] = {
-                "category": getattr(msg.stop_details, "category", None),
-                "explanation": getattr(msg.stop_details, "explanation", None),
-            }
-        return GenerationResponse(
-            text=text,
-            model_reported=msg.model,
-            stop_reason=msg.stop_reason,
-            input_tokens=msg.usage.input_tokens,
-            output_tokens=msg.usage.output_tokens,
-            latency_ms=latency,
-            created_utc=_now(),
-            request_id=getattr(msg, "_request_id", None),
-            extra=extra,
-        )
+        return response_from_message(msg, latency, getattr(msg, "_request_id", None))
+
+
+def response_from_message(
+    msg: Any, latency_ms: float, request_id: str | None, extra: dict[str, Any] | None = None
+) -> GenerationResponse:
+    text = "".join(b.text for b in msg.content if getattr(b, "type", None) == "text")
+    extra = dict(extra or {})
+    if msg.stop_reason == "refusal" and getattr(msg, "stop_details", None) is not None:
+        extra["stop_details"] = {
+            "category": getattr(msg.stop_details, "category", None),
+            "explanation": getattr(msg.stop_details, "explanation", None),
+        }
+    return GenerationResponse(
+        text=text,
+        model_reported=msg.model,
+        stop_reason=msg.stop_reason,
+        input_tokens=msg.usage.input_tokens,
+        output_tokens=msg.usage.output_tokens,
+        latency_ms=latency_ms,
+        created_utc=_now(),
+        request_id=request_id,
+        extra=extra,
+    )
 
 
 class ContextOverflow(ValueError):
