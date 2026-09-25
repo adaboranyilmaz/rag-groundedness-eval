@@ -44,3 +44,7 @@ build/
 
 # generated labelling page (regenerate with scripts/06b_judge_validation.py sample)
 results/labels/*.html
+
+# adversarial-set review working file; its decisions are applied to questions.jsonl
+# (scripts/07a_adversarial_set.py review / apply)
+data/adversarial/review_candidates.md

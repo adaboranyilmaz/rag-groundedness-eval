@@ -24,3 +24,17 @@ def render_labeling_page(page_items: list[dict], sample_sha256: str) -> str:
     data = json.dumps({"sample_sha256": sample_sha256, "items": page_items}, ensure_ascii=False)
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     return template.replace("__DATA__", data.replace("</", r"<\/"))
+
+
+REVIEW_TEMPLATE_PATH = Path(__file__).with_name("quadrant_review_page.html")
+
+
+def render_review_page(page_items: list[dict], sample_sha256: str) -> str:
+    """The Phase 6 review of the correct-but-ungrounded quadrant. Unlike the labelling page
+    it shows the judge's claim verdicts and reasons, since the question is whether the judge
+    is right; it still hides the model, the prompt and the gold answer. `page_items`:
+    [{review_id, question, answer, excerpts: [{header, text}], claims: [{claim, kind,
+    verdict, reason, supporting_excerpts}]}]; `review_id` is opaque."""
+    data = json.dumps({"sample_sha256": sample_sha256, "items": page_items}, ensure_ascii=False)
+    template = REVIEW_TEMPLATE_PATH.read_text(encoding="utf-8")
+    return template.replace("__DATA__", data.replace("</", r"<\/"))

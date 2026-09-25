@@ -1,0 +1,27 @@
+# Phase 6 reliability analysis. The plan is fixed in results/metrics/phase6_preregistration.md
+# (Part A); scripts/07_reliability_analysis.py implements it. Every value here is copied into
+# results/metrics/reliability_analysis.json.
+
+inputs:
+  eval_per_trace: results/metrics/eval_per_trace.jsonl # Phase 5, single run
+  eval_config: configs/evaluation.yaml # where the Phase 4 traces are
+  preregistration: results/metrics/phase6_preregistration.md
+  validation_sample: results/labels/validation_sample.json
+  human_labels: results/labels/groundedness_human.json # blind labels, not the adjudicated ones
+  review_sample: results/labels/quadrant_review_sample.json # written by this script
+  review_labels: results/labels/quadrant_review_human.json # the author's review, when done
+
+# Question-level bootstrap intervals, and the permutation baseline (same count and seed).
+bootstrap:
+  n_resamples: 10000
+  seed: 0
+
+q2:
+  examples_seed: 0 # one example per quadrant per cell, drawn at random, not chosen
+  review_per_condition: 15 # human check of the correct + ungrounded quadrant
+  review_seed: 0
+
+q3:
+  confidence_flag_below: 80 # stated confidence below this flags an answer as unreliable
+  sensitivity_thresholds: [70, 90]
+  no_variance_share: 0.9 # a signal this concentrated on one value is reported as no variance
