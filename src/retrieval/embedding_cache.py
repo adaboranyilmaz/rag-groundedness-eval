@@ -30,7 +30,9 @@ def save(npy_path: Path, vectors: np.ndarray, texts: Sequence[str]) -> None:
         raise ValueError("one vector per text required")
     npy_path.parent.mkdir(parents=True, exist_ok=True)
     np.save(npy_path, vectors)
-    keys_path(npy_path).write_text(json.dumps([text_key(t) for t in texts]), encoding="utf-8")
+    keys_path(npy_path).write_text(
+        json.dumps([text_key(t) for t in texts]), encoding="utf-8", newline="\n"
+    )
 
 
 def load(npy_path: Path) -> dict[str, np.ndarray]:

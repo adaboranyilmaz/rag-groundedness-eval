@@ -94,7 +94,7 @@ def evaluate(traces: list[dict], inputs: Inputs, judge: Judge, cfg: dict) -> lis
 def write_jsonl(path: Path, records: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     lines = [json.dumps(r, ensure_ascii=False, sort_keys=True) for r in records]
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
 def judge_meta(judge: Judge) -> dict:
@@ -418,7 +418,7 @@ def dry_run(cfg: dict, inputs: Inputs, cache: ResponseCache) -> None:
         "caps": {"project_usd": ledger.project_cap_usd, "phase_usd": ledger.phase_cap_usd},
     }
     out = RESULTS_DIR / "eval_cost_estimate.json"
-    out.write_text(json.dumps(estimate, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(estimate, indent=2), encoding="utf-8", newline="\n")
     print(json.dumps(estimate, indent=2))
     print(f"wrote {out}")
 
@@ -472,7 +472,7 @@ def main() -> None:
     if args.pilot:
         write_jsonl(RESULTS_DIR / "eval_pilot_per_trace.jsonl", records)
         (RESULTS_DIR / "eval_pilot_review.md").write_text(
-            review_markdown(records, inputs), encoding="utf-8"
+            review_markdown(records, inputs), encoding="utf-8", newline="\n"
         )
         print(f"wrote {len(records)} pilot records and eval_pilot_review.md")
         return
@@ -482,7 +482,7 @@ def main() -> None:
     nb, seed = cfg["bootstrap"]["n_resamples"], cfg["bootstrap"]["seed"]
     crosscheck = correctness_crosscheck(records, nb, seed)
     (RESULTS_DIR / "correctness_crosscheck.json").write_text(
-        json.dumps(crosscheck, indent=2, ensure_ascii=False), encoding="utf-8"
+        json.dumps(crosscheck, indent=2, ensure_ascii=False), encoding="utf-8", newline="\n"
     )
     main_out = {
         "meta": {
@@ -507,7 +507,7 @@ def main() -> None:
         **summary,
     }
     (RESULTS_DIR / "eval_main.json").write_text(
-        json.dumps(main_out, indent=2, ensure_ascii=False), encoding="utf-8"
+        json.dumps(main_out, indent=2, ensure_ascii=False), encoding="utf-8", newline="\n"
     )
     plot_reliability(
         summary["reliability"],

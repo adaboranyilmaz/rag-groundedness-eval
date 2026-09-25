@@ -47,7 +47,7 @@ class FaissVectorStore:
         path.mkdir(parents=True, exist_ok=True)
         faiss.write_index(self._index, str(path / "index.faiss"))
         meta = {"dim": self.dim, "ids": self._ids, "metadata": self._metadata}
-        (path / "meta.json").write_text(json.dumps(meta), encoding="utf-8")
+        (path / "meta.json").write_text(json.dumps(meta), encoding="utf-8", newline="\n")
 
     def load(self, path: Path) -> None:
         path = Path(path)

@@ -15,12 +15,12 @@ stages:
       nfiles: 4
     - path: scripts/01_ingest.py
       hash: md5
-      md5: aeacc1c12f6d19e75fe3d2efb581cf95
-      size: 10578
+      md5: 23b6da79ecdb1cefa807c6360fd80e02
+      size: 10606
     - path: src/ingestion/edgar.py
       hash: md5
-      md5: af52d474950288545589eff7a1fd4277
-      size: 17831
+      md5: 94c5a95dbb62e5d4a380159193a9dfe7
+      size: 17378
     - path: src/ingestion/parser.py
       hash: md5
       md5: 13a39017f391131e7b1f240963b3bf04
@@ -33,8 +33,8 @@ stages:
       nfiles: 72
     - path: results/metrics/corpus_stats.json
       hash: md5
-      md5: dfaf55c8bfb28667ea99f8b81e62f393
-      size: 38067
+      md5: a9e409b2e0888aef566265f5eb1c282c
+      size: 36846
   chunk:
     cmd: uv run --env-file configs/replay.env python scripts/02_chunk.py
     deps:
@@ -50,8 +50,8 @@ stages:
       nfiles: 4
     - path: scripts/02_chunk.py
       hash: md5
-      md5: e3c93192ca54e58663d1858676b31063
-      size: 12366
+      md5: d14928e8cb51d5763046ef75b99e7b33
+      size: 12408
     - path: src/ingestion/chunking.py
       hash: md5
       md5: b9fee77302dda6c8fba5691da97ff335
@@ -63,17 +63,17 @@ stages:
     outs:
     - path: data/processed/chunks
       hash: md5
-      md5: a05a3d5f49a3063149b974d722bb7d47.dir
-      size: 143363443
+      md5: 0ec9eeab4eb9ea0ec1b18ca1b2ed5d79.dir
+      size: 143203242
       nfiles: 3
     - path: results/metrics/chunking_stats.json
       hash: md5
-      md5: c94d15b3a51ac620e6374d24545cdf24
-      size: 5982
+      md5: fd744c6c02324e23ec0726c29c96f697
+      size: 5850
     - path: results/metrics/chunking_table_report.md
       hash: md5
-      md5: e99fbf18d334c44cfc2cec13d4158427
-      size: 2660
+      md5: 82f81b3b422b1a8b24764bfb398c1cbb
+      size: 2636
   embed@fixed_size-bge-small-en-v1.5:
     cmd: uv run --env-file configs/replay.env python scripts/03_build_index.py 
       --embed-only --chunking-strategy fixed_size --embedding-model 
@@ -81,16 +81,16 @@ stages:
     deps:
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -111,16 +111,16 @@ stages:
     deps:
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -141,16 +141,16 @@ stages:
     deps:
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -171,16 +171,16 @@ stages:
     deps:
     - path: data/processed/chunks/recursive_structural.jsonl
       hash: md5
-      md5: 9877a05c8c6beb8bb056679b7c22ff55
-      size: 43663353
+      md5: 0f7a1ce154e82afb0c79ef9d267bbbe8
+      size: 43623760
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -203,16 +203,16 @@ stages:
     deps:
     - path: data/processed/chunks/recursive_structural.jsonl
       hash: md5
-      md5: 9877a05c8c6beb8bb056679b7c22ff55
-      size: 43663353
+      md5: 0f7a1ce154e82afb0c79ef9d267bbbe8
+      size: 43623760
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -234,16 +234,16 @@ stages:
     deps:
     - path: data/processed/chunks/recursive_structural.jsonl
       hash: md5
-      md5: 9877a05c8c6beb8bb056679b7c22ff55
-      size: 43663353
+      md5: 0f7a1ce154e82afb0c79ef9d267bbbe8
+      size: 43623760
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -265,16 +265,16 @@ stages:
     deps:
     - path: data/processed/chunks/table_aware.jsonl
       hash: md5
-      md5: 73b6e56ee48409c3a96bde7f03019856
-      size: 44007286
+      md5: 2d66f7b28b52be77352ef6c280ce2986
+      size: 43962629
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -295,16 +295,16 @@ stages:
     deps:
     - path: data/processed/chunks/table_aware.jsonl
       hash: md5
-      md5: 73b6e56ee48409c3a96bde7f03019856
-      size: 44007286
+      md5: 2d66f7b28b52be77352ef6c280ce2986
+      size: 43962629
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -325,16 +325,16 @@ stages:
     deps:
     - path: data/processed/chunks/table_aware.jsonl
       hash: md5
-      md5: 73b6e56ee48409c3a96bde7f03019856
-      size: 44007286
+      md5: 2d66f7b28b52be77352ef6c280ce2986
+      size: 43962629
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval/embedding_cache.py
       hash: md5
-      md5: 0dc3b4083cd6a1302b7b5e6400937ca9
-      size: 3053
+      md5: 853cd7621aae0a2b441c0f329a542cff
+      size: 3008
     - path: src/retrieval/embeddings.py
       hash: md5
       md5: c94900d5d9d7548bd370250b52f26599
@@ -358,8 +358,8 @@ stages:
       size: 509
     - path: data/processed/chunks
       hash: md5
-      md5: a05a3d5f49a3063149b974d722bb7d47.dir
-      size: 143363443
+      md5: 0ec9eeab4eb9ea0ec1b18ca1b2ed5d79.dir
+      size: 143203242
       nfiles: 3
     - path: data/processed/embeddings/fixed_size__all-MiniLM-L6-v2.npy
       hash: md5
@@ -405,12 +405,12 @@ stages:
       nfiles: 4
     - path: scripts/03_build_index.py
       hash: md5
-      md5: a19a30bc51be21d751715c16a6521476
-      size: 11724
+      md5: ae751ca8e361df4defc1e4c2b0717dbf
+      size: 11443
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: data/indices/fixed_size__all-MiniLM-L6-v2__faiss
@@ -505,8 +505,8 @@ stages:
       nfiles: 1
     - path: results/metrics/index_stats.json
       hash: md5
-      md5: 3faffbfcdb7e6e1fd8da7a95de80523d
-      size: 8150
+      md5: 5d349836adfdcdf5617c06c084e62a47
+      size: 7866
   retrieve:
     cmd: uv run --env-file configs/replay.env python 
       scripts/04_eval_retrieval.py
@@ -562,8 +562,8 @@ stages:
       nfiles: 2
     - path: data/processed/chunks
       hash: md5
-      md5: a05a3d5f49a3063149b974d722bb7d47.dir
-      size: 143363443
+      md5: 0ec9eeab4eb9ea0ec1b18ca1b2ed5d79.dir
+      size: 143203242
       nfiles: 3
     - path: data/processed/parsed
       hash: md5
@@ -577,8 +577,8 @@ stages:
       nfiles: 4
     - path: scripts/04_eval_retrieval.py
       hash: md5
-      md5: 479e25bb51fbcae70f52724c49c4d592
-      size: 20623
+      md5: 73a066956d9fc1f4282fa443a37c9302
+      size: 20203
     - path: src/evaluation/gold_spans.py
       hash: md5
       md5: abdf7de188d3453a4cdaa158c12d83b9
@@ -589,22 +589,22 @@ stages:
       size: 8464
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: results/metrics/gold_span_alignment.json
       hash: md5
-      md5: 7ec9a92e3babdae60951ddea79597fa8
-      size: 50005
+      md5: f023b7efb662f502a1c1a381a982a34e
+      size: 48182
     - path: results/metrics/retrieval_grid.json
       hash: md5
-      md5: 3d3baec286a6d22669424cf4f5967349
-      size: 75587
+      md5: 0f769fbc6f39bf7e03ce9a3c58b3c701
+      size: 73491
     - path: results/metrics/retrieval_per_question.jsonl
       hash: md5
-      md5: c0269f6efdd8b7a493dcd7ae2a2038b5
-      size: 4596441
+      md5: 9a77b8f4934b6d582f30d80d9bfd9d50
+      size: 4591905
   retrieve_scoped:
     cmd: uv run --env-file configs/replay.env python 
       scripts/04b_scoped_retrieval.py
@@ -624,8 +624,8 @@ stages:
       nfiles: 2
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: data/processed/parsed
       hash: md5
       md5: 70ba9fa7ec87cbfa9920e9a490dc2d9b.dir
@@ -638,16 +638,16 @@ stages:
       nfiles: 4
     - path: results/metrics/retrieval_per_question.jsonl
       hash: md5
-      md5: c0269f6efdd8b7a493dcd7ae2a2038b5
-      size: 4596441
+      md5: 9a77b8f4934b6d582f30d80d9bfd9d50
+      size: 4591905
     - path: scripts/04_eval_retrieval.py
       hash: md5
-      md5: 479e25bb51fbcae70f52724c49c4d592
-      size: 20623
+      md5: 73a066956d9fc1f4282fa443a37c9302
+      size: 20203
     - path: scripts/04b_scoped_retrieval.py
       hash: md5
-      md5: f5c49124b900c0344a250b32d3e0fc7a
-      size: 7083
+      md5: b5d4cff00ceff21c6a9ae2d9f26c5036
+      size: 7097
     - path: src/evaluation/gold_spans.py
       hash: md5
       md5: abdf7de188d3453a4cdaa158c12d83b9
@@ -658,14 +658,14 @@ stages:
       size: 8464
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: results/metrics/retrieval_scoped.json
       hash: md5
-      md5: 7d92a002739ee590c9471ab52eda6f46
-      size: 367697
+      md5: 10c030fa07ab3c8f4ce2adc5c3e21ccb
+      size: 356371
   generate:
     cmd: uv run --env-file configs/replay.env python scripts/05_generate.py 
       --no-mlflow
@@ -690,8 +690,8 @@ stages:
       nfiles: 2
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: data/processed/parsed
       hash: md5
       md5: 70ba9fa7ec87cbfa9920e9a490dc2d9b.dir
@@ -720,20 +720,20 @@ stages:
       size: 1181
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: results/metrics/retrieval_per_question.jsonl
       hash: md5
-      md5: c0269f6efdd8b7a493dcd7ae2a2038b5
-      size: 4596441
+      md5: 9a77b8f4934b6d582f30d80d9bfd9d50
+      size: 4591905
     - path: scripts/04_eval_retrieval.py
       hash: md5
-      md5: 479e25bb51fbcae70f52724c49c4d592
-      size: 20623
+      md5: 73a066956d9fc1f4282fa443a37c9302
+      size: 20203
     - path: scripts/05_generate.py
       hash: md5
-      md5: f119e0345e6a4d48c55ab84f1a0687f4
-      size: 31652
+      md5: a4c5b140aa3fbd98a98dc8bf98717974
+      size: 30958
     - path: src/evaluation/gold_spans.py
       hash: md5
       md5: abdf7de188d3453a4cdaa158c12d83b9
@@ -744,28 +744,28 @@ stages:
       size: 8464
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: results/metrics/generation_runs.json
       hash: md5
-      md5: e8a99c3dd284823f3d845f45fbe7c999
-      size: 24016
+      md5: 465192e1ad9b6522f90133bad8bff9bf
+      size: 23189
     - path: results/traces/oracle
       hash: md5
-      md5: 7c39e8b875ac478ce1122d3ff0f27217.dir
-      size: 6728301
+      md5: 3251b3edc6da7c4113affc4ffc940229.dir
+      size: 6727293
       nfiles: 8
     - path: results/traces/retrieved
       hash: md5
-      md5: 1726ff68e39e3340311dfd35924fb55e.dir
-      size: 7641830
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
       nfiles: 8
   generate_pilot:
     cmd: uv run --env-file configs/replay.env python scripts/05_generate.py 
@@ -791,8 +791,8 @@ stages:
       nfiles: 2
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: data/processed/parsed
       hash: md5
       md5: 70ba9fa7ec87cbfa9920e9a490dc2d9b.dir
@@ -821,20 +821,20 @@ stages:
       size: 1181
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: results/metrics/retrieval_per_question.jsonl
       hash: md5
-      md5: c0269f6efdd8b7a493dcd7ae2a2038b5
-      size: 4596441
+      md5: 9a77b8f4934b6d582f30d80d9bfd9d50
+      size: 4591905
     - path: scripts/04_eval_retrieval.py
       hash: md5
-      md5: 479e25bb51fbcae70f52724c49c4d592
-      size: 20623
+      md5: 73a066956d9fc1f4282fa443a37c9302
+      size: 20203
     - path: scripts/05_generate.py
       hash: md5
-      md5: f119e0345e6a4d48c55ab84f1a0687f4
-      size: 31652
+      md5: a4c5b140aa3fbd98a98dc8bf98717974
+      size: 30958
     - path: src/evaluation/gold_spans.py
       hash: md5
       md5: abdf7de188d3453a4cdaa158c12d83b9
@@ -845,23 +845,23 @@ stages:
       size: 8464
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: results/metrics/generation_runs_pilot.json
       hash: md5
-      md5: 35f330a5e4fe3adaf348a2874bb8e615
-      size: 21861
+      md5: 6b96724d14d8988360b84ebb124e9f30
+      size: 21078
     - path: results/traces/pilot
       hash: md5
-      md5: a781eccdd3f9ba9e2737ee329da32f48.dir
-      size: 959798
+      md5: 0f5277b321c621748547a23cac7016c5.dir
+      size: 959654
       nfiles: 16
   evaluate:
     cmd: uv run --env-file configs/replay.env python 
@@ -896,53 +896,53 @@ stages:
       nfiles: 4
     - path: results/labels/out_of_corpus_audit.json
       hash: md5
-      md5: 75d9810ed44bbc0717b6af1568c287de
-      size: 15608
+      md5: 144dde1413fbb6db9d22ef63dc8473fb
+      size: 15335
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: results/metrics/gold_span_alignment.json
       hash: md5
-      md5: 7ec9a92e3babdae60951ddea79597fa8
-      size: 50005
+      md5: f023b7efb662f502a1c1a381a982a34e
+      size: 48182
     - path: results/traces/oracle
       hash: md5
-      md5: 7c39e8b875ac478ce1122d3ff0f27217.dir
-      size: 6728301
+      md5: 3251b3edc6da7c4113affc4ffc940229.dir
+      size: 6727293
       nfiles: 8
     - path: results/traces/retrieved
       hash: md5
-      md5: 1726ff68e39e3340311dfd35924fb55e.dir
-      size: 7641830
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
       nfiles: 8
     - path: scripts/06_eval_generation.py
       hash: md5
-      md5: 8418c5b5dc73f996bf288f19db083fc8
-      size: 22846
+      md5: 61d0c51f52906894bf3df27b92f77ba2
+      size: 22390
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     outs:
     - path: results/metrics/correctness_crosscheck.json
       hash: md5
-      md5: 0d95d5df6383ef57ccf487f6232a839e
-      size: 7326
+      md5: 29598520264fe616720060cb9d52b5f0
+      size: 7153
     - path: results/metrics/eval_main.json
       hash: md5
-      md5: 2de1b6446a025a0b51365e70393be6ba
-      size: 125770
+      md5: 68c20b371923109c98f3b62cc8c39726
+      size: 120906
     - path: results/metrics/eval_per_trace.jsonl
       hash: md5
-      md5: 7173ce723d51ea50a6ec9e3b3ec0e9af
-      size: 5421876
+      md5: 0ed4c7218eb65630928c696cb3dd79e2
+      size: 5419668
     - path: results/plots/reliability_diagram.png
       hash: md5
       md5: 905c65ca699d7516628f5d33ddc10e1d
@@ -980,49 +980,49 @@ stages:
       nfiles: 4
     - path: results/labels/out_of_corpus_audit.json
       hash: md5
-      md5: 75d9810ed44bbc0717b6af1568c287de
-      size: 15608
+      md5: 144dde1413fbb6db9d22ef63dc8473fb
+      size: 15335
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: results/metrics/gold_span_alignment.json
       hash: md5
-      md5: 7ec9a92e3babdae60951ddea79597fa8
-      size: 50005
+      md5: f023b7efb662f502a1c1a381a982a34e
+      size: 48182
     - path: results/traces/oracle
       hash: md5
-      md5: 7c39e8b875ac478ce1122d3ff0f27217.dir
-      size: 6728301
+      md5: 3251b3edc6da7c4113affc4ffc940229.dir
+      size: 6727293
       nfiles: 8
     - path: results/traces/retrieved
       hash: md5
-      md5: 1726ff68e39e3340311dfd35924fb55e.dir
-      size: 7641830
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
       nfiles: 8
     - path: scripts/06_eval_generation.py
       hash: md5
-      md5: 8418c5b5dc73f996bf288f19db083fc8
-      size: 22846
+      md5: 61d0c51f52906894bf3df27b92f77ba2
+      size: 22390
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     outs:
     - path: results/metrics/eval_pilot_per_trace.jsonl
       hash: md5
-      md5: a3e11f137ab0d91fa2f86d6a717f919c
-      size: 64784
+      md5: 0e19d790dea7f3ca1e638dc784f048b4
+      size: 64760
     - path: results/metrics/eval_pilot_review.md
       hash: md5
-      md5: 33a8e2a4d360bd462210460db597876b
-      size: 42622
+      md5: 3506e1c460b4079bce5e935f5cfcedc3
+      size: 42213
   judge_validation:
     cmd: uv run --env-file configs/replay.env python 
       scripts/06b_judge_validation.py agreement
@@ -1056,49 +1056,49 @@ stages:
       size: 18748
     - path: results/labels/validation_sample.json
       hash: md5
-      md5: b3fc24dd8d2f936feead2997ec339090
-      size: 227785
+      md5: 6ed24684c499e8edab32c62c61d1e1af
+      size: 224733
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: results/metrics/gold_span_alignment.json
       hash: md5
-      md5: 7ec9a92e3babdae60951ddea79597fa8
-      size: 50005
+      md5: f023b7efb662f502a1c1a381a982a34e
+      size: 48182
     - path: results/traces/oracle
       hash: md5
-      md5: 7c39e8b875ac478ce1122d3ff0f27217.dir
-      size: 6728301
+      md5: 3251b3edc6da7c4113affc4ffc940229.dir
+      size: 6727293
       nfiles: 8
     - path: results/traces/retrieved
       hash: md5
-      md5: 1726ff68e39e3340311dfd35924fb55e.dir
-      size: 7641830
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
       nfiles: 8
     - path: scripts/06b_judge_validation.py
       hash: md5
-      md5: 7692b7ed7a7a31f9079320e371c04103
-      size: 19992
+      md5: b85089aad1266ce6fea1e027264c13e9
+      size: 19612
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     outs:
     - path: results/metrics/judge_agreement.json
       hash: md5
-      md5: a0ed8a7fad95dc5b5f00d10ba441cf69
-      size: 209413
+      md5: 28ec6d5ce7fa155405649fb388a3c627
+      size: 203460
     - path: results/metrics/judge_agreement.md
       hash: md5
-      md5: 70d764c24acdf5711355316b95c926e5
-      size: 11384
+      md5: af78f684c8d47557d5fb7601f223d184
+      size: 11286
   adversarial_contexts:
     cmd:
     - uv run --env-file configs/replay.env python scripts/07a_adversarial_set.py
@@ -1124,8 +1124,8 @@ stages:
       size: 1300
     - path: data/adversarial/questions.jsonl
       hash: md5
-      md5: f72276b5830f8c379968fdbf3dd76eee
-      size: 33524
+      md5: 2158975edf1c62a736d9867775bc6d70
+      size: 33476
     - path: data/indices/fixed_size__bge-small-en-v1.5__faiss
       hash: md5
       md5: 3c1de8b2489f201cb5a60c74717e9405.dir
@@ -1133,8 +1133,8 @@ stages:
       nfiles: 2
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: data/processed/parsed
       hash: md5
       md5: 70ba9fa7ec87cbfa9920e9a490dc2d9b.dir
@@ -1147,40 +1147,40 @@ stages:
       nfiles: 9
     - path: scripts/04_eval_retrieval.py
       hash: md5
-      md5: 479e25bb51fbcae70f52724c49c4d592
-      size: 20623
+      md5: 73a066956d9fc1f4282fa443a37c9302
+      size: 20203
     - path: scripts/05_generate.py
       hash: md5
-      md5: f119e0345e6a4d48c55ab84f1a0687f4
-      size: 31652
+      md5: a4c5b140aa3fbd98a98dc8bf98717974
+      size: 30958
     - path: scripts/07a_adversarial_set.py
       hash: md5
-      md5: 9a27e40bfefc964913c2909116867843
-      size: 3494
+      md5: 146eb69de43a817cfdaf5e39e0e0b7db
+      size: 3539
     - path: scripts/07b_adversarial_run.py
       hash: md5
-      md5: 529180faece3b75bed8418f207615dff
-      size: 28758
+      md5: 296d6c4fc4eb87958667a31b8ff33b17
+      size: 28217
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: results/metrics/adversarial_contexts.json
       hash: md5
-      md5: e15da1a3de7baa72043b001cc467808f
-      size: 8805
+      md5: 6d2987372851192b5afd6876b3a37942
+      size: 8308
   adversarial_generate:
     cmd: uv run --env-file configs/replay.env python 
       scripts/07b_adversarial_run.py generate
@@ -1203,8 +1203,8 @@ stages:
       size: 1300
     - path: data/adversarial/questions.jsonl
       hash: md5
-      md5: f72276b5830f8c379968fdbf3dd76eee
-      size: 33524
+      md5: 2158975edf1c62a736d9867775bc6d70
+      size: 33476
     - path: data/cache/llm
       hash: md5
       md5: 824802260d3f4433e3a4c83556f045a7.dir
@@ -1217,8 +1217,8 @@ stages:
       nfiles: 2
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: data/processed/parsed
       hash: md5
       md5: 70ba9fa7ec87cbfa9920e9a490dc2d9b.dir
@@ -1231,48 +1231,48 @@ stages:
       nfiles: 9
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: scripts/04_eval_retrieval.py
       hash: md5
-      md5: 479e25bb51fbcae70f52724c49c4d592
-      size: 20623
+      md5: 73a066956d9fc1f4282fa443a37c9302
+      size: 20203
     - path: scripts/05_generate.py
       hash: md5
-      md5: f119e0345e6a4d48c55ab84f1a0687f4
-      size: 31652
+      md5: a4c5b140aa3fbd98a98dc8bf98717974
+      size: 30958
     - path: scripts/07a_adversarial_set.py
       hash: md5
-      md5: 9a27e40bfefc964913c2909116867843
-      size: 3494
+      md5: 146eb69de43a817cfdaf5e39e0e0b7db
+      size: 3539
     - path: scripts/07b_adversarial_run.py
       hash: md5
-      md5: 529180faece3b75bed8418f207615dff
-      size: 28758
+      md5: 296d6c4fc4eb87958667a31b8ff33b17
+      size: 28217
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: results/metrics/generation_runs_adversarial.json
       hash: md5
-      md5: 871d64d473c4dc496a5d6ffb0af75226
-      size: 22071
+      md5: 816668311011db8550425ad76c96449a
+      size: 21286
     - path: results/traces/adversarial
       hash: md5
-      md5: 01865715bcdd82783187ed0c919986d0.dir
-      size: 2944203
+      md5: f4588a5582e6cfd9753d1d687e85fa1e.dir
+      size: 2943723
       nfiles: 16
   adversarial_premise_pilot:
     cmd: uv run --env-file configs/replay.env python 
@@ -1288,8 +1288,8 @@ stages:
       size: 2879
     - path: data/adversarial/questions.jsonl
       hash: md5
-      md5: f72276b5830f8c379968fdbf3dd76eee
-      size: 33524
+      md5: 2158975edf1c62a736d9867775bc6d70
+      size: 33476
     - path: data/cache/llm
       hash: md5
       md5: 824802260d3f4433e3a4c83556f045a7.dir
@@ -1302,36 +1302,36 @@ stages:
       nfiles: 4
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: results/traces/adversarial
       hash: md5
-      md5: 01865715bcdd82783187ed0c919986d0.dir
-      size: 2944203
+      md5: f4588a5582e6cfd9753d1d687e85fa1e.dir
+      size: 2943723
       nfiles: 16
     - path: scripts/07b_adversarial_run.py
       hash: md5
-      md5: 529180faece3b75bed8418f207615dff
-      size: 28758
+      md5: 296d6c4fc4eb87958667a31b8ff33b17
+      size: 28217
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     outs:
     - path: results/metrics/premise_judge_pilot.json
       hash: md5
-      md5: 7df18479dd0d8c2c1f380f9e7763cc8b
-      size: 501
+      md5: d5bf2fe64db773e11be6d5646a0b168e
+      size: 489
     - path: results/metrics/premise_judge_pilot.md
       hash: md5
-      md5: 517134738e3596fe3aaf54f7bcb3c807
-      size: 6098
+      md5: 3eebbd6e3e4d41cc3e9aeed058b72f55
+      size: 6039
   adversarial_evaluate:
     cmd: uv run --env-file configs/replay.env python 
       scripts/07b_adversarial_run.py evaluate --offline
@@ -1354,8 +1354,8 @@ stages:
       size: 1300
     - path: data/adversarial/questions.jsonl
       hash: md5
-      md5: f72276b5830f8c379968fdbf3dd76eee
-      size: 33524
+      md5: 2158975edf1c62a736d9867775bc6d70
+      size: 33476
     - path: data/cache/llm
       hash: md5
       md5: 824802260d3f4433e3a4c83556f045a7.dir
@@ -1368,8 +1368,8 @@ stages:
       nfiles: 2
     - path: data/processed/chunks/fixed_size.jsonl
       hash: md5
-      md5: 2525446aee16def70815408b7517a517
-      size: 55692804
+      md5: 05ff7842542693c1efdb1b6d82ee8345
+      size: 55616853
     - path: data/processed/parsed
       hash: md5
       md5: 70ba9fa7ec87cbfa9920e9a490dc2d9b.dir
@@ -1382,53 +1382,53 @@ stages:
       nfiles: 9
     - path: results/metrics/api_spend.json
       hash: md5
-      md5: 9914a53857c9f3d8b2b847a9ea558e3b
-      size: 1149
+      md5: ddcb63cca1268ed7e5cfa20688ffb79d
+      size: 1102
     - path: results/metrics/eval_per_trace.jsonl
       hash: md5
-      md5: 7173ce723d51ea50a6ec9e3b3ec0e9af
-      size: 5421876
+      md5: 0ed4c7218eb65630928c696cb3dd79e2
+      size: 5419668
     - path: results/traces/adversarial
       hash: md5
-      md5: 01865715bcdd82783187ed0c919986d0.dir
-      size: 2944203
+      md5: f4588a5582e6cfd9753d1d687e85fa1e.dir
+      size: 2943723
       nfiles: 16
     - path: scripts/04_eval_retrieval.py
       hash: md5
-      md5: 479e25bb51fbcae70f52724c49c4d592
-      size: 20623
+      md5: 73a066956d9fc1f4282fa443a37c9302
+      size: 20203
     - path: scripts/05_generate.py
       hash: md5
-      md5: f119e0345e6a4d48c55ab84f1a0687f4
-      size: 31652
+      md5: a4c5b140aa3fbd98a98dc8bf98717974
+      size: 30958
     - path: scripts/07a_adversarial_set.py
       hash: md5
-      md5: 9a27e40bfefc964913c2909116867843
-      size: 3494
+      md5: 146eb69de43a817cfdaf5e39e0e0b7db
+      size: 3539
     - path: scripts/07b_adversarial_run.py
       hash: md5
-      md5: 529180faece3b75bed8418f207615dff
-      size: 28758
+      md5: 296d6c4fc4eb87958667a31b8ff33b17
+      size: 28217
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     - path: src/retrieval
       hash: md5
-      md5: 32f9b5c63f1968f62e81078ab713eae9.dir
-      size: 24927
+      md5: 74f09241b1a6fefd0c43f2709c0c304c.dir
+      size: 24910
       nfiles: 12
     outs:
     - path: results/metrics/eval_adversarial_per_trace.jsonl
       hash: md5
-      md5: 9d54c312c59e4ca4ab64f9a4c74f522c
-      size: 1015387
+      md5: 19be7a823e0044b53ad27f07f35901cb
+      size: 1014907
   replay_check:
     cmd: uv run --env-file configs/replay.env python scripts/05_generate.py 
       --verify-replay
@@ -1445,38 +1445,38 @@ stages:
       nfiles: 9
     - path: results/traces/adversarial
       hash: md5
-      md5: 01865715bcdd82783187ed0c919986d0.dir
-      size: 2944203
+      md5: f4588a5582e6cfd9753d1d687e85fa1e.dir
+      size: 2943723
       nfiles: 16
     - path: results/traces/oracle
       hash: md5
-      md5: 7c39e8b875ac478ce1122d3ff0f27217.dir
-      size: 6728301
+      md5: 3251b3edc6da7c4113affc4ffc940229.dir
+      size: 6727293
       nfiles: 8
     - path: results/traces/pilot
       hash: md5
-      md5: a781eccdd3f9ba9e2737ee329da32f48.dir
-      size: 959798
+      md5: 0f5277b321c621748547a23cac7016c5.dir
+      size: 959654
       nfiles: 16
     - path: results/traces/retrieved
       hash: md5
-      md5: 1726ff68e39e3340311dfd35924fb55e.dir
-      size: 7641830
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
       nfiles: 8
     - path: scripts/05_generate.py
       hash: md5
-      md5: f119e0345e6a4d48c55ab84f1a0687f4
-      size: 31652
+      md5: a4c5b140aa3fbd98a98dc8bf98717974
+      size: 30958
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     outs:
     - path: results/metrics/generation_replay_check.json
       hash: md5
-      md5: f8de2a47fb49e4cc94ea1ea68a8739fb
-      size: 6717
+      md5: 77c41f0a4d2a8a19a439184f32f1a5ed
+      size: 6469
   analyse:
     cmd: uv run --env-file configs/replay.env python 
       scripts/07_reliability_analysis.py
@@ -1487,8 +1487,8 @@ stages:
       size: 2879
     - path: configs/reliability.yaml
       hash: md5
-      md5: 8912577e6135a1e1db8fbac267c166e4
-      size: 1772
+      md5: d3fec18d9840d42cf3055a164f95e7a4
+      size: 1740
     - path: data/raw/financebench
       hash: md5
       md5: d5f26d0310b207e9f441fde093cf758d.dir
@@ -1500,81 +1500,81 @@ stages:
       size: 18748
     - path: results/labels/premise_human.json
       hash: md5
-      md5: 5b9c3daa41e88bb9ac7ee3dc92db3aab
-      size: 4669
+      md5: fc7ce708d1e9d41a428347e3d4a47abb
+      size: 4469
     - path: results/labels/premise_sample.json
       hash: md5
-      md5: 20ccf9fb49f55dbf94e6d154c35a553c
-      size: 5780
+      md5: 54880ca8f5006e519d57381e569a5b30
+      size: 5578
     - path: results/labels/quadrant_review_categories.json
       hash: md5
-      md5: 7db36788a2553982022209a88094f493
-      size: 4010
+      md5: 5c87082424f0028dc57e117a45ded84a
+      size: 3913
     - path: results/labels/quadrant_review_human.json
       hash: md5
       md5: d6b0c2da54330b9be94a059ba08daca5
       size: 3380
     - path: results/labels/quadrant_review_sample.json
       hash: md5
-      md5: 6191dceb71cd13b554625e8bde5c65ca
-      size: 5009
+      md5: 76c66f0021b966be5919f82923724ce2
+      size: 4846
     - path: results/labels/validation_sample.json
       hash: md5
-      md5: b3fc24dd8d2f936feead2997ec339090
-      size: 227785
+      md5: 6ed24684c499e8edab32c62c61d1e1af
+      size: 224733
     - path: results/metrics/eval_adversarial_per_trace.jsonl
       hash: md5
-      md5: 9d54c312c59e4ca4ab64f9a4c74f522c
-      size: 1015387
+      md5: 19be7a823e0044b53ad27f07f35901cb
+      size: 1014907
     - path: results/metrics/eval_per_trace.jsonl
       hash: md5
-      md5: 7173ce723d51ea50a6ec9e3b3ec0e9af
-      size: 5421876
+      md5: 0ed4c7218eb65630928c696cb3dd79e2
+      size: 5419668
     - path: results/metrics/phase6_preregistration.md
       hash: md5
       md5: 7e600136ad3317dce297e1380af19d46
       size: 13252
     - path: results/metrics/premise_judge_pilot.json
       hash: md5
-      md5: 7df18479dd0d8c2c1f380f9e7763cc8b
-      size: 501
+      md5: d5bf2fe64db773e11be6d5646a0b168e
+      size: 489
     - path: results/traces/oracle
       hash: md5
-      md5: 7c39e8b875ac478ce1122d3ff0f27217.dir
-      size: 6728301
+      md5: 3251b3edc6da7c4113affc4ffc940229.dir
+      size: 6727293
       nfiles: 8
     - path: results/traces/retrieved
       hash: md5
-      md5: 1726ff68e39e3340311dfd35924fb55e.dir
-      size: 7641830
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
       nfiles: 8
     - path: scripts/07_reliability_analysis.py
       hash: md5
-      md5: c221377bfa0efc3fd5e62b248d01a275
-      size: 36918
+      md5: f5b01fdba23a75865199a87ef63f15a2
+      size: 36185
     - path: src/evaluation
       hash: md5
-      md5: 3df899172f698da0b27d7508629a0726.dir
-      size: 216404
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
       nfiles: 20
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     outs:
     - path: results/metrics/quadrant_examples.md
       hash: md5
-      md5: df8176bd8706ce4c6e111f932f6bd617
-      size: 24386
+      md5: c48f6fa90e3dbb192204ceb75cf3fd30
+      size: 24163
     - path: results/metrics/reliability_analysis.json
       hash: md5
-      md5: 4e31b92131aafe72b83dcfaf12de8f42
-      size: 186352
+      md5: d99da0625a43a972b00d3e8318145477
+      size: 178314
     - path: results/metrics/reliability_analysis.md
       hash: md5
-      md5: 5e296956b2bda7d11a15387b664523b9
-      size: 20874
+      md5: 55116aab30edcbf7d0e3ca8871305754
+      size: 20624
     - path: results/plots/adversarial_breakdown.png
       hash: md5
       md5: fb2cfd09f6f96be0155754ba230f9c63
@@ -1610,12 +1610,12 @@ stages:
       nfiles: 9
     - path: results/metrics/eval_per_trace.jsonl
       hash: md5
-      md5: 7173ce723d51ea50a6ec9e3b3ec0e9af
-      size: 5421876
+      md5: 0ed4c7218eb65630928c696cb3dd79e2
+      size: 5419668
     - path: scripts/09_track_experiments.py
       hash: md5
-      md5: 2888cbe337c30d309ecfa07f6d833a23
-      size: 20866
+      md5: d494ef6e60a15f14cc81bd3ab8e743cb
+      size: 20452
     - path: src/evaluation/reliability.py
       hash: md5
       md5: 79bef5d1f810d106a65f654826c71af2
@@ -1627,8 +1627,8 @@ stages:
     outs:
     - path: results/metrics/pipeline_selection.json
       hash: md5
-      md5: 6a913c51d3dcdbe42525f18257090396
-      size: 9922
+      md5: 0e3ba477f80878169f47a09d0631e65c
+      size: 9572
   track:
     cmd: uv run --env-file configs/replay.env python 
       scripts/09_track_experiments.py track
@@ -1648,44 +1648,44 @@ stages:
       nfiles: 9
     - path: results/metrics/eval_main.json
       hash: md5
-      md5: 2de1b6446a025a0b51365e70393be6ba
-      size: 125770
+      md5: 68c20b371923109c98f3b62cc8c39726
+      size: 120906
     - path: results/metrics/eval_per_trace.jsonl
       hash: md5
-      md5: 7173ce723d51ea50a6ec9e3b3ec0e9af
-      size: 5421876
+      md5: 0ed4c7218eb65630928c696cb3dd79e2
+      size: 5419668
     - path: results/metrics/generation_runs.json
       hash: md5
-      md5: e8a99c3dd284823f3d845f45fbe7c999
-      size: 24016
+      md5: 465192e1ad9b6522f90133bad8bff9bf
+      size: 23189
     - path: results/metrics/generation_runs_adversarial.json
       hash: md5
-      md5: 871d64d473c4dc496a5d6ffb0af75226
-      size: 22071
+      md5: 816668311011db8550425ad76c96449a
+      size: 21286
     - path: results/metrics/index_stats.json
       hash: md5
-      md5: 3faffbfcdb7e6e1fd8da7a95de80523d
-      size: 8150
+      md5: 5d349836adfdcdf5617c06c084e62a47
+      size: 7866
     - path: results/metrics/pipeline_selection.json
       hash: md5
-      md5: 6a913c51d3dcdbe42525f18257090396
-      size: 9922
+      md5: 0e3ba477f80878169f47a09d0631e65c
+      size: 9572
     - path: results/metrics/quadrant_examples.md
       hash: md5
-      md5: df8176bd8706ce4c6e111f932f6bd617
-      size: 24386
+      md5: c48f6fa90e3dbb192204ceb75cf3fd30
+      size: 24163
     - path: results/metrics/reliability_analysis.json
       hash: md5
-      md5: 4e31b92131aafe72b83dcfaf12de8f42
-      size: 186352
+      md5: d99da0625a43a972b00d3e8318145477
+      size: 178314
     - path: results/metrics/reliability_analysis.md
       hash: md5
-      md5: 5e296956b2bda7d11a15387b664523b9
-      size: 20874
+      md5: 55116aab30edcbf7d0e3ca8871305754
+      size: 20624
     - path: results/metrics/retrieval_grid.json
       hash: md5
-      md5: 3d3baec286a6d22669424cf4f5967349
-      size: 75587
+      md5: 0f769fbc6f39bf7e03ce9a3c58b3c701
+      size: 73491
     - path: results/plots/adversarial_breakdown.png
       hash: md5
       md5: fb2cfd09f6f96be0155754ba230f9c63
@@ -1712,27 +1712,27 @@ stages:
       size: 249026
     - path: results/traces/adversarial
       hash: md5
-      md5: 01865715bcdd82783187ed0c919986d0.dir
-      size: 2944203
+      md5: f4588a5582e6cfd9753d1d687e85fa1e.dir
+      size: 2943723
       nfiles: 16
     - path: results/traces/oracle
       hash: md5
-      md5: 7c39e8b875ac478ce1122d3ff0f27217.dir
-      size: 6728301
+      md5: 3251b3edc6da7c4113affc4ffc940229.dir
+      size: 6727293
       nfiles: 8
     - path: results/traces/retrieved
       hash: md5
-      md5: 1726ff68e39e3340311dfd35924fb55e.dir
-      size: 7641830
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
       nfiles: 8
     - path: scripts/09_track_experiments.py
       hash: md5
-      md5: 2888cbe337c30d309ecfa07f6d833a23
-      size: 20866
+      md5: d494ef6e60a15f14cc81bd3ab8e743cb
+      size: 20452
     - path: src/generation
       hash: md5
-      md5: 3c26e1243f3be83e2708a76206153326.dir
-      size: 47993
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
       nfiles: 7
     - path: src/serving/pipeline.py
       hash: md5
@@ -1746,5 +1746,5 @@ stages:
     outs:
     - path: results/metrics/mlflow_runs.json
       hash: md5
-      md5: 2790fea869146db54a12a33a60b4cea3
-      size: 13283
+      md5: ffc1bbb30fdca98749dddf56f7517f94
+      size: 12809

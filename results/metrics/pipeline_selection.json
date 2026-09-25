@@ -4,7 +4,7 @@
     "rule": "the retrieved-condition arm with the highest share of all its questions answered correct (strict) and fully grounded; ties: higher accuracy_all, then the earlier prompt version (DECISIONS.md, Phase 7)",
     "source": {
       "eval_per_trace": "results/metrics/eval_per_trace.jsonl",
-      "sha256": "d6febe218d5a80ae65c06422fdf560ae066e6df295ac21d38b82e449e832ef23"
+      "sha256": "69181c63b1acf19348558f491721144258fdc49a3863d69d63835c1bfb5b7566"
     },
     "bootstrap": {
       "n_resamples": 10000,

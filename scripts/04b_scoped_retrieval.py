@@ -159,7 +159,7 @@ def main() -> None:
         "per_question": rows,
     }
     path = RESULTS_DIR / "retrieval_scoped.json"
-    path.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(out, indent=2), encoding="utf-8", newline="\n")
     for scope in ("corpus", "filing"):
         m = summary[scope]["metrics"]
         print(

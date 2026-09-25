@@ -109,7 +109,7 @@ def cmd_fixture() -> None:
     for k in sorted(keys):
         entry = json.loads(cache._path(k).read_text(encoding="utf-8"))
         lines.append(json.dumps({"cache_key": k, "response": entry["response"]}, sort_keys=True))
-    (fdir / "responses.jsonl").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (fdir / "responses.jsonl").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     manifest = {
         "questions": qids,
         "condition": cfg["condition"],
@@ -118,7 +118,9 @@ def cmd_fixture() -> None:
         "n_responses": len(keys),
         "doc_names": sorted({t["question"]["doc_name"] for t in traces.values()}),
     }
-    (fdir / "questions.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    (fdir / "questions.json").write_text(
+        json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n"
+    )
     print(f"{len(qids)} questions, {len(manifest['doc_names'])} filings, {len(traces)} traces")
     print(f"wrote {len(keys)} responses to {fdir / 'responses.jsonl'}")
 
@@ -154,7 +156,7 @@ def build_workspace(ws: Path, cfg: dict, manifest: dict) -> None:
     ev["traces"]["conditions"] = [cfg["condition"]]
     ev["traces"]["models"] = cfg["models"]
     ev["traces"]["prompts"] = cfg["prompts"]
-    ev_path.write_text(yaml.safe_dump(ev, sort_keys=False), encoding="utf-8")
+    ev_path.write_text(yaml.safe_dump(ev, sort_keys=False), encoding="utf-8", newline="\n")
 
     qids = set(manifest["questions"])
     rows = [r for r in financebench_rows() if r["financebench_id"] in qids]
@@ -162,7 +164,7 @@ def build_workspace(ws: Path, cfg: dict, manifest: dict) -> None:
         raise SystemExit(f"FinanceBench has {len(rows)} of the {len(qids)} smoke questions")
     fb = ws / FINANCEBENCH
     fb.parent.mkdir(parents=True, exist_ok=True)
-    fb.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+    fb.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8", newline="\n")
 
     # The response cache, from the fixture (entries without their request).
     n = 0
@@ -171,7 +173,9 @@ def build_workspace(ws: Path, cfg: dict, manifest: dict) -> None:
         k = rec["cache_key"]
         path = ws / "data/cache/llm" / k[:2] / f"{k}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps({"request": None, "response": rec["response"]}), "utf-8")
+        path.write_text(
+            json.dumps({"request": None, "response": rec["response"]}), "utf-8", newline="\n"
+        )
         n += 1
     print(f"workspace {ws}: {len(rows)} questions, {n} cached responses")
 
@@ -303,9 +307,9 @@ def cmd_run(args) -> None:
         **compare(ws, cfg, manifest),
     }
     text = json.dumps(result, indent=2) + "\n"
-    (ws / "smoke_eval.json").write_text(text, encoding="utf-8")
+    (ws / "smoke_eval.json").write_text(text, encoding="utf-8", newline="\n")
     if args.record:
-        (REPO / "results/metrics/smoke_eval.json").write_text(text, encoding="utf-8")
+        (REPO / "results/metrics/smoke_eval.json").write_text(text, encoding="utf-8", newline="\n")
     print(
         f"\nsmoke eval: {result['n_traces']}/{result['n_traces_expected']} traces, "
         f"{result['n_evaluations_identical']} evaluations identical, "

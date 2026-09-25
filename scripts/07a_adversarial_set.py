@@ -41,7 +41,9 @@ def read_records() -> list[dict]:
 
 def write_records(records: list[dict]) -> None:
     QUESTIONS_PATH.write_text(
-        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in records), encoding="utf-8"
+        "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in records),
+        encoding="utf-8",
+        newline="\n",
     )
 
 
@@ -80,7 +82,7 @@ def main() -> None:
         sys.exit(0 if validate(records) else 1)
     if args.command == "review":
         pending = [r for r in records if r["status"] == "candidate"]
-        REVIEW_PATH.write_text(render_review(pending), encoding="utf-8")
+        REVIEW_PATH.write_text(render_review(pending), encoding="utf-8", newline="\n")
         print(f"{len(pending)} candidates -> {REVIEW_PATH}")
         return
     decisions, comments, problems = parse_review(REVIEW_PATH.read_text(encoding="utf-8"))

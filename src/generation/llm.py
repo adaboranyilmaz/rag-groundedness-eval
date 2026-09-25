@@ -123,7 +123,9 @@ class ResponseCache:
         path.parent.mkdir(parents=True, exist_ok=True)
         entry = {"request": asdict(request), "response": asdict(response)}
         tmp = path.with_suffix(f".tmp{os.getpid()}.{threading.get_ident()}")
-        tmp.write_text(json.dumps(entry, ensure_ascii=False, indent=1), encoding="utf-8")
+        tmp.write_text(
+            json.dumps(entry, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n"
+        )
         os.replace(tmp, path)
 
 
@@ -253,7 +255,7 @@ class SpendLedger:
             caps["project_usd"] = self.project_cap_usd
             caps[f"{self.phase}_usd"] = self.phase_cap_usd
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.path.write_text(json.dumps(self.state, indent=2), encoding="utf-8")
+            self.path.write_text(json.dumps(self.state, indent=2), encoding="utf-8", newline="\n")
         return actual
 
     def release(self, reserved: float) -> None:

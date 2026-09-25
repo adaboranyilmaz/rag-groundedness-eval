@@ -107,7 +107,7 @@ def write_traces(path: Path, traces: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     ordered = sorted(traces, key=lambda t: t["question"]["financebench_id"])
     lines = [json.dumps(t, ensure_ascii=False, sort_keys=True) for t in ordered]
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
 def read_traces(path: Path) -> list[dict[str, Any]]:

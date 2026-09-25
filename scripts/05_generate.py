@@ -542,7 +542,7 @@ def dry_run(cfg, registry, models, prompts, questions, contexts, cache) -> None:
         "phase_usd": cfg["budget"]["phase_cap_usd"],
     }
     out = RESULTS_DIR / "generation_cost_estimate.json"
-    out.write_text(json.dumps(estimate, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(estimate, indent=2), encoding="utf-8", newline="\n")
     print(json.dumps({k: v for k, v in estimate.items() if k != "arms"}, indent=2))
     for name, a in estimate["arms"].items():
         print(
@@ -577,7 +577,7 @@ def verify_replay(registry) -> None:
         from_cache += counts["output_source_cache"]
     report.update({"n_traces": total, "n_ok": ok, "n_output_checked_against_cache": from_cache})
     out = RESULTS_DIR / "generation_replay_check.json"
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    out.write_text(json.dumps(report, indent=2), encoding="utf-8", newline="\n")
     print(
         f"replayed {total} traces: {ok} ok, {total - ok} failed; "
         f"{from_cache} outputs checked against the response cache"
@@ -728,7 +728,7 @@ def main() -> None:
         "environment": environment_meta(cfg, models),
         "api_spend_to_date_usd": round(ledger.state["total_usd"], 6),
     }
-    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8", newline="\n")
     print(f"\nwrote {summary_path}; API spend to date ${ledger.state['total_usd']:.4f}")
 
 

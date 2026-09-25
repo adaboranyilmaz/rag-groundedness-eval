@@ -200,13 +200,15 @@ def cmd_sample(cfg: dict) -> None:
         "rejected": rejected,
     }
     LABELS_DIR.mkdir(parents=True, exist_ok=True)
-    SAMPLE_PATH.write_text(json.dumps(sample, indent=1, ensure_ascii=False), encoding="utf-8")
+    SAMPLE_PATH.write_text(
+        json.dumps(sample, indent=1, ensure_ascii=False), encoding="utf-8", newline="\n"
+    )
     page_items = [
         {k: it[k] for k in ("item_id", "question", "answer", "claims")}
         | {"excerpts": [{"header": x["header"], "text": x["text"]} for x in it["excerpts"]]}
         for it in items
     ]
-    PAGE_PATH.write_text(render_labeling_page(page_items, digest), encoding="utf-8")
+    PAGE_PATH.write_text(render_labeling_page(page_items, digest), encoding="utf-8", newline="\n")
     print(json.dumps(sample["meta"], indent=2))
     print(f"wrote {SAMPLE_PATH} and {PAGE_PATH}")
 
@@ -396,9 +398,11 @@ def cmd_agreement(cfg: dict) -> None:
         "claims": rows,
     }
     (RESULTS_DIR / "judge_agreement.json").write_text(
-        json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8"
+        json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8", newline="\n"
     )
-    (RESULTS_DIR / "judge_agreement.md").write_text(markdown_table(out), encoding="utf-8")
+    (RESULTS_DIR / "judge_agreement.md").write_text(
+        markdown_table(out), encoding="utf-8", newline="\n"
+    )
     print(markdown_table(out))
 
 

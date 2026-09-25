@@ -63,7 +63,7 @@ def _write_record(batch_dir: Path, rec: dict) -> None:
     batch_dir.mkdir(parents=True, exist_ok=True)
     path = batch_dir / f"{rec['batch_id']}.json"
     tmp = path.with_suffix(f".tmp{os.getpid()}")
-    tmp.write_text(json.dumps(rec, ensure_ascii=False), encoding="utf-8")
+    tmp.write_text(json.dumps(rec, ensure_ascii=False), encoding="utf-8", newline="\n")
     os.replace(tmp, path)
 
 

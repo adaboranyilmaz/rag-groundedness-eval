@@ -112,7 +112,7 @@ def cmd_select() -> None:
         **sel,
         "pipeline_config": pipeline_config(gen, winner),
     }
-    SELECTION_PATH.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
+    SELECTION_PATH.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"ranking ({SELECTION_CONDITION}):")
     for k in sel["ranking"]:
         a = sel["arms"][k]
@@ -299,7 +299,9 @@ def track_generation_eval(t: Tracker, selection: dict) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             eval_rows = Path(tmp) / "eval_per_trace.jsonl"
             eval_rows.write_text(
-                "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8"
+                "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows),
+                encoding="utf-8",
+                newline="\n",
             )
             t.log(
                 "phase5-generation-eval",
@@ -412,7 +414,7 @@ def register_pipeline(t: Tracker, selection: dict) -> dict:
         pass  # not registered yet
     with tempfile.TemporaryDirectory() as tmp:
         cfg_path = Path(tmp) / "pipeline_config.json"
-        cfg_path.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+        cfg_path.write_text(json.dumps(cfg, indent=2), encoding="utf-8", newline="\n")
         with t.mlflow.start_run(experiment_id=exp_id, run_name="registered-pipeline") as run:
             t.mlflow.set_tags(
                 {
@@ -484,7 +486,7 @@ def cmd_track() -> None:
         },
         "n_runs": sum(len(r) for r in t.manifest.values()),
     }
-    RUNS_MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    RUNS_MANIFEST.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     for name, runs in t.manifest.items():
         print(f"  {name:28s} {len(runs)} runs")
     print(f"registered {registered['name']} from run {registered['run_id']}")

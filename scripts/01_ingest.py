@@ -184,7 +184,7 @@ def main() -> None:
 
         parsed_docs[doc_name] = parsed
         (PROCESSED_DIR / f"{doc_name}.json").write_text(
-            json.dumps(parsed_document_to_dict(parsed)), encoding="utf-8"
+            json.dumps(parsed_document_to_dict(parsed)), encoding="utf-8", newline="\n"
         )
         outcomes[doc_name] = {
             "status": "ok",
@@ -244,7 +244,7 @@ def main() -> None:
         "exhibit_lookup_failed": lookup_failed,
     }
     out_path = RESULTS_DIR / "corpus_stats.json"
-    out_path.write_text(json.dumps(corpus_stats, indent=2), encoding="utf-8")
+    out_path.write_text(json.dumps(corpus_stats, indent=2), encoding="utf-8", newline="\n")
     print(f"\nWrote {out_path}")
 
 

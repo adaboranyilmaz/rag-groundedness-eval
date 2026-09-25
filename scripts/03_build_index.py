@@ -285,7 +285,7 @@ def main() -> None:
             results["equivalence_check"] = equivalence
             results["n_benchmark_queries"] = len(query_texts)
             out_path = RESULTS_DIR / "index_stats.json"
-            out_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+            out_path.write_text(json.dumps(results, indent=2), encoding="utf-8", newline="\n")
             print(f"  wrote (partial) {out_path}")
 
     print(f"\nDone. Final results at {RESULTS_DIR / 'index_stats.json'}")

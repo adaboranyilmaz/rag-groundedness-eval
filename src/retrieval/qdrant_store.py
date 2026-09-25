@@ -82,7 +82,7 @@ class QdrantVectorStore:
         path = Path(path)
         path.mkdir(parents=True, exist_ok=True)
         manifest = {"backend": "qdrant", "collection_name": self.collection_name, "dim": self.dim}
-        (path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+        (path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8", newline="\n")
 
     def load(self, path: Path) -> None:
         path = Path(path)

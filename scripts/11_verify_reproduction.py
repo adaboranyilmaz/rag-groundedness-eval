@@ -178,7 +178,7 @@ def main() -> None:
         "failures": failures,
         "exempt_only": {k: v for k, v in report.items() if v["status"] == "exempt_only"},
     }
-    Path(args.out).write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
+    Path(args.out).write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"{len(report)} files: {counts}")
     for k, v in failures.items():
         print(f"  DIFFERENT {k} ({v.get('n', '')}):")
