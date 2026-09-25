@@ -1,0 +1,30 @@
+# Phase 6, Q4: the adversarial question set, generated and evaluated with the Phase 4 and 5
+# pipeline. The plan is results/metrics/phase6_preregistration.md (Part A, Q4); the script is
+# scripts/07b_adversarial_run.py. Every value here is copied into the run's results files.
+
+questions: data/adversarial/questions.jsonl # approved records only
+
+# Retriever, generators, prompts and max_tokens come from the Phase 4 config, and the judge
+# models, prompts and batch settings from the Phase 5 config, unchanged, so the adversarial
+# answers are produced and graded exactly as the FinanceBench ones were.
+generation_config: configs/generation.yaml
+evaluation_config: configs/evaluation.yaml
+
+# Which categories run under which context condition. The oracle needs gold evidence, so it
+# covers (a) and (b) only; for (b) its candidates are both filings' chunks, ranked together.
+conditions:
+  retrieved: [a, b, c, d]
+  oracle: [a, b]
+
+# The premise judge (category d only), added to the Phase 5 judge prompts.
+premise_judge:
+  prompt: judge_premise
+  max_tokens: 1024
+  pilot_n: 8 # (d) responses judged synchronously for review before the full run
+  pilot_seed: 0
+
+label_seed: 0 # order of the author's blind premise-labelling page
+
+budget:
+  phase: phase6_reliability
+  phase_cap_usd: 6.0 # Phase 6 total; the project cap stays at $30 (configs/evaluation.yaml)

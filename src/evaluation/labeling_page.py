@@ -38,3 +38,16 @@ def render_review_page(page_items: list[dict], sample_sha256: str) -> str:
     data = json.dumps({"sample_sha256": sample_sha256, "items": page_items}, ensure_ascii=False)
     template = REVIEW_TEMPLATE_PATH.read_text(encoding="utf-8")
     return template.replace("__DATA__", data.replace("</", r"<\/"))
+
+
+PREMISE_TEMPLATE_PATH = Path(__file__).with_name("premise_labeling_page.html")
+
+
+def render_premise_page(page_items: list[dict], sample_sha256: str) -> str:
+    """The author's blind labels for the adversarial false-premise answers (Phase 6, Q4):
+    how each answer handles the premise, with the premise judge's definitions. Hides the
+    model, the prompt and the judge's verdict. `page_items`: [{label_id, question,
+    premise_note, answer}]; `label_id` is opaque."""
+    data = json.dumps({"sample_sha256": sample_sha256, "items": page_items}, ensure_ascii=False)
+    template = PREMISE_TEMPLATE_PATH.read_text(encoding="utf-8")
+    return template.replace("__DATA__", data.replace("</", r"<\/"))

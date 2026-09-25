@@ -19,6 +19,8 @@ from src.evaluation.reliability_questions import (
     parse_predictions,
     parse_range,
     primary_quadrant,
+    q3_signal_agreement,
+    q4_adversarial,
 )
 
 SONNET, QWEN = "claude-sonnet-5", "qwen2.5-3b"
@@ -86,6 +88,7 @@ def make_rows(n_q: int = 60, seed: int = 0) -> list[dict]:
                             "condition": cond,
                             "model": model,
                             "prompt": p,
+                            "question_type": "metrics-generated" if qi % 2 else "domain-relevant",
                             "answerability": ans,
                             "status": "answered" if answered else "declined",
                             "answered": answered,
@@ -218,7 +221,35 @@ class TestQ3:
             for p in cell["pairs"].values():
                 if p["status"] == "ok":
                     for stat in ("spearman", "jaccard", "kappa"):
-                        assert p[stat]["baseline"]["n_perm"] == CFG["bootstrap"]["n_resamples"]
+                        if p[stat]["status"] == "ok":
+                            n = p[stat]["baseline"]["n_perm"]
+                            assert n == CFG["bootstrap"]["n_resamples"]
+
+    def test_constant_flag_is_no_variance_for_flag_statistics_only(self):
+        # confidence varies (80-100) but never falls below the flag threshold of 80: Spearman
+        # is computed, Jaccard and kappa are not (both would sit at about zero)
+        rows = [
+            r | {"confidence": 80 + (i % 21)} if r["model"] == SONNET and r["answered"] else r
+            for i, r in enumerate(make_rows())
+        ]
+        q3 = q3_signal_agreement(rows, 200, 0, 80, [90], 0.9)
+        cell = q3["oracle__claude-sonnet-5"]
+        assert cell["variance"]["C"]["no_variance"] is False
+        assert cell["variance"]["C"]["flag_no_variance"] is True
+        g_c = cell["pairs"]["G-C"]
+        assert g_c["spearman"]["status"] == "ok"
+        assert g_c["jaccard"] == {"status": "no_variance", "signals": ["C"]}
+        assert g_c["kappa"]["status"] == "no_variance"
+        # at a threshold of 90 the flag varies again
+        assert cell["confidence_threshold_sensitivity"]["90"]["G-C"]["jaccard"]["status"] == "ok"
+
+    def test_post_hoc_split_by_question_type(self, res):
+        by_type = res["q3"]["oracle__claude-sonnet-5"]["post_hoc_G_NS_by_question_type"]
+        assert set(by_type) == {"metrics-generated", "other"}
+        assert (
+            by_type["metrics-generated"]["n"] + by_type["other"]["n"]
+            == (res["q3"]["oracle__claude-sonnet-5"]["pairs"]["G-NS"]["n"])
+        )
 
 
 class TestQ5:
@@ -245,11 +276,19 @@ class TestHumanCheck:
     def test_identical_labels_give_identical_statistics(self, res):
         hc = res["human_check"]
         assert hc["n_items_scored"] == 12
-        for k, v in hc.items():
-            if k != "n_items_scored" and v["n"]:
+        blocks = [hc, *hc["by_generator"].values()]
+        for block in blocks:
+            for k, v in block.items():
+                if k in ("n_items_scored", "by_generator") or not v["n"]:
+                    continue
                 assert v["judge"] == v["human"] or (
                     v["judge"] is not None and math.isclose(v["judge"], v["human"])
                 )
+
+    def test_by_generator_partitions_the_items(self, res):
+        hc = res["human_check"]
+        for stat in ("q2_ungrounded_given_correct", "q3_spearman_G_C"):
+            assert sum(b[stat]["n"] for b in hc["by_generator"].values()) == hc[stat]["n"]
 
 
 # --------------------------------------------------------------------------------------
@@ -275,6 +314,11 @@ class TestPredictions:
         assert p["P2.4"]["predicted"] == "correct+grounded"
         assert len(p["P1.1"]["options"]) == 4
         assert p["P2.4"]["options"][2] == "incorrect+grounded"
+
+    def test_empty_box_without_space_is_an_option(self):
+        p = parse_predictions("- P4.1 Sonnet (d): [] < 25% · [x] 25-50% · [ ] > 75%\n")
+        assert p["P4.1"]["options"] == ["< 25%", "25-50%", "> 75%"]
+        assert p["P4.1"]["predicted"] == "25-50%"
 
     @pytest.mark.parametrize(
         ("text", "bounds"),
@@ -308,8 +352,50 @@ class TestPredictions:
         by_id = {c["id"]: c for c in check_predictions(FILLED, res)}
         counts = res["q2"]["cells"]["retrieved__qwen2.5-3b"]["primary"]["counts"]
         largest = max(counts, key=counts.get)
-        assert by_id["P2.4"]["observed"] == largest
+        assert by_id["P2.4"]["observed"] == largest.replace("_", "+")  # the prediction's notation
         assert by_id["P2.4"]["unexpected"] == (largest != "correct_grounded")
+
+    def test_generator_free_prediction_with_split_outcome_is_mixed(self, res):
+        text = "- P1.3 Top-1 at least as good: [ ] yes · [x] no\n"
+        split = {
+            "q1": {
+                "by_model": {
+                    SONNET: {"top1_minus_recall5_rho": {"value": 0.04, "ci95": [-0.1, 0.2]}},
+                    QWEN: {"top1_minus_recall5_rho": {"value": -0.4, "ci95": [-0.6, -0.2]}},
+                }
+            }
+        }
+        (c,) = check_predictions(text, split)
+        assert c["observed"] == "mixed (Claude Sonnet 5 yes, Qwen2.5 3B no)"
+        assert c["unexpected"] is None
+        same = {
+            "q1": {
+                "by_model": {
+                    m: {"top1_minus_recall5_rho": {"value": -0.1, "ci95": None}}
+                    for m in (SONNET, QWEN)
+                }
+            }
+        }
+        (c,) = check_predictions(text, same)
+        assert c["observed"] == "no" and c["unexpected"] is False
+
+    def test_pair_names_compare_in_any_order(self):
+        text = "- P3.4 Highest Jaccard: [ ] G-C · [x] NS-G\n"
+        res = {
+            "q3": {
+                "oracle__claude-sonnet-5": {
+                    "pairs": {
+                        "G-NS": {"status": "ok", "jaccard": {"status": "ok", "value": 0.6}},
+                        "G-C": {
+                            "status": "ok",
+                            "jaccard": {"status": "no_variance", "signals": ["C"]},
+                        },
+                    }
+                }
+            }
+        }
+        (c,) = check_predictions(text, res)
+        assert c["observed"] == "G-NS" and c["unexpected"] is False
 
 
 # --------------------------------------------------------------------------------------
@@ -329,6 +415,7 @@ def test_reports_render(res, rows):
     full = dict(res)
     full["meta"] = {"config": CFG}
     full["q2_review"] = {"status": "not_done", "n": 30}
+    full["q4"] = {"status": "not_run"}
     full["predictions"] = check_predictions(FILLED, full)
     md = script.report_markdown(full)
     for heading in ("## Predictions", "## Q1.", "## Q2.", "## Q3.", "## Q5.", "## Human-label"):
@@ -363,3 +450,100 @@ def test_plots_render(res, tmp_path):
         "signal_agreement.png",
     ]
     assert all(p.stat().st_size > 10_000 for p in tmp_path.iterdir())
+
+
+# --------------------------------------------------------------------------------------
+# Q4
+
+
+def make_adv_rows(human_done: bool = True) -> list[dict]:
+    """Planted: (a) accuracy 0.8, (b) 0.2 under retrieval; Sonnet answers 3 of the 5
+    out-of-corpus (c) questions; Sonnet rejects false premises only under v4; Qwen never."""
+    rows = []
+    cats = {"a": "single_filing", "b": "two_filings"}
+    for cat in ("a", "b", "c", "d"):
+        for qi in range(10):
+            qid = f"adv_{cat}{qi:02d}"
+            sub = cats.get(cat) or (
+                ("not_disclosed" if qi < 5 else "filing_not_in_corpus")
+                if cat == "c"
+                else ("premise_contradicted" if qi < 5 else "entity_does_not_exist")
+            )
+            for model in (SONNET, QWEN):
+                for p in PROMPTS:
+                    correct = (cat == "a" and qi < 8) or (cat == "b" and qi < 2)
+                    answered = cat in ("a", "b", "d") or (
+                        cat == "c" and model == SONNET and sub == "filing_not_in_corpus" and qi < 8
+                    )
+                    handling = None
+                    if cat == "d":
+                        handling = (
+                            "rejects_premise"
+                            if model == SONNET and p == "v4_abstention"
+                            else "accepts_premise"
+                        )
+                    rows.append(
+                        {
+                            "trace_id": f"retrieved__{model}__{p}__{qid}",
+                            "question_id": qid,
+                            "condition": "retrieved",
+                            "model": model,
+                            "prompt": p,
+                            "category": cat,
+                            "subtype": sub,
+                            "status": "answered" if answered else "declined",
+                            "answered": answered,
+                            "label": ("correct" if correct else "incorrect")
+                            if cat in ("a", "b")
+                            else None,
+                            "groundedness": 1.0 if answered else None,
+                            "premise_judge": handling,
+                            "premise_human": handling if human_done else None,
+                        }
+                    )
+    return rows
+
+
+class TestQ4:
+    def test_planted_structure(self):
+        q4 = q4_adversarial(make_adv_rows(), 300, 0)
+        a = q4["by_category"]["a"]["retrieved"][SONNET]["accuracy_all"]["pooled"]["mean"]
+        b = q4["by_category"]["b"]["retrieved"][SONNET]["accuracy_all"]["pooled"]["mean"]
+        assert (a, b) == (0.8, 0.2)
+        d = q4["two_filing_minus_one_filing_accuracy"][SONNET]
+        assert d["value"] == pytest.approx(-0.6) and d["ci95"][1] < 0
+        assert q4["out_of_corpus_answered_from_memory"][SONNET]["value"] == pytest.approx(0.6)
+        assert q4["out_of_corpus_answered_from_memory"][QWEN]["value"] == 0.0
+        assert q4["premise_rejected"][SONNET]["value"] == pytest.approx(0.25)
+        assert q4["v4_raises_rejection"] == {SONNET: "yes", QWEN: "no"}
+        per = q4["premise"][SONNET]["human"]["rejected"]["per_prompt"]["v4_abstention"]
+        assert (per["k"], per["n"]) == (10, 10) and per["ci95"][0] > 0.6
+        assert q4["premise_agreement"]["raw_agreement"] == 1.0
+
+    def test_premise_pending_until_labelled(self):
+        q4 = q4_adversarial(make_adv_rows(human_done=False), 200, 0)
+        assert q4["premise"][SONNET]["human"] == {"status": "not_done"}
+        assert q4["premise_rejected"] == {} and q4["v4_raises_rejection"] == {}
+        assert q4["premise_agreement"] == {"status": "not_done"}
+        assert "rejected" in q4["premise"][SONNET]["judge"]
+
+    def test_predictions_read_q4(self):
+        q4 = q4_adversarial(make_adv_rows(), 300, 0)
+        text = (
+            "- P4.1 Sonnet (d): [ ] < 25% · [x] 25-50% · [ ] 50-75% · [ ] > 75%\n"
+            "- P4.3 v4 raises: [x] yes · [ ] no\n"
+            "- P4.5 (b) vs (a): [ ] (b) clearly lower · [ ] about the same · [x] (b) higher\n"
+        )
+        by_id = {c["id"]: c for c in check_predictions(text, {"q4": q4})}
+        assert by_id["P4.1"]["unexpected"] is False  # 0.25 sits on the range's edge
+        assert by_id["P4.3"]["unexpected"] is False
+        assert by_id["P4.5"]["observed"] == "(b) clearly lower"
+        assert by_id["P4.5"]["unexpected"] is True
+
+    def test_report_renders(self):
+        script = load_script()
+        md = "\n".join(script.q4_markdown(q4_adversarial(make_adv_rows(), 200, 0)))
+        assert "## Q4." in md and "not done" not in md
+        md = "\n".join(script.q4_markdown(q4_adversarial(make_adv_rows(False), 200, 0)))
+        assert "| human | not done |" in md
+        assert script.q4_markdown({"status": "not_run"})[-1] == "Not run yet."

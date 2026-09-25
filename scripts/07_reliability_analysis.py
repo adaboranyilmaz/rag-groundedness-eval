@@ -56,6 +56,7 @@ from src.evaluation.reliability_questions import (
     analyse,
     check_predictions,
     human_scores,
+    q4_adversarial,
 )
 from src.generation.trace import read_traces
 
@@ -109,6 +110,7 @@ def flat_row(rec: dict, trace: dict) -> dict:
         "condition": rec["condition"],
         "model": rec["model_key"],
         "prompt": rec["prompt_id"],
+        "question_type": rec["question_type"],
         "answerability": rec["answerability"],
         "status": rec["abstention"]["status"],
         "answered": rec["abstention"]["status"] in ("answered", "partial"),
@@ -141,6 +143,59 @@ def load_inputs(cfg: dict) -> tuple[list[dict], dict[str, dict], dict[str, dict]
         )
     rows = [flat_row(rec, traces[tid]) for tid, rec in sorted(recs.items())]
     return rows, recs, traces
+
+
+def adversarial_rows(cfg: dict) -> list[dict] | None:
+    """Q4's rows from the adversarial evaluation, with the author's premise label where the
+    labelling is complete (None otherwise). None when the adversarial set has not been run."""
+    inp = cfg["inputs"]
+    path = Path(inp["adversarial_eval"])
+    if not path.exists():
+        return None
+    human: dict[str, str] = {}
+    sample_path, labels_path = Path(inp["premise_sample"]), Path(inp["premise_labels"])
+    if sample_path.exists() and labels_path.exists():
+        sample = json.loads(sample_path.read_text(encoding="utf-8"))
+        labels = json.loads(labels_path.read_text(encoding="utf-8"))
+        if labels["sample_sha256"] != sample["sample_sha256"]:
+            raise RuntimeError(f"{labels_path} belongs to a different premise sample")
+        decided = {
+            it["trace_id"]: labels["items"].get(it["label_id"], {}).get("decision")
+            for it in sample["items"]
+        }
+        if all(decided.values()):
+            human = decided
+    rows = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        rec = json.loads(line)
+        adv = rec["adversarial"]
+        premise = rec.get("premise") or {}
+        judge_label = premise.get("handling")
+        if adv["category"] == "d" and premise.get("source") == "rule":
+            human_label = judge_label  # no answer text: the rule decides for both
+        else:
+            human_label = human.get(rec["trace_id"])
+        g = rec["groundedness"] or {}
+        rows.append(
+            {
+                "trace_id": rec["trace_id"],
+                "question_id": rec["financebench_id"],
+                "condition": rec["condition"],
+                "model": rec["model_key"],
+                "prompt": rec["prompt_id"],
+                "category": adv["category"],
+                "subtype": adv["subtype"],
+                "status": rec["abstention"]["status"],
+                "answered": rec["abstention"]["status"] in ("answered", "partial"),
+                "label": rec["correctness"]["label"],
+                "groundedness": g.get("groundedness"),
+                "premise_judge": judge_label if adv["category"] == "d" else None,
+                "premise_human": (human_label if human else None)
+                if adv["category"] == "d"
+                else None,
+            }
+        )
+    return rows
 
 
 def load_human(cfg: dict) -> dict[str, dict]:
@@ -272,9 +327,77 @@ def _est(d: dict | None, key: str = "mean", nd: int = 2) -> str:
 
 
 def _pair_cell(p: dict) -> str:
+    if p.get("status") == "no_variance":
+        return f"no variance ({', '.join(p['signals'])} flag)"
     b = p["baseline"]
     mark = " *" if p["above_chance"] else ""
     return f"{_f(p['value'])} {_ci(p['ci95'])} vs {_f(b['mean'])}{mark}"
+
+
+CATEGORY_NAMES = {
+    "a": "(a) one filing",
+    "b": "(b) two filings",
+    "c": "(c) unanswerable",
+    "d": "(d) false premise",
+}
+
+
+def q4_markdown(q4: dict) -> list[str]:
+    out = ["", "## Q4. Adversarial questions (40, author-approved)", ""]
+    if q4.get("status") == "not_run":
+        return out + ["Not run yet."]
+    out += [
+        "Pooled over the four prompts, intervals resampling questions (10 per category). "
+        "Accuracy counts a decline as not correct.",
+        "",
+        "| Category | Condition | Generator | n | Accuracy | Declined | Groundedness (answered) "
+        "| Answered, not disclosed | Answered, filing not in corpus |",
+        "|---|---|---|---|---|---|---|---|---|",
+    ]
+    for cat, conds in q4["by_category"].items():
+        for cond, models in conds.items():
+            for model, e in models.items():
+                acc = _est(e["accuracy_all"]["pooled"]) if "accuracy_all" in e else "–"
+                nd = _est(e["answered_not_disclosed"]["pooled"]) if cat == "c" else "–"
+                oc = _est(e["answered_filing_not_in_corpus"]["pooled"]) if cat == "c" else "–"
+                out.append(
+                    f"| {CATEGORY_NAMES[cat]} | {cond} | {model} | {e['n']} | {acc} "
+                    f"| {_est(e['declined']['pooled'])} | {_est(e['groundedness_answered'])} "
+                    f"| {nd} | {oc} |"
+                )
+    out += [
+        "",
+        "False premise (d), retrieved context: share of answers that reject the premise. The "
+        "author's blind labels are the measurement; the judge is a second rater.",
+        "",
+        "| Generator | Rater | Rejects (pooled) | v1 | v2 | v3 | v4 | Counts |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for model, block in q4["premise"].items():
+        for rater in ("human", "judge"):
+            b = block[rater]
+            if b.get("status") == "not_done":
+                out.append(f"| {model} | {rater} | not done | | | | | |")
+                continue
+            pp = b["rejected"]["per_prompt"]
+            cells = [
+                f"{v['k']}/{v['n']}"
+                for p, v in sorted(pp.items())
+            ]
+            out.append(
+                f"| {model} | {rater} | {_est(b['rejected']['pooled'])} | "
+                + " | ".join(cells)
+                + f" | {b['counts']} |"
+            )
+    ag = q4["premise_agreement"]
+    if ag.get("status") != "not_done":
+        out += [
+            "",
+            f"Author vs premise judge on {ag['n']} judged answers: kappa "
+            f"{_f(ag['kappa_3class'])} (three classes), {_f(ag['kappa_rejects'])} (rejects vs "
+            f"not); raw agreement {_f(ag['raw_agreement'])}.",
+        ]
+    return out
 
 
 def report_markdown(res: dict) -> str:
@@ -454,6 +577,7 @@ def report_markdown(res: dict) -> str:
                 f"| {_pair_cell(p['kappa'])} |"
             )
 
+    out += q4_markdown(res["q4"])
     out += [
         "",
         "## Q5. Prompt variants against v1 (paired by question)",
@@ -481,12 +605,54 @@ def report_markdown(res: dict) -> str:
         "",
         f"{hc['n_items_scored']} of the 50 answers are scored under both.",
         "",
-        "| Statistic | n | Judge | Human |",
+        "| Statistic | Generators | n | Judge | Human |",
+        "|---|---|---|---|---|",
+    ]
+    blocks = [("both", hc)] + [
+        (m + " (post hoc)", b) for m, b in hc.get("by_generator", {}).items()
+    ]
+    for label, block in blocks:
+        for k, v in block.items():
+            if k in ("n_items_scored", "by_generator"):
+                continue
+            out.append(f"| {k} | {label} | {v['n']} | {_f(v['judge'])} | {_f(v['human'])} |")
+
+    out += [
+        "",
+        "## Deviations from the pre-registration",
+        "",
+        "Made after the first run on the real traces; each is visible in the code history.",
+        "",
+        "1. **The no-variance rule is applied to the form each statistic uses.** Part A reports "
+        "a signal whose most common value covers >= 90% of a cell as no variance. On the first "
+        "run it was applied to the continuous values only, and Jaccard and kappa were computed "
+        "on flags that were almost constant (Qwen2.5 3B states 100 on nearly everything, so its "
+        "confidence flag almost never fires): a kappa of 0.00 [0.00, 0.00] was called above "
+        "chance. The rule now also applies to the flags for the flag statistics. No prediction "
+        "changed verdict (the cells affected are Qwen2.5 3B's, and retrieved Claude Sonnet 5's "
+        "CP-NS).",
+        "2. **P1.3 names no generator.** The first run checked it against Claude Sonnet 5 only; "
+        "the two generators give opposite answers, so it is reported as mixed, without a verdict.",
+        "3. **An empty box typed `[]`** (P4.1) is read as an unmarked option; the prediction "
+        "itself was unambiguous.",
+        "4. **Added, post hoc:** the human-label check per generator (pooled, it mixes a "
+        "generator with near-constant confidence with one whose confidence varies), and the "
+        "G-NS split by question type below.",
+        "",
+        "## Post hoc, exploratory (added after the first run)",
+        "",
+        "Groundedness vs NS (figures found in cited excerpts), split by FinanceBench question "
+        "type. NS finds only figures printed in the excerpts, so a derived figure (a ratio, a "
+        "sum) scores 0 there while the judge may accept it as arithmetic on the excerpts; "
+        "metrics-generated questions are the computational ones.",
+        "",
+        "| Cell | Question type | n | Spearman G-NS |",
         "|---|---|---|---|",
     ]
-    for k, v in hc.items():
-        if k != "n_items_scored":
-            out.append(f"| {k} | {v['n']} | {_f(v['judge'])} | {_f(v['human'])} |")
+    for cell, c in res["q3"].items():
+        for qtype, v in c.get("post_hoc_G_NS_by_question_type", {}).items():
+            rho = _pair_cell({"status": "ok", **v["spearman"]}) if v["spearman"] else "–"
+            out.append(f"| {cell} | {qtype} | {v['n']} | {rho} |")
     return "\n".join(out) + "\n"
 
 
@@ -556,6 +722,12 @@ def main() -> None:
     }
     print(f"{len(rows)} traces; running Q1-Q3, Q5 and the human-label check ...")
     res = analyse(rows, human, cfg)
+    adv = adversarial_rows(cfg)
+    res["q4"] = (
+        q4_adversarial(adv, cfg["bootstrap"]["n_resamples"], cfg["bootstrap"]["seed"])
+        if adv is not None
+        else {"status": "not_run"}
+    )
 
     sample = write_review_sample(res["q2"], cfg, rows_by_trace)
     write_review_page(sample, recs, traces)
@@ -570,7 +742,7 @@ def main() -> None:
         "inputs_sha256": inputs,
     }
     res["predictions"] = check_predictions(prereg, res)
-    order = ["meta", "predictions", "q1", "q2", "q2_review", "q3", "q5", "human_check"]
+    order = ["meta", "predictions", "q1", "q2", "q2_review", "q3", "q4", "q5", "human_check"]
     res = {k: res[k] for k in order}
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)

@@ -6,7 +6,7 @@ placeholders its user section must contain exactly once. Every judge request ask
 constrained by a schema (`output_config.format`), and the schema is part of the request, so
 it is part of the response-cache key: changing a schema can never reuse an old answer.
 
-Three judge calls:
+Four judge calls:
   decompose    question + the ANSWER field -> atomic claims (kind: document | context | general) and
                the response type (answered | partial | declined). Sees no context, so it
                cannot shape claims to fit it, and no gold answer.
@@ -17,6 +17,9 @@ Three judge calls:
   correctness  question + gold answer + gold justification + the ANSWER field -> reason,
                grade (correct | partially_correct | incorrect | no_answer), unit_error flag.
                Sees no context.
+  premise      (Phase 6, adversarial category d) question + a note stating the false
+               premise and what the filings say + the ANSWER field -> reason, handling
+               (rejects_premise | accepts_premise | declines_without_addressing).
 Outputs are validated field by field; anything malformed raises `JudgeOutputError`, which
 the harness records as a judge failure for that trace rather than guessing.
 """
@@ -35,11 +38,12 @@ from src.generation.llm import GenerationRequest
 from src.generation.prompts import SYSTEM_MARKER, USER_MARKER, sha256_text
 
 JUDGE_PROMPTS_DIR = Path("prompts/judge")
-PURPOSES = ("decompose", "verify", "correctness")
+PURPOSES = ("decompose", "verify", "correctness", "premise")
 RESPONSE_TYPES = ("answered", "partial", "declined")
 CLAIM_KINDS = ("document", "context", "general")
 VERDICTS = ("supported", "unsupported", "contradicted")
 GRADES = ("correct", "partially_correct", "incorrect", "no_answer")
+HANDLINGS = ("rejects_premise", "accepts_premise", "declines_without_addressing")
 _PLACEHOLDER_RE = re.compile(r"\{\{(\w+)\}\}")
 
 
@@ -150,6 +154,13 @@ CORRECTNESS_SCHEMA = _obj(
         "reason": {"type": "string"},
         "grade": {"type": "string", "enum": list(GRADES)},
         "unit_error": {"type": "boolean"},
+    }
+)
+
+PREMISE_SCHEMA = _obj(
+    {
+        "reason": {"type": "string"},
+        "handling": {"type": "string", "enum": list(HANDLINGS)},
     }
 )
 
@@ -293,5 +304,13 @@ def parse_correctness(text: str) -> dict:
     return {
         "grade": _enum(obj.get("grade"), GRADES, "grade"),
         "unit_error": obj["unit_error"],
+        "reason": str(obj.get("reason", "")).strip(),
+    }
+
+
+def parse_premise(text: str) -> dict:
+    obj = _load_json(text)
+    return {
+        "handling": _enum(obj.get("handling"), HANDLINGS, "handling"),
         "reason": str(obj.get("reason", "")).strip(),
     }

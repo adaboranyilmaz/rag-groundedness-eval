@@ -289,8 +289,15 @@ def judge_outcome(
     return out
 
 
-def judge_traces(traces: list[dict], inputs: Inputs, judge: Judge) -> dict[str, dict]:
-    """Run both judge stages over `traces`; return {trace_id: {stage: outcome}}."""
+def judge_traces(
+    traces: list[dict],
+    inputs: Inputs,
+    judge: Judge,
+    grade_if: Callable[[dict], bool] | None = None,
+) -> dict[str, dict]:
+    """Run both judge stages over `traces`; return {trace_id: {stage: outcome}}. `grade_if`
+    limits the correctness grade to the traces it accepts (Phase 6's adversarial set grades
+    only questions with a gold answer); by default every trace not declined is graded."""
     out: dict[str, dict] = {t["trace_id"]: {} for t in traces}
     stage1 = {
         t["trace_id"]: judge.request("decompose", decompose_values(t), DECOMPOSE_SCHEMA)
@@ -314,7 +321,7 @@ def judge_traces(traces: list[dict], inputs: Inputs, judge: Judge) -> dict[str, 
                 len(dec["claims"]),
                 labels,
             )
-        if dec["response_type"] != "declined":
+        if dec["response_type"] != "declined" and (grade_if is None or grade_if(t)):
             row = inputs.gold_rows[t["question"]["financebench_id"]]
             grade[t["trace_id"]] = judge.request(
                 "correctness", correctness_values(t, row), CORRECTNESS_SCHEMA

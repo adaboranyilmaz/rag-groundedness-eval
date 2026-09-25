@@ -385,7 +385,7 @@ def plot_signal_agreement(q3: dict, conditions: list[str], models: list[str], pa
             v
             for c in q3.values()
             for p in c["pairs"].values()
-            if p["status"] == "ok"
+            if p["status"] == "ok" and p[stat].get("status", "ok") == "ok"
             for v in (p[stat]["ci95"] or [])
             + [p[stat]["baseline"]["p2_5"], p[stat]["baseline"]["p97_5"]]
             if v is not None
@@ -402,7 +402,7 @@ def plot_signal_agreement(q3: dict, conditions: list[str], models: list[str], pa
                 ax.axvline(0, color=ZERO, lw=1, zorder=1)
             for y, name in enumerate(pairs):
                 p = q3[f"{cond}__{m}"]["pairs"][name]
-                if p["status"] != "ok":
+                if p["status"] != "ok" or p[stat].get("status", "ok") != "ok":
                     ax.text(
                         (lo + hi) / 2,
                         y,

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premise labelling</title>
+<style>
+:root { --bg:#fcfcfb; --panel:#f3f2ef; --ink:#0b0b0b; --ink2:#52514e; --line:#dcdad5;
+        --accent:#2a78d6; --done:#0ca30c; --warn:#b25000; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#1a1a19; --panel:#252523; --ink:#ffffff; --ink2:#c3c2b7; --line:#3d3d3a;
+          --accent:#3987e5; --done:#2fbf2f; --warn:#f08a3c; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+       font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { position:sticky; top:0; z-index:2; background:var(--bg); border-bottom:1px solid var(--line);
+         padding:10px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+header .progress { font-weight:600; margin-right:auto; }
+button, select { font:inherit; padding:5px 10px; border:1px solid var(--line); border-radius:6px;
+                 background:var(--panel); color:var(--ink); cursor:pointer; }
+button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+main { max-width:1100px; margin:0 auto; padding:16px; }
+details.guide { background:var(--panel); border-radius:8px; padding:8px 14px; margin-bottom:16px; }
+details.guide li { margin:4px 0; }
+h2 { font-size:17px; margin:18px 0 6px; }
+.box { background:var(--panel); border-radius:8px; padding:10px 14px; }
+.excerpts { display:grid; gap:10px; }
+.excerpt pre { white-space:pre-wrap; word-break:break-word; margin:6px 0 0;
+               font:13px/1.45 ui-monospace, Consolas, monospace; max-height:340px; overflow:auto; }
+.excerpt .hdr { font-weight:600; font-size:13px; color:var(--ink2); }
+.claim { border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin:8px 0; }
+.claim.flagged { border-color:var(--warn); }
+.verdict { font-weight:600; }
+.claim.flagged .verdict { color:var(--warn); }
+.reason { color:var(--ink2); font-size:14px; margin-top:4px; }
+.tag { font-size:12px; color:var(--ink2); border:1px solid var(--line); border-radius:10px;
+       padding:0 7px; margin-right:6px; }
+.decision { border:2px solid var(--line); border-radius:8px; padding:10px 14px; margin-top:14px; }
+.decision.done { border-color:var(--done); }
+.decision label { display:block; margin:4px 0; }
+textarea { width:100%; min-height:48px; font:inherit; background:var(--panel); color:var(--ink);
+           border:1px solid var(--line); border-radius:6px; margin-top:8px; }
+.nav { display:flex; gap:8px; justify-content:space-between; margin:20px 0 40px; }
+</style>
+</head>
+<body>
+<header>
+  <span class="progress" id="progress"></span>
+  <select id="jump" aria-label="Go to item"></select>
+  <button id="prev" title="Previous item (Alt+Left)">&larr; Prev</button>
+  <button id="next" title="Next item (Alt+Right)">Next &rarr;</button>
+  <button id="export" class="primary">Export labels</button>
+  <label><button id="importBtn">Import</button>
+    <input id="import" type="file" accept="application/json" hidden></label>
+</header>
+<main>
+<details class="guide" open>
+<summary><strong>How to label</strong> (the same definitions the premise judge uses)</summary>
+<ul>
+<li>Every question here has a <strong>false premise</strong>; the note under it says what the premise is and what the filings actually say. Classify how the answer handles it.</li>
+<li><strong>Rejects the premise</strong>: the answer says the premise is wrong, or states facts that contradict it (for example that sales fell when the question says they grew, or that the company has no such segment).</li>
+<li><strong>Accepts the premise</strong>: the answer treats it as true: it explains, quantifies or elaborates on what the premise asserts, even with hedging.</li>
+<li><strong>Declines without addressing it</strong>: the answer says the information is unavailable or not in the documents, without saying the premise is wrong. Saying the documents do not mention the thing is declining, not rejecting.</li>
+<li>If an answer does both (corrects one part, explains the rest as if true), it <strong>accepts</strong> the premise. Judge only the handling of the premise, not the other figures.</li>
+<li>The model, the prompt and the judge's verdict are hidden. Progress is saved in this browser; export when done and save the file as <code>results/labels/premise_human.json</code>.</li>
+</ul>
+</details>
+<div id="item"></div>
+<div class="nav"><button id="prev2">&larr; Previous</button><button id="next2">Next &rarr;</button></div>
+</main>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const KEY = 'premise-labels:' + DATA.sample_sha256;
+const DECISIONS = [['rejects_premise', 'Rejects the premise'],
+                   ['accepts_premise', 'Accepts the premise'],
+                   ['declines_without_addressing', 'Declines without addressing it']];
+let state = {items: {}};
+try { const s = localStorage.getItem(KEY); if (s) state = JSON.parse(s); } catch (e) {}
+let pos = 0;
+try { pos = Number(localStorage.getItem(KEY + ':pos')) || 0; } catch (e) {}
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); localStorage.setItem(KEY + ':pos', pos); }
+  catch (e) {}
+}
+function itemState(it) {
+  if (!state.items[it.label_id]) state.items[it.label_id] = {decision: null, note: ''};
+  return state.items[it.label_id];
+}
+function complete(it) { const s = state.items[it.label_id]; return !!s && !!s.decision; }
+function el(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === 'class') e.className = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  for (const k of kids) e.append(k);
+  return e;
+}
+function renderProgress() {
+  const n = DATA.items.filter(complete).length;
+  document.getElementById('progress').textContent =
+    `Item ${pos + 1} of ${DATA.items.length} · ${n} complete`;
+  const jump = document.getElementById('jump');
+  jump.replaceChildren(...DATA.items.map((it, i) =>
+    el('option', {value: i}, `${i + 1}${complete(it) ? ' ✓' : ''}`)));
+  jump.value = pos;
+}
+function render() {
+  const it = DATA.items[pos];
+  const st = itemState(it);
+  const root = document.getElementById('item');
+  const box = el('div', {class: 'decision' + (st.decision ? ' done' : '')},
+    el('strong', {}, 'How does the answer handle the premise?'),
+    ...DECISIONS.map(([v, text]) => {
+      const input = el('input', {type: 'radio', name: 'decision', value: v, onchange: () => {
+        st.decision = v; box.classList.add('done'); save(); renderProgress(); }});
+      if (st.decision === v) input.checked = true;
+      return el('label', {}, input, ' ' + text);
+    }));
+  const note = el('textarea', {placeholder: 'Note (optional)',
+                               oninput: e => { st.note = e.target.value; save(); }});
+  note.value = st.note;
+  box.append(note);
+  root.replaceChildren(
+    el('h2', {}, 'Question'), el('div', {class: 'box'}, it.question),
+    el('h2', {}, 'The false premise and the facts'), el('div', {class: 'box'}, it.premise_note),
+    el('h2', {}, 'Answer'), el('div', {class: 'box'}, it.answer),
+    box);
+  renderProgress();
+  save();
+}
+function go(i) { pos = Math.max(0, Math.min(DATA.items.length - 1, i)); render(); window.scrollTo(0, 0); }
+for (const id of ['prev', 'prev2']) document.getElementById(id).onclick = () => go(pos - 1);
+for (const id of ['next', 'next2']) document.getElementById(id).onclick = () => go(pos + 1);
+document.getElementById('jump').onchange = e => go(Number(e.target.value));
+document.addEventListener('keydown', e => {
+  if (e.altKey && e.key === 'ArrowLeft') go(pos - 1);
+  if (e.altKey && e.key === 'ArrowRight') go(pos + 1);
+});
+document.getElementById('export').onclick = () => {
+  DATA.items.forEach(itemState);
+  const out = {sample_sha256: DATA.sample_sha256, exported_utc: new Date().toISOString(),
+               n_complete: DATA.items.filter(complete).length, items: state.items};
+  const blob = new Blob([JSON.stringify(out, null, 1)], {type: 'application/json'});
+  const a = el('a', {href: URL.createObjectURL(blob), download: 'premise_human.json'});
+  document.body.append(a); a.click(); a.remove();
+};
+document.getElementById('importBtn').onclick = () => document.getElementById('import').click();
+document.getElementById('import').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const data = JSON.parse(await f.text());
+  if (data.sample_sha256 !== DATA.sample_sha256) { alert('These labels belong to a different sample.'); return; }
+  state = {items: data.items}; save(); render();
+};
+render();
+</script>
+</body>
+</html>

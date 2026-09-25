@@ -151,3 +151,52 @@ class TestReview:
     def test_display_cleans_filing_whitespace(self):
         r = rec(gold_evidence=[{"doc_id": "ACME_2022_10K", "text": "a\xa0b\n\n​\nc"}])
         assert "```\na b\nc\n```" in render_review([r])
+
+
+# --------------------------------------------------------------------------------------
+# scripts/07b_adversarial_run.py: the parts that decide without the judge
+
+
+def load_run_script():
+    import importlib.util
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[1] / "scripts" / "07b_adversarial_run.py"
+    spec = importlib.util.spec_from_file_location("adversarial_run", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class TestRunScript:
+    def test_premise_rule(self):
+        run = load_run_script()
+        assert run.premise_rule({"answer": None}) == "unparsed"
+        assert run.premise_rule({"answer": "NOT_IN_DOCUMENTS"}) == "declines_without_addressing"
+        assert run.premise_rule({"answer": "Sales fell 3.2%."}) is None  # the judge decides
+
+    def test_trace_question(self):
+        run = load_run_script()
+        c = rec(
+            id="adv_c07",
+            category="c",
+            subtype="filing_not_in_corpus",
+            expected_behaviour="decline",
+            gold_evidence=[],
+        )
+        q = run.trace_question(c)
+        assert q["financebench_id"] == "adv_c07" and q["in_corpus"] is False
+        assert q["question_type"] == "adversarial_c" and q["doc_name"] is None
+        assert q["adversarial"]["expected_behaviour"] == "decline"
+        assert run.trace_question(rec())["doc_name"] == "ACME_2022_10K"
+
+
+def test_premise_page_hides_what_it_should():
+    from src.evaluation.labeling_page import render_premise_page
+
+    page = render_premise_page(
+        [{"label_id": "abc", "question": "Q?", "premise_note": "False: x.", "answer": "A </b>"}],
+        "f" * 64,
+    )
+    assert '"label_id": "abc"' in page and "trace_id" not in page
+    assert "<\/b>" in page  # filing text cannot close the script element

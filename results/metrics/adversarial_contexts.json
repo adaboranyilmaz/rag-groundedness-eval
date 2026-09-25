@@ -1,0 +1,497 @@
+{
+ "cell": "fixed_size__bge-small-en-v1.5__dense",
+ "k": 5,
+ "search_depth": 100,
+ "conditions": {
+  "retrieved": {
+   "a": {
+    "n_questions": 10,
+    "n_with_gold": 10,
+    "mean_recall@5": 0.55,
+    "n_recall@5_gt_0": 6,
+    "n_recall@5_eq_1": 5
+   },
+   "b": {
+    "n_questions": 10,
+    "n_with_gold": 10,
+    "mean_recall@5": 0.05,
+    "n_recall@5_gt_0": 1,
+    "n_recall@5_eq_1": 0
+   },
+   "c": {
+    "n_questions": 10,
+    "n_with_gold": 0,
+    "mean_recall@5": null,
+    "n_recall@5_gt_0": 0,
+    "n_recall@5_eq_1": 0
+   },
+   "d": {
+    "n_questions": 10,
+    "n_with_gold": 0,
+    "mean_recall@5": null,
+    "n_recall@5_gt_0": 0,
+    "n_recall@5_eq_1": 0
+   }
+  },
+  "oracle": {
+   "a": {
+    "n_questions": 10,
+    "n_with_gold": 10,
+    "mean_recall@5": 1.0,
+    "n_recall@5_gt_0": 10,
+    "n_recall@5_eq_1": 10
+   },
+   "b": {
+    "n_questions": 10,
+    "n_with_gold": 10,
+    "mean_recall@5": 1.0,
+    "n_recall@5_gt_0": 10,
+    "n_recall@5_eq_1": 10
+   }
+  }
+ },
+ "per_question": {
+  "retrieved": {
+   "adv_a01": {
+    "recall@5": 1.0,
+    "docs": [
+     "NIKE_2018_10K",
+     "NIKE_2019_10K",
+     "NIKE_2023_10K"
+    ]
+   },
+   "adv_a02": {
+    "recall@5": 1.0,
+    "docs": [
+     "COSTCO_2021_10K"
+    ]
+   },
+   "adv_a03": {
+    "recall@5": 0.5,
+    "docs": [
+     "MICROSOFT_2016_10K",
+     "MICROSOFT_2023_10K"
+    ]
+   },
+   "adv_a04": {
+    "recall@5": 0.0,
+    "docs": [
+     "NETFLIX_2015_10K",
+     "NETFLIX_2017_10K"
+    ]
+   },
+   "adv_a07": {
+    "recall@5": 0.0,
+    "docs": [
+     "ULTABEAUTY_2023_10K"
+    ]
+   },
+   "adv_a08": {
+    "recall@5": 0.0,
+    "docs": [
+     "BOEING_2018_10K",
+     "BOEING_2022_10K"
+    ]
+   },
+   "adv_a09": {
+    "recall@5": 1.0,
+    "docs": [
+     "JPMORGAN_2022Q2_10Q",
+     "JPMORGAN_2022_10K",
+     "JPMORGAN_2023Q2_10Q"
+    ]
+   },
+   "adv_a10": {
+    "recall@5": 1.0,
+    "docs": [
+     "PAYPAL_2022_10K"
+    ]
+   },
+   "adv_a11": {
+    "recall@5": 1.0,
+    "docs": [
+     "BLOCK_2020_10K"
+    ]
+   },
+   "adv_a12": {
+    "recall@5": 0.0,
+    "docs": [
+     "AMERICANWATERWORKS_2020_10K",
+     "AMERICANWATERWORKS_2021_10K",
+     "AMERICANWATERWORKS_2022_10K"
+    ]
+   },
+   "adv_b01": {
+    "recall@5": 0.0,
+    "docs": [
+     "GENERALMILLS_2020_10K",
+     "GENERALMILLS_2022_10K",
+     "WALMART_2020_10K"
+    ]
+   },
+   "adv_b02": {
+    "recall@5": 0.0,
+    "docs": [
+     "MICROSOFT_2016_10K",
+     "MICROSOFT_2023_10K"
+    ]
+   },
+   "adv_b03": {
+    "recall@5": 0.0,
+    "docs": [
+     "AMD_2022_10K",
+     "BLOCK_2016_10K",
+     "BLOCK_2020_10K",
+     "MICROSOFT_2016_10K"
+    ]
+   },
+   "adv_b04": {
+    "recall@5": 0.0,
+    "docs": [
+     "CVSHEALTH_2018_10K",
+     "CVSHEALTH_2022_10K"
+    ]
+   },
+   "adv_b05": {
+    "recall@5": 0.0,
+    "docs": [
+     "ADOBE_2015_10K",
+     "ADOBE_2016_10K",
+     "ADOBE_2017_10K"
+    ]
+   },
+   "adv_b06": {
+    "recall@5": 0.0,
+    "docs": [
+     "BESTBUY_2017_10K",
+     "BESTBUY_2023_10K",
+     "BESTBUY_2024Q2_10Q",
+     "GENERALMILLS_2020_10K"
+    ]
+   },
+   "adv_b07": {
+    "recall@5": 0.0,
+    "docs": [
+     "NIKE_2018_10K",
+     "NIKE_2019_10K",
+     "NIKE_2023_10K"
+    ]
+   },
+   "adv_b09": {
+    "recall@5": 0.5,
+    "docs": [
+     "BOEING_2018_10K",
+     "BOEING_2022_10K"
+    ]
+   },
+   "adv_b10": {
+    "recall@5": 0.0,
+    "docs": [
+     "JPMORGAN_2021Q1_10Q",
+     "JPMORGAN_2022_10K",
+     "JPMORGAN_2023Q2_10Q"
+    ]
+   },
+   "adv_b12": {
+    "recall@5": 0.0,
+    "docs": [
+     "NIKE_2018_10K",
+     "NIKE_2019_10K",
+     "NIKE_2021_10K",
+     "NIKE_2023_10K"
+    ]
+   },
+   "adv_c01": {
+    "recall@5": null,
+    "docs": [
+     "NIKE_2023_10K"
+    ]
+   },
+   "adv_c02": {
+    "recall@5": null,
+    "docs": [
+     "COSTCO_2021_10K",
+     "WALMART_2020_10K"
+    ]
+   },
+   "adv_c04": {
+    "recall@5": null,
+    "docs": [
+     "AMD_2022_10K",
+     "MICROSOFT_2016_10K",
+     "MICROSOFT_2023_10K"
+    ]
+   },
+   "adv_c05": {
+    "recall@5": null,
+    "docs": [
+     "BOEING_2018_10K",
+     "BOEING_2022_10K",
+     "LOCKHEEDMARTIN_2020_10K",
+     "LOCKHEEDMARTIN_2022_10K"
+    ]
+   },
+   "adv_c06": {
+    "recall@5": null,
+    "docs": [
+     "WALMART_2019_10K",
+     "WALMART_2020_10K"
+    ]
+   },
+   "adv_c07": {
+    "recall@5": null,
+    "docs": [
+     "AMCOR_2023_10K",
+     "AMD_2022_10K",
+     "CVSHEALTH_2022_10K",
+     "JPMORGAN_2022_10K"
+    ]
+   },
+   "adv_c08": {
+    "recall@5": null,
+    "docs": [
+     "BESTBUY_2023_10K",
+     "CVSHEALTH_2022_10K",
+     "JPMORGAN_2022_10K",
+     "MICROSOFT_2023_10K",
+     "VERIZON_2022_10K"
+    ]
+   },
+   "adv_c09": {
+    "recall@5": null,
+    "docs": [
+     "ADOBE_2022_10K",
+     "BESTBUY_2023_10K",
+     "MICROSOFT_2023_10K",
+     "NIKE_2021_10K"
+    ]
+   },
+   "adv_c10": {
+    "recall@5": null,
+    "docs": [
+     "AMD_2022_10K",
+     "MICROSOFT_2016_10K",
+     "MICROSOFT_2023_10K"
+    ]
+   },
+   "adv_c12": {
+    "recall@5": null,
+    "docs": [
+     "BLOCK_2016_10K",
+     "BLOCK_2020_10K"
+    ]
+   },
+   "adv_d01": {
+    "recall@5": null,
+    "docs": [
+     "3M_2018_10K",
+     "3M_2023Q2_10Q"
+    ]
+   },
+   "adv_d02": {
+    "recall@5": null,
+    "docs": [
+     "NETFLIX_2015_10K",
+     "NETFLIX_2017_10K"
+    ]
+   },
+   "adv_d04": {
+    "recall@5": null,
+    "docs": [
+     "NIKE_2018_10K",
+     "NIKE_2023_10K"
+    ]
+   },
+   "adv_d05": {
+    "recall@5": null,
+    "docs": [
+     "VERIZON_2021_10K",
+     "VERIZON_2022_10K"
+    ]
+   },
+   "adv_d06": {
+    "recall@5": null,
+    "docs": [
+     "MICROSOFT_2016_10K",
+     "MICROSOFT_2023_10K",
+     "PAYPAL_2022_10K",
+     "WALMART_2019_10K"
+    ]
+   },
+   "adv_d07": {
+    "recall@5": null,
+    "docs": [
+     "ADOBE_2022_10K"
+    ]
+   },
+   "adv_d09": {
+    "recall@5": null,
+    "docs": [
+     "COCACOLA_2017_10K",
+     "COCACOLA_2021_10K",
+     "COCACOLA_2022_10K"
+    ]
+   },
+   "adv_d10": {
+    "recall@5": null,
+    "docs": [
+     "AMCOR_2023_10K",
+     "BOEING_2018_10K",
+     "BOEING_2022_10K",
+     "LOCKHEEDMARTIN_2022_10K"
+    ]
+   },
+   "adv_d11": {
+    "recall@5": null,
+    "docs": [
+     "ULTABEAUTY_2023_10K"
+    ]
+   },
+   "adv_d12": {
+    "recall@5": null,
+    "docs": [
+     "3M_2022_10K",
+     "JOHNSON_JOHNSON_2022_10K",
+     "PFIZER_2021_10K"
+    ]
+   }
+  },
+  "oracle": {
+   "adv_a01": {
+    "recall@5": 1.0,
+    "docs": [
+     "NIKE_2023_10K"
+    ]
+   },
+   "adv_a02": {
+    "recall@5": 1.0,
+    "docs": [
+     "COSTCO_2021_10K"
+    ]
+   },
+   "adv_a03": {
+    "recall@5": 1.0,
+    "docs": [
+     "MICROSOFT_2023_10K"
+    ]
+   },
+   "adv_a04": {
+    "recall@5": 1.0,
+    "docs": [
+     "NETFLIX_2017_10K"
+    ]
+   },
+   "adv_a07": {
+    "recall@5": 1.0,
+    "docs": [
+     "ULTABEAUTY_2023_10K"
+    ]
+   },
+   "adv_a08": {
+    "recall@5": 1.0,
+    "docs": [
+     "BOEING_2022_10K"
+    ]
+   },
+   "adv_a09": {
+    "recall@5": 1.0,
+    "docs": [
+     "JPMORGAN_2022_10K"
+    ]
+   },
+   "adv_a10": {
+    "recall@5": 1.0,
+    "docs": [
+     "PAYPAL_2022_10K"
+    ]
+   },
+   "adv_a11": {
+    "recall@5": 1.0,
+    "docs": [
+     "BLOCK_2020_10K"
+    ]
+   },
+   "adv_a12": {
+    "recall@5": 1.0,
+    "docs": [
+     "AMERICANWATERWORKS_2022_10K"
+    ]
+   },
+   "adv_b01": {
+    "recall@5": 1.0,
+    "docs": [
+     "3M_2018_10K",
+     "3M_2022_10K"
+    ]
+   },
+   "adv_b02": {
+    "recall@5": 1.0,
+    "docs": [
+     "MICROSOFT_2016_10K",
+     "MICROSOFT_2023_10K"
+    ]
+   },
+   "adv_b03": {
+    "recall@5": 1.0,
+    "docs": [
+     "AMD_2015_10K",
+     "AMD_2022_10K"
+    ]
+   },
+   "adv_b04": {
+    "recall@5": 1.0,
+    "docs": [
+     "CVSHEALTH_2018_10K",
+     "CVSHEALTH_2022_10K"
+    ]
+   },
+   "adv_b05": {
+    "recall@5": 1.0,
+    "docs": [
+     "ADOBE_2015_10K",
+     "ADOBE_2022_10K"
+    ]
+   },
+   "adv_b06": {
+    "recall@5": 1.0,
+    "docs": [
+     "BESTBUY_2017_10K",
+     "BESTBUY_2023_10K"
+    ]
+   },
+   "adv_b07": {
+    "recall@5": 1.0,
+    "docs": [
+     "NIKE_2018_10K",
+     "NIKE_2023_10K"
+    ]
+   },
+   "adv_b09": {
+    "recall@5": 1.0,
+    "docs": [
+     "BOEING_2022_10K",
+     "LOCKHEEDMARTIN_2022_10K"
+    ]
+   },
+   "adv_b10": {
+    "recall@5": 1.0,
+    "docs": [
+     "AMERICANEXPRESS_2022_10K",
+     "JPMORGAN_2022_10K"
+    ]
+   },
+   "adv_b12": {
+    "recall@5": 1.0,
+    "docs": [
+     "COSTCO_2021_10K",
+     "NIKE_2023_10K"
+    ]
+   }
+  }
+ },
+ "meta": {
+  "updated_utc": "2026-09-25T14:21:31+00:00",
+  "n_approved": 40,
+  "questions_sha256": "a2777f6d00e80938513562e31c8bd2bff9ce006f51c3d322e28da606004ffac8"
+ }
+}

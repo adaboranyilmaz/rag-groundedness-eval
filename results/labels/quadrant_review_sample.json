@@ -1,0 +1,163 @@
+{
+ "meta": {
+  "created_utc": "2026-09-25T14:02:13+00:00",
+  "rule": "correct (strict) and not fully grounded; up to 15 per condition, generators pooled, seed 0",
+  "n_in_quadrant": {
+   "oracle": 132,
+   "retrieved": 34
+  }
+ },
+ "sample_sha256": "da69101bee16e0eff1996015cc3fb5a87fcd8def6b9e6ae37798ea26a5f58677",
+ "items": [
+  {
+   "review_id": "4824a9b13695",
+   "trace_id": "oracle__claude-sonnet-5__v3_chain_of_thought__financebench_id_00720",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "526d878fc7df",
+   "trace_id": "oracle__claude-sonnet-5__v2_citation_required__financebench_id_04412",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "ca90fa46e152",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_00790",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "9af039dcd515",
+   "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_01091",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "335644cc32cc",
+   "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_00956",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "dfe09ad574d7",
+   "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00723",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "7b004f009e01",
+   "trace_id": "oracle__claude-sonnet-5__v3_chain_of_thought__financebench_id_01244",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "26fa24225d05",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_01981",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "feeec7ffba46",
+   "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__financebench_id_00464",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "86d019487a2b",
+   "trace_id": "oracle__claude-sonnet-5__v1_zero_shot__financebench_id_01902",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "ad9ba122b83c",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_01319",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "92033e27eda8",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_02049",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "c7c871521a7d",
+   "trace_id": "retrieved__claude-sonnet-5__v4_abstention__financebench_id_01244",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "34f9768c61cd",
+   "trace_id": "oracle__claude-sonnet-5__v1_zero_shot__financebench_id_00685",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "f45c59ed4345",
+   "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_01328",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "39be0523ec78",
+   "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_01009",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "5cc00a0f02cf",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_01319",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "7dbdc3369b0d",
+   "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_01091",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "f0e1ee7c4ba9",
+   "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_01981",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "950a54b56d40",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_01163",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "e64a2f183adb",
+   "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00222",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "3f5eb0974fe9",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_03882",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "7032b755aa3f",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_00464",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "2d197ae0273b",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_01319",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "5bbf8f845de5",
+   "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_00735",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "de9cb26b3c0f",
+   "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_01936",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "88a4f0a93802",
+   "trace_id": "oracle__claude-sonnet-5__v3_chain_of_thought__financebench_id_01009",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "8eb537b940a8",
+   "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_01981",
+   "condition": "retrieved"
+  },
+  {
+   "review_id": "f44305504cc8",
+   "trace_id": "oracle__claude-sonnet-5__v2_citation_required__financebench_id_00678",
+   "condition": "oracle"
+  },
+  {
+   "review_id": "1cbc0dc7e159",
+   "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_00464",
+   "condition": "retrieved"
+  }
+ ]
+}

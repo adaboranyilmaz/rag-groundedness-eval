@@ -53,8 +53,10 @@ PRICES = {"claude-sonnet-5": {"input": 2.0, "output": 10.0}}
 class TestJudgePrompts:
     def test_repo_judge_prompts_load(self):
         reg = load_judge_registry(JUDGE_PROMPTS)
-        assert {p.purpose for p in reg.values()} == {"decompose", "verify", "correctness"}
+        purposes = {p.purpose for p in reg.values()}
+        assert purposes == {"decompose", "verify", "correctness", "premise"}
         assert reg["judge_verify"].placeholders == ("context", "claims")
+        assert reg["judge_premise"].placeholders == ("question", "premise_note", "answer")
 
     def test_render_is_single_pass(self):
         prompt = load_judge_registry(JUDGE_PROMPTS)["judge_decompose"]
@@ -638,3 +640,21 @@ def test_labeling_page_embeds_data_safely():
     assert data["sample_sha256"] == "abc123" and data["items"][0]["answer"] == "a </script><b>"
     # nothing the page hides is present in the embedded data
     assert not {"trace_id", "model_key", "condition", "gold", "citations"} & set(data["items"][0])
+
+
+class TestPremiseParsing:
+    def test_valid(self):
+        from src.evaluation.judge import parse_premise
+
+        out = parse_premise('{"reason": "It says sales fell.", "handling": "rejects_premise"}')
+        assert out == {"handling": "rejects_premise", "reason": "It says sales fell."}
+
+    @pytest.mark.parametrize(
+        "text",
+        ['{"reason": "x", "handling": "partly"}', '{"reason": "x"}', "not json", "[]"],
+    )
+    def test_invalid(self, text):
+        from src.evaluation.judge import JudgeOutputError, parse_premise
+
+        with pytest.raises(JudgeOutputError):
+            parse_premise(text)

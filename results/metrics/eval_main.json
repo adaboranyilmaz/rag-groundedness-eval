@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated_utc": "2026-09-25T10:34:19+00:00",
+    "updated_utc": "2026-09-25T14:18:32+00:00",
     "single_run": true,
     "judge_mode": "offline",
     "judge": {
@@ -209,8 +209,8 @@
       "new_cost_usd_this_run": 0.0,
       "judge_results_missing": 0,
       "batch_failures": [],
-      "phase_spent_usd": 11.86697,
-      "project_spent_usd": 17.593204
+      "phase_spent_usd": 12.420243,
+      "project_spent_usd": 18.146477
     },
     "environment": {
       "python": "3.12.13",

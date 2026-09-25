@@ -25,6 +25,7 @@ from itertools import combinations
 import numpy as np
 
 from src.evaluation import groundedness as groundedness_metric
+from src.evaluation.agreement import cohen_kappa
 from src.evaluation.reliability import (
     QUADRANTS,
     dominant_share,
@@ -335,17 +336,38 @@ def q3_signal_agreement(
     sensitivity_thresholds: list[float],
     no_variance_share: float,
 ) -> dict:
+    """The no-variance rule applies to the form each statistic uses: the continuous value for
+    Spearman, the flag for Jaccard and kappa. A flag that is (almost) always the same value,
+    as when a generator states 100 on nearly everything, leaves both flag statistics and
+    their baselines at about zero, where the above-chance call is meaningless."""
     out: dict = {}
+
+    def flag_stat(fa, fb, flat: list[str], qs, strata, f) -> dict:
+        if flat:
+            return {"status": "no_variance", "signals": flat}
+        return {"status": "ok", **pair_agreement(fa, fb, qs, strata, f, nb, seed)}
+
+    def flag_flat(names_flags: list[tuple[str, np.ndarray]]) -> list[str]:
+        return [
+            n
+            for n, fl in names_flags
+            if (s := dominant_share(fl.tolist())) is not None and s >= no_variance_share
+        ]
+
     for cond, model in _cells([r for r in rows if scored(r)]):
         sc = [r for r in rows if scored(r) and (r["condition"], r["model"]) == (cond, model)]
         variance = {}
         for s in SIGNALS:
-            vals = [v[0] for r in sc if (v := signal(r, s, conf_threshold)) is not None]
-            share = dominant_share(vals)
+            vals = [v for r in sc if (v := signal(r, s, conf_threshold)) is not None]
+            share = dominant_share([v[0] for v in vals])
+            fshare = dominant_share([v[1] for v in vals])
             variance[s] = {
                 "n": len(vals),
                 "dominant_share": share,
                 "no_variance": share is not None and share >= no_variance_share,
+                "flag_rate": _share([v[1] for v in vals]),
+                "flag_dominant_share": fshare,
+                "flag_no_variance": fshare is not None and fshare >= no_variance_share,
             }
         pairs: dict = {}
         for a, b in combinations(SIGNALS, 2):
@@ -366,13 +388,17 @@ def q3_signal_agreement(
             y = np.asarray([vb[0] for _, _, vb in both])
             fa = np.asarray([va[1] for _, va, _ in both])
             fb = np.asarray([vb[1] for _, _, vb in both])
+            fflat = flag_flat([(a, fa), (b, fb)])
             pairs[key] = {
                 "n": len(both),
                 "status": "ok",
                 "flag_rate": {a: float(fa.mean()), b: float(fb.mean())},
-                "spearman": pair_agreement(x, y, qs, strata, spearman, nb, seed),
-                "jaccard": pair_agreement(fa, fb, qs, strata, jaccard, nb, seed),
-                "kappa": pair_agreement(fa, fb, qs, strata, kappa, nb, seed),
+                "spearman": {
+                    "status": "ok",
+                    **pair_agreement(x, y, qs, strata, spearman, nb, seed),
+                },
+                "jaccard": flag_stat(fa, fb, fflat, qs, strata, jaccard),
+                "kappa": flag_stat(fa, fb, fflat, qs, strata, kappa),
             }
         sens: dict = {}
         if not variance["C"]["no_variance"]:
@@ -391,16 +417,46 @@ def q3_signal_agreement(
                     strata = [r["prompt"] for r, _, _ in both]
                     fo = np.asarray([vo[1] for _, vo, _ in both])
                     fc = np.asarray([vc[1] for _, _, vc in both])
+                    fflat = flag_flat([(other, fo), ("C", fc)])
                     sens[str(thr)][pair_name(other, "C")] = {
                         "n": len(both),
-                        "jaccard": pair_agreement(fo, fc, qs, strata, jaccard, nb, seed),
-                        "kappa": pair_agreement(fo, fc, qs, strata, kappa, nb, seed),
+                        "jaccard": flag_stat(fo, fc, fflat, qs, strata, jaccard),
+                        "kappa": flag_stat(fo, fc, fflat, qs, strata, kappa),
                     }
+        # Post hoc (added after the first run): G-NS split by FinanceBench question type.
+        # NS finds only figures printed in the excerpts, so a figure the answer derives (a
+        # ratio, a sum) scores 0 there while the judge may find it supported by arithmetic;
+        # metrics-generated questions are the computational ones.
+        by_type: dict = {}
+        if not (variance["G"]["no_variance"] or variance["NS"]["no_variance"]):
+            for name, is_metric in (("metrics-generated", True), ("other", False)):
+                sub = [
+                    (r, vg, vn)
+                    for r in sc
+                    if (r["question_type"] == "metrics-generated") == is_metric
+                    and (vg := signal(r, "G", conf_threshold)) is not None
+                    and (vn := signal(r, "NS", conf_threshold)) is not None
+                ]
+                by_type[name] = {
+                    "n": len(sub),
+                    "spearman": pair_agreement(
+                        np.asarray([vg[0] for _, vg, _ in sub]),
+                        np.asarray([vn[0] for _, _, vn in sub]),
+                        [r["question_id"] for r, _, _ in sub],
+                        [r["prompt"] for r, _, _ in sub],
+                        spearman,
+                        nb,
+                        seed,
+                    )
+                    if len(sub) >= 3
+                    else None,
+                }
         out[cell_key(cond, model)] = {
             "n_scored": len(sc),
             "variance": variance,
             "pairs": pairs,
             "confidence_threshold_sensitivity": sens,
+            "post_hoc_G_NS_by_question_type": by_type,
         }
     return out
 
@@ -523,18 +579,30 @@ def human_check(rows_by_trace: dict[str, dict], human: dict[str, dict]) -> dict:
     def ungrounded_share(xs: list, who: str) -> float | None:
         return _share([not g(x, who)[1] for x in xs])
 
+    def stats(model: str | None) -> dict:
+        def sel(extra: Callable[[dict], bool]) -> Callable[[dict], bool]:
+            return lambda r: (model is None or r["model"] == model) and extra(r)
+
+        return {
+            "q1_spearman_recall5_groundedness": both(
+                sel(lambda r: r["condition"] == "retrieved" and r["recall5"] is not None),
+                rho("recall5"),
+            ),
+            "q2_ungrounded_given_correct": both(
+                sel(lambda r: is_correct(r["label"]) is True), ungrounded_share
+            ),
+            "q3_spearman_G_C": both(sel(lambda r: r["confidence"] is not None), rho("confidence")),
+            "q3_spearman_G_NS": both(
+                sel(lambda r: r["numeric_in_cited"] is not None), rho("numeric_in_cited")
+            ),
+        }
+
+    # Per generator: added after the first run (post hoc). Pooled, the Q3 statistics mix a
+    # generator that states ~100 on everything with one whose confidence varies.
     return {
         "n_items_scored": len(items),
-        "q1_spearman_recall5_groundedness": both(
-            lambda r: r["condition"] == "retrieved" and r["recall5"] is not None, rho("recall5")
-        ),
-        "q2_ungrounded_given_correct": both(
-            lambda r: is_correct(r["label"]) is True, ungrounded_share
-        ),
-        "q3_spearman_G_C": both(lambda r: r["confidence"] is not None, rho("confidence")),
-        "q3_spearman_G_NS": both(
-            lambda r: r["numeric_in_cited"] is not None, rho("numeric_in_cited")
-        ),
+        **stats(None),
+        "by_generator": {m: stats(m) for m in sorted({r["model"] for r, _ in items})},
     }
 
 
@@ -542,7 +610,8 @@ def human_check(rows_by_trace: dict[str, dict], human: dict[str, dict]) -> dict:
 # Predictions: parse Part B and check each against its result
 
 _LINE_RE = re.compile(r"^- (P\d+\.\d+) (.*?):\s*(\[.*)$", re.MULTILINE)
-_OPTION_RE = re.compile(r"\[( |x|X)\]\s*([^·]+)")
+# "[]" counts as an unmarked box: a hand-edited file may lose the space.
+_OPTION_RE = re.compile(r"\[( |x|X)?\]\s*([^·]+)")
 
 
 def parse_predictions(text: str) -> dict[str, dict]:
@@ -593,10 +662,16 @@ def _direction_check(predicted: str, ci) -> dict:
     return {"observed": observed, "unexpected": observed != p}
 
 
-def _named_check(predicted: str, observed: str | None) -> dict:
+def _plain(s: str) -> str:
+    return s.lower().replace("+", "_")
+
+
+def _named_check(predicted: str, observed: str | None, key: Callable[[str], str] = _plain) -> dict:
+    """Named options compare case- and separator-insensitively; `observed` is shown as
+    given, in the prediction's own notation where the caller converts it."""
     if observed is None:
         return {"observed": None, "unexpected": None, "note": "not computable"}
-    return {"observed": observed, "unexpected": observed != predicted.lower(), "kind": "named"}
+    return {"observed": observed, "unexpected": key(observed) != key(predicted), "kind": "named"}
 
 
 def _get(results: dict, *path):
@@ -623,13 +698,39 @@ def _q3_highest_jaccard(results: dict) -> str | None:
     vals = {
         k: v["jaccard"]["value"]
         for k, v in pairs.items()
-        if v.get("status") == "ok" and v["jaccard"]["value"] is not None
+        if v.get("status") == "ok"
+        and v["jaccard"].get("status") == "ok"
+        and v["jaccard"]["value"] is not None
     }
     return max(vals, key=vals.get) if vals else None
 
 
 def _norm_pair(name: str) -> str:
     return "-".join(sorted(name.split("-")))
+
+
+def _top1_check(predicted: str, results: dict) -> dict:
+    """P1.3 names no generator. Each generator's answer comes from its point estimates of
+    rho(top-1 score) - rho(recall@5); where the two generators differ the prediction has no
+    single outcome, and is reported as mixed rather than judged."""
+    calls, notes = {}, []
+    for model, label in ((SONNET, "Claude Sonnet 5"), (QWEN, "Qwen2.5 3B")):
+        d = _get(results, "q1", "by_model", model, "top1_minus_recall5_rho")
+        if d is None or d.get("value") is None:
+            return {"observed": None, "unexpected": None, "note": "not computable"}
+        calls[label] = "yes" if d["value"] >= 0 else "no"
+        ci = d.get("ci95")
+        notes.append(
+            f"{label}: difference {d['value']:.2f}" + (f" [{ci[0]:.2f}, {ci[1]:.2f}]" if ci else "")
+        )
+    if len(set(calls.values())) == 1:
+        return {**_named_check(predicted, next(iter(calls.values()))), "note": "; ".join(notes)}
+    return {
+        "observed": "mixed (" + ", ".join(f"{k} {v}" for k, v in calls.items()) + ")",
+        "unexpected": None,
+        "kind": "named",
+        "note": "the prediction names no generator and the generators differ; " + "; ".join(notes),
+    }
 
 
 def check_predictions(text: str, results: dict) -> list[dict]:
@@ -657,12 +758,7 @@ def check_predictions(text: str, results: dict) -> list[dict]:
     checks: dict[str, Callable[[], dict]] = {
         "P1.1": lambda: rng("P1.1", rho_stat(s_ret)),
         "P1.2": lambda: rng("P1.2", rho_stat(q_ret)),
-        "P1.3": lambda: _named_check(
-            preds["P1.3"]["predicted"],
-            None
-            if _get(s_ret or {}, "top1_minus_recall5_rho", "value") is None
-            else ("yes" if s_ret["top1_minus_recall5_rho"]["value"] >= 0 else "no"),
-        ),
+        "P1.3": lambda: _top1_check(preds["P1.3"]["predicted"], results),
         "P1.4": lambda: _direction_check(
             preds["P1.4"]["predicted"],
             _get(results, "q1", "paired_oracle_vs_retrieved", SONNET, "d_groundedness", "ci95"),
@@ -671,9 +767,9 @@ def check_predictions(text: str, results: dict) -> list[dict]:
         "P2.2": lambda: rng("P2.2", ugc(cell_key("retrieved", SONNET))),
         "P2.3": lambda: rng("P2.3", ugc(cell_key("oracle", QWEN))),
         "P2.4": lambda: _named_check(
-            preds["P2.4"]["predicted"].replace("+", "_"),
+            preds["P2.4"]["predicted"],
             (
-                max(c, key=c.get)
+                max(c, key=c.get).replace("_", "+")
                 if (
                     c := _get(
                         results, "q2", "cells", cell_key("retrieved", QWEN), "primary", "counts"
@@ -687,8 +783,9 @@ def check_predictions(text: str, results: dict) -> list[dict]:
         "P3.2": lambda: _named_check(preds["P3.2"]["predicted"], _q3_call(results, "G-NS")),
         "P3.3": lambda: _named_check(preds["P3.3"]["predicted"], _q3_call(results, "G-CP")),
         "P3.4": lambda: _named_check(
-            _norm_pair(preds["P3.4"]["predicted"]),
-            _norm_pair(h).lower() if (h := _q3_highest_jaccard(results)) else None,
+            preds["P3.4"]["predicted"],
+            _q3_highest_jaccard(results),
+            key=lambda x: _norm_pair(x).lower(),
         ),
         "P4.1": lambda: rng("P4.1", _get(results, "q4", "premise_rejected", SONNET)),
         "P4.2": lambda: rng("P4.2", _get(results, "q4", "premise_rejected", QWEN)),
@@ -740,6 +837,172 @@ def check_predictions(text: str, results: dict) -> list[dict]:
 def _reading_label(results: dict, cell: str) -> str | None:
     r = _get(results, "q5", cell, f"v2_citation_required_vs_{BASE_PROMPT}", "reading")
     return None if r in (None, "undetermined") else r.replace("_", " ")
+
+
+# --------------------------------------------------------------------------------------
+# Q4. The adversarial set
+#
+# Rows: one per adversarial trace (scripts/07_reliability_analysis.py `adversarial_row`):
+#   trace_id, question_id, condition, model, prompt, category, subtype, status, answered,
+#   label, groundedness, premise_judge, premise_human (None until the author has labelled)
+# Accuracy is over all answers, declines counting as not correct (Phase 5's "acc. (all)");
+# accuracy over answered questions is reported beside it. The author's labels are the
+# premise measurement; the judge is a second rater.
+
+PREMISE_HANDLINGS = ("rejects_premise", "accepts_premise", "declines_without_addressing")
+
+
+def _exact(flags: list[bool]) -> dict:
+    """Count, rate and Clopper-Pearson interval over independent items (one prompt's
+    answers to distinct questions)."""
+    from src.evaluation.reliability import clopper_pearson
+
+    k, n = sum(flags), len(flags)
+    return {"n": n, "k": k, "rate": k / n if n else None, "ci95": clopper_pearson(k, n)}
+
+
+def _pooled_and_per_prompt(
+    rows: list[dict], flag: Callable[[dict], bool], nb: int, seed: int
+) -> dict:
+    return {
+        "pooled": mean_with_ci(
+            [float(flag(r)) for r in rows], [r["question_id"] for r in rows], nb, seed
+        ),
+        "per_prompt": {
+            p: _exact([flag(r) for r in rows if r["prompt"] == p])
+            for p in sorted({r["prompt"] for r in rows})
+        },
+    }
+
+
+def q4_adversarial(rows: list[dict], nb: int, seed: int) -> dict:
+    out: dict = {"n_traces": len(rows), "by_category": {}}
+    for cat in sorted({r["category"] for r in rows}):
+        out["by_category"][cat] = {}
+        for cond in sorted({r["condition"] for r in rows if r["category"] == cat}):
+            out["by_category"][cat][cond] = {}
+            for model in sorted({r["model"] for r in rows}):
+                rs = [
+                    r
+                    for r in rows
+                    if (r["category"], r["condition"], r["model"]) == (cat, cond, model)
+                ]
+                answered = [r for r in rs if r["answered"]]
+                scored_rs = [r for r in answered if r["groundedness"] is not None]
+                entry = {
+                    "n": len(rs),
+                    "n_questions": len({r["question_id"] for r in rs}),
+                    "declined": _pooled_and_per_prompt(
+                        rs, lambda r: r["status"] == "declined", nb, seed
+                    ),
+                    "groundedness_answered": mean_with_ci(
+                        [r["groundedness"] for r in scored_rs],
+                        [r["question_id"] for r in scored_rs],
+                        nb,
+                        seed,
+                    ),
+                }
+                if cat in ("a", "b"):
+                    entry["accuracy_all"] = _pooled_and_per_prompt(
+                        rs, lambda r: is_correct(r["label"]) is True, nb, seed
+                    )
+                    entry["accuracy_answered"] = mean_with_ci(
+                        [float(is_correct(r["label"]) is True) for r in answered],
+                        [r["question_id"] for r in answered],
+                        nb,
+                        seed,
+                    )
+                if cat == "c":
+                    for sub in ("not_disclosed", "filing_not_in_corpus"):
+                        srs = [r for r in rs if r["subtype"] == sub]
+                        entry[f"answered_{sub}"] = _pooled_and_per_prompt(
+                            srs, lambda r: r["answered"], nb, seed
+                        )
+                out["by_category"][cat][cond][model] = entry
+
+    # (d): premise handling, the author's labels (the measurement) and the judge's
+    d = [r for r in rows if r["category"] == "d"]
+    out["premise"] = {}
+    human_done = bool(d) and all(r["premise_human"] is not None for r in d)
+    for model in sorted({r["model"] for r in d}):
+        rs = [r for r in d if r["model"] == model]
+        block = {}
+        for source in ("human", "judge"):
+            if source == "human" and not human_done:
+                block[source] = {"status": "not_done"}
+                continue
+            key = f"premise_{source}"
+            block[source] = {
+                "counts": dict(Counter(r[key] for r in rs)),
+                "rejected": _pooled_and_per_prompt(
+                    rs, lambda r, key=key: r[key] == "rejects_premise", nb, seed
+                ),
+            }
+        out["premise"][model] = block
+    both = [
+        r for r in d if r["premise_human"] is not None and r["premise_judge"] in PREMISE_HANDLINGS
+    ]
+    out["premise_agreement"] = (
+        {
+            "n": len(both),
+            "kappa_3class": cohen_kappa(
+                [r["premise_human"] for r in both], [r["premise_judge"] for r in both]
+            ),
+            "kappa_rejects": kappa(
+                [r["premise_human"] == "rejects_premise" for r in both],
+                [r["premise_judge"] == "rejects_premise" for r in both],
+            ),
+            "raw_agreement": _share([r["premise_human"] == r["premise_judge"] for r in both]),
+        }
+        if both
+        else {"status": "not_done"}
+    )
+
+    # the statistics the predictions name (P4.1-P4.5); retrieved condition throughout
+    out["premise_rejected"], out["v4_raises_rejection"] = {}, {}
+    if human_done:
+        for model, block in out["premise"].items():
+            h = block["human"]["rejected"]
+            out["premise_rejected"][model] = {
+                "value": h["pooled"]["mean"],
+                "ci95": h["pooled"]["ci95"],
+            }
+            pp = h["per_prompt"]
+            if "v1_zero_shot" in pp and "v4_abstention" in pp:
+                out["v4_raises_rejection"][model] = (
+                    "yes" if pp["v4_abstention"]["rate"] > pp["v1_zero_shot"]["rate"] else "no"
+                )
+    out["out_of_corpus_answered_from_memory"] = {}
+    out["two_filing_minus_one_filing_accuracy"] = {}
+    for model in sorted({r["model"] for r in rows}):
+        c = _get(
+            out, "by_category", "c", "retrieved", model, "answered_filing_not_in_corpus", "pooled"
+        )
+        if c:
+            out["out_of_corpus_answered_from_memory"][model] = {
+                "value": c["mean"],
+                "ci95": c["ci95"],
+            }
+        ab = [
+            r
+            for r in rows
+            if r["model"] == model and r["condition"] == "retrieved" and r["category"] in ("a", "b")
+        ]
+        if {r["category"] for r in ab} == {"a", "b"}:
+            corr = np.asarray([float(is_correct(r["label"]) is True) for r in ab])
+            is_b = np.asarray([r["category"] == "b" for r in ab])
+
+            def diff(idx: np.ndarray, corr=corr, is_b=is_b) -> float | None:
+                b = is_b[idx]
+                if b.all() or not b.any():
+                    return None
+                return float(corr[idx][b].mean() - corr[idx][~b].mean())
+
+            out["two_filing_minus_one_filing_accuracy"][model] = {
+                "value": diff(np.arange(len(ab))),
+                "ci95": question_ci([r["question_id"] for r in ab], diff, nb, seed),
+            }
+    return out
 
 
 # --------------------------------------------------------------------------------------
