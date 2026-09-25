@@ -57,3 +57,14 @@ def test_npy_without_keys_file_is_not_trusted(tmp_path):
     emb = CountingEmbedder()
     _, n_new = embedding_cache.get_or_embed(path, ["a", "bb"], emb)
     assert n_new == 2
+
+
+def test_unchanged_cache_is_not_rewritten(tmp_path, monkeypatch):
+    path = tmp_path / "c.npy"
+    embedding_cache.get_or_embed(path, ["a", "bb"], CountingEmbedder())
+    saves = []
+    monkeypatch.setattr(embedding_cache, "save", lambda *a: saves.append(a))
+    embedding_cache.get_or_embed(path, ["a", "bb"], CountingEmbedder())
+    assert saves == []  # a read-only caller (the index build) leaves the files untouched
+    embedding_cache.get_or_embed(path, ["bb", "a"], CountingEmbedder())
+    assert len(saves) == 1  # a new order is a new cache

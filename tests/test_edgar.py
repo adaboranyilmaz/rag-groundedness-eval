@@ -313,3 +313,18 @@ class TestGetRetries:
         with pytest.raises(urllib.error.HTTPError):
             edgar._get("https://example.test/a", "ua")
         assert len(calls) == edgar.MAX_ATTEMPTS
+
+    def test_offline_miss_raises_without_network(self, monkeypatch):
+        calls = self._stub(monkeypatch, [])
+        monkeypatch.setenv("EDGAR_OFFLINE", "1")
+        with pytest.raises(edgar.EdgarOffline):
+            edgar._get("https://example.test/a", "ua")
+        assert calls == []
+
+    def test_offline_hit_is_served_from_cache(self, monkeypatch, tmp_path):
+        calls = self._stub(monkeypatch, [])
+        cached = tmp_path / "a.htm"
+        cached.write_bytes(b"cached")
+        monkeypatch.setenv("EDGAR_OFFLINE", "1")
+        assert edgar._get("https://example.test/a", "ua", cache_path=cached) == b"cached"
+        assert calls == []

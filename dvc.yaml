@@ -1,0 +1,456 @@
+# The pipeline from raw data to every reported number (PROJECT_SPEC.md §6 Phase 7):
+#   ingest -> chunk -> embed -> index -> retrieve -> generate -> evaluate -> analyse -> track
+#
+# Roots (`dvc add`, pushed to the local remote): data/raw/edgar_cache, data/raw/financebench
+# and the LLM response cache data/cache/llm. Human inputs are git-tracked dependencies, never
+# outputs, so a rebuild cannot rewrite them: the adversarial questions, the author's labels,
+# the review samples and the pre-registration. Results files are git-tracked outputs
+# (`cache: false`); data files are DVC-cached outputs.
+#
+# Every command runs with configs/replay.env: a model response missing from the cache, or an
+# EDGAR document missing from the raw cache, stops the stage instead of calling the network.
+# A rebuild therefore costs no API spend and reads only the versioned raw data.
+#
+# Not stages: the dry-run cost estimates (they call the token-counting endpoint and record
+# what was expected before money was spent), the drawing of labelling samples, and the
+# labelling pages. The Qdrant indices' vectors live in the Qdrant server's volume (only their
+# manifests are outputs here); the `index` stage needs `docker compose up -d qdrant`.
+
+stages:
+  ingest:
+    cmd: uv run --env-file configs/replay.env python scripts/01_ingest.py
+    deps:
+      - scripts/01_ingest.py
+      - src/ingestion/edgar.py
+      - src/ingestion/parser.py
+      - data/raw/edgar_cache
+      - data/raw/financebench
+    outs:
+      - data/processed/parsed
+      - results/metrics/corpus_stats.json:
+          cache: false
+
+  chunk:
+    cmd: uv run --env-file configs/replay.env python scripts/02_chunk.py
+    deps:
+      - scripts/02_chunk.py
+      - src/ingestion/chunking.py
+      - src/ingestion/parser.py
+      - data/processed/parsed
+      - data/raw/financebench
+    outs:
+      - data/processed/chunks
+      - results/metrics/chunking_stats.json:
+          cache: false
+      - results/metrics/chunking_table_report.md:
+          cache: false
+
+  # One stage per configuration. The embedding cache is content-addressed (rows keyed by the
+  # SHA-256 of their chunk text), so it persists across runs: a changed chunk set re-embeds
+  # only its new texts. `dvc repro` on a checkout without the embeddings computes them all.
+  embed:
+    matrix:
+      chunking: [fixed_size, recursive_structural, table_aware]
+      embedder: [bge-small-en-v1.5, all-MiniLM-L6-v2, bge-base-en-v1.5]
+    cmd: >-
+      uv run --env-file configs/replay.env python scripts/03_build_index.py --embed-only
+      --chunking-strategy ${item.chunking} --embedding-model ${item.embedder}
+    deps:
+      - scripts/03_build_index.py
+      - src/retrieval/embeddings.py
+      - src/retrieval/embedding_cache.py
+      - data/processed/chunks/${item.chunking}.jsonl
+    outs:
+      - data/processed/embeddings/${item.chunking}__${item.embedder}.npy:
+          persist: true
+      - data/processed/embeddings/${item.chunking}__${item.embedder}.keys.json:
+          persist: true
+
+  index:
+    cmd: uv run --env-file configs/replay.env python scripts/03_build_index.py --all
+    deps:
+      - scripts/03_build_index.py
+      - src/retrieval
+      - configs/index_configs.yaml
+      - data/processed/chunks
+      - data/raw/financebench
+      - data/processed/embeddings/fixed_size__bge-small-en-v1.5.npy
+      - data/processed/embeddings/fixed_size__all-MiniLM-L6-v2.npy
+      - data/processed/embeddings/fixed_size__bge-base-en-v1.5.npy
+      - data/processed/embeddings/recursive_structural__bge-small-en-v1.5.npy
+      - data/processed/embeddings/recursive_structural__all-MiniLM-L6-v2.npy
+      - data/processed/embeddings/recursive_structural__bge-base-en-v1.5.npy
+      - data/processed/embeddings/table_aware__bge-small-en-v1.5.npy
+      - data/processed/embeddings/table_aware__all-MiniLM-L6-v2.npy
+      - data/processed/embeddings/table_aware__bge-base-en-v1.5.npy
+    outs:
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+      - data/indices/fixed_size__bge-small-en-v1.5__qdrant
+      - data/indices/fixed_size__all-MiniLM-L6-v2__faiss
+      - data/indices/fixed_size__all-MiniLM-L6-v2__qdrant
+      - data/indices/fixed_size__bge-base-en-v1.5__faiss
+      - data/indices/fixed_size__bge-base-en-v1.5__qdrant
+      - data/indices/recursive_structural__bge-small-en-v1.5__faiss
+      - data/indices/recursive_structural__bge-small-en-v1.5__qdrant
+      - data/indices/recursive_structural__all-MiniLM-L6-v2__faiss
+      - data/indices/recursive_structural__all-MiniLM-L6-v2__qdrant
+      - data/indices/recursive_structural__bge-base-en-v1.5__faiss
+      - data/indices/recursive_structural__bge-base-en-v1.5__qdrant
+      - data/indices/table_aware__bge-small-en-v1.5__faiss
+      - data/indices/table_aware__bge-small-en-v1.5__qdrant
+      - data/indices/table_aware__all-MiniLM-L6-v2__faiss
+      - data/indices/table_aware__all-MiniLM-L6-v2__qdrant
+      - data/indices/table_aware__bge-base-en-v1.5__faiss
+      - data/indices/table_aware__bge-base-en-v1.5__qdrant
+      - results/metrics/index_stats.json:
+          cache: false
+
+  retrieve:
+    cmd: uv run --env-file configs/replay.env python scripts/04_eval_retrieval.py
+    deps:
+      - scripts/04_eval_retrieval.py
+      - src/retrieval
+      - src/evaluation/gold_spans.py
+      - src/evaluation/retrieval_metrics.py
+      - configs/retrieval_grid.yaml
+      - data/raw/financebench
+      - data/processed/parsed
+      - data/processed/chunks
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+      - data/indices/fixed_size__all-MiniLM-L6-v2__faiss
+      - data/indices/fixed_size__bge-base-en-v1.5__faiss
+      - data/indices/recursive_structural__bge-small-en-v1.5__faiss
+      - data/indices/recursive_structural__all-MiniLM-L6-v2__faiss
+      - data/indices/recursive_structural__bge-base-en-v1.5__faiss
+      - data/indices/table_aware__bge-small-en-v1.5__faiss
+      - data/indices/table_aware__all-MiniLM-L6-v2__faiss
+      - data/indices/table_aware__bge-base-en-v1.5__faiss
+    outs:
+      - results/metrics/gold_span_alignment.json:
+          cache: false
+      - results/metrics/retrieval_grid.json:
+          cache: false
+      - results/metrics/retrieval_per_question.jsonl:
+          cache: false
+
+  retrieve_scoped:
+    cmd: uv run --env-file configs/replay.env python scripts/04b_scoped_retrieval.py
+    deps:
+      - scripts/04b_scoped_retrieval.py
+      - scripts/04_eval_retrieval.py
+      - src/retrieval
+      - src/evaluation/gold_spans.py
+      - src/evaluation/retrieval_metrics.py
+      - configs/generation.yaml
+      - configs/retrieval_grid.yaml
+      - data/raw/financebench
+      - data/processed/parsed
+      - data/processed/chunks/fixed_size.jsonl
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+      - results/metrics/retrieval_per_question.jsonl
+    outs:
+      - results/metrics/retrieval_scoped.json:
+          cache: false
+
+  generate:
+    cmd: uv run --env-file configs/replay.env python scripts/05_generate.py --no-mlflow
+    deps: &generate_deps
+      - scripts/05_generate.py
+      - scripts/04_eval_retrieval.py
+      - src/generation
+      - src/retrieval
+      - src/evaluation/gold_spans.py
+      - src/evaluation/retrieval_metrics.py
+      - prompts/v1_zero_shot.md
+      - prompts/v2_citation_required.md
+      - prompts/v3_chain_of_thought.md
+      - prompts/v4_abstention.md
+      - configs/generation.yaml
+      - configs/retrieval_grid.yaml
+      - data/raw/financebench
+      - data/processed/parsed
+      - data/processed/chunks/fixed_size.jsonl
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+      - data/cache/llm
+      - results/metrics/retrieval_per_question.jsonl
+      - results/metrics/api_spend.json
+    outs:
+      - results/traces/retrieved:
+          cache: false
+      - results/traces/oracle:
+          cache: false
+      - results/metrics/generation_runs.json:
+          cache: false
+
+  generate_pilot:
+    cmd: uv run --env-file configs/replay.env python scripts/05_generate.py --pilot 10 --no-mlflow
+    deps: *generate_deps
+    outs:
+      - results/traces/pilot:
+          cache: false
+      - results/metrics/generation_runs_pilot.json:
+          cache: false
+
+  evaluate:
+    cmd: >-
+      uv run --env-file configs/replay.env python scripts/06_eval_generation.py --offline
+      --no-mlflow
+    deps: &evaluate_deps
+      - scripts/06_eval_generation.py
+      - src/evaluation
+      - src/generation
+      - prompts/judge
+      - configs/evaluation.yaml
+      - configs/generation.yaml
+      - configs/retrieval_grid.yaml
+      - data/raw/financebench
+      - data/cache/llm
+      - results/traces/retrieved
+      - results/traces/oracle
+      - results/metrics/gold_span_alignment.json
+      - results/metrics/api_spend.json
+      - results/labels/out_of_corpus_audit.json
+    outs:
+      - results/metrics/eval_per_trace.jsonl:
+          cache: false
+      - results/metrics/eval_main.json:
+          cache: false
+      - results/metrics/correctness_crosscheck.json:
+          cache: false
+      - results/plots/reliability_diagram.png:
+          cache: false
+
+  evaluate_pilot:
+    cmd: uv run --env-file configs/replay.env python scripts/06_eval_generation.py --pilot --no-mlflow
+    deps: *evaluate_deps
+    outs:
+      - results/metrics/eval_pilot_per_trace.jsonl:
+          cache: false
+      - results/metrics/eval_pilot_review.md:
+          cache: false
+
+  judge_validation:
+    cmd: uv run --env-file configs/replay.env python scripts/06b_judge_validation.py agreement
+    deps:
+      - scripts/06b_judge_validation.py
+      - src/evaluation
+      - src/generation
+      - prompts/judge
+      - configs/evaluation.yaml
+      - configs/retrieval_grid.yaml
+      - data/raw/financebench
+      - data/cache/llm
+      - results/traces/retrieved
+      - results/traces/oracle
+      - results/metrics/gold_span_alignment.json
+      - results/metrics/api_spend.json
+      - results/labels/validation_sample.json
+      - results/labels/groundedness_human.json
+    outs:
+      - results/metrics/judge_agreement.json:
+          cache: false
+      - results/metrics/judge_agreement.md:
+          cache: false
+
+  adversarial_contexts:
+    cmd:
+      - uv run --env-file configs/replay.env python scripts/07a_adversarial_set.py validate
+      - uv run --env-file configs/replay.env python scripts/07b_adversarial_run.py contexts
+    deps:
+      - scripts/07a_adversarial_set.py
+      - scripts/07b_adversarial_run.py
+      - scripts/05_generate.py
+      - scripts/04_eval_retrieval.py
+      - src/evaluation
+      - src/generation
+      - src/retrieval
+      - prompts
+      - configs/adversarial.yaml
+      - configs/generation.yaml
+      - configs/evaluation.yaml
+      - configs/retrieval_grid.yaml
+      - data/adversarial/questions.jsonl
+      - data/processed/parsed
+      - data/processed/chunks/fixed_size.jsonl
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+    outs:
+      - results/metrics/adversarial_contexts.json:
+          cache: false
+
+  adversarial_generate:
+    cmd: uv run --env-file configs/replay.env python scripts/07b_adversarial_run.py generate
+    deps:
+      - scripts/07a_adversarial_set.py
+      - scripts/07b_adversarial_run.py
+      - scripts/05_generate.py
+      - scripts/04_eval_retrieval.py
+      - src/evaluation
+      - src/generation
+      - src/retrieval
+      - prompts
+      - configs/adversarial.yaml
+      - configs/generation.yaml
+      - configs/evaluation.yaml
+      - configs/retrieval_grid.yaml
+      - data/adversarial/questions.jsonl
+      - data/processed/parsed
+      - data/processed/chunks/fixed_size.jsonl
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+      - data/cache/llm
+      - results/metrics/api_spend.json
+    outs:
+      - results/traces/adversarial:
+          cache: false
+      - results/metrics/generation_runs_adversarial.json:
+          cache: false
+
+  adversarial_premise_pilot:
+    cmd: uv run --env-file configs/replay.env python scripts/07b_adversarial_run.py premise-pilot
+    deps:
+      - scripts/07b_adversarial_run.py
+      - src/evaluation
+      - src/generation
+      - prompts/judge
+      - configs/adversarial.yaml
+      - configs/evaluation.yaml
+      - data/adversarial/questions.jsonl
+      - data/cache/llm
+      - results/traces/adversarial
+      - results/metrics/api_spend.json
+    outs:
+      - results/metrics/premise_judge_pilot.json:
+          cache: false
+      - results/metrics/premise_judge_pilot.md:
+          cache: false
+
+  adversarial_evaluate:
+    cmd: >-
+      uv run --env-file configs/replay.env python scripts/07b_adversarial_run.py evaluate
+      --offline
+    deps:
+      - scripts/07a_adversarial_set.py
+      - scripts/07b_adversarial_run.py
+      - scripts/05_generate.py
+      - scripts/04_eval_retrieval.py
+      - src/evaluation
+      - src/generation
+      - src/retrieval
+      - prompts
+      - configs/adversarial.yaml
+      - configs/generation.yaml
+      - configs/evaluation.yaml
+      - configs/retrieval_grid.yaml
+      - data/adversarial/questions.jsonl
+      - data/processed/parsed
+      - data/processed/chunks/fixed_size.jsonl
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+      - data/cache/llm
+      - results/traces/adversarial
+      - results/metrics/eval_per_trace.jsonl
+      - results/metrics/api_spend.json
+    outs:
+      - results/metrics/eval_adversarial_per_trace.jsonl:
+          cache: false
+
+  replay_check:
+    cmd: uv run --env-file configs/replay.env python scripts/05_generate.py --verify-replay
+    deps:
+      - scripts/05_generate.py
+      - src/generation
+      - prompts
+      - data/cache/llm
+      - results/traces/retrieved
+      - results/traces/oracle
+      - results/traces/pilot
+      - results/traces/adversarial
+    outs:
+      - results/metrics/generation_replay_check.json:
+          cache: false
+
+  analyse:
+    cmd: uv run --env-file configs/replay.env python scripts/07_reliability_analysis.py
+    deps:
+      - scripts/07_reliability_analysis.py
+      - src/evaluation
+      - src/generation
+      - configs/reliability.yaml
+      - configs/evaluation.yaml
+      - data/raw/financebench
+      - results/traces/retrieved
+      - results/traces/oracle
+      - results/metrics/eval_per_trace.jsonl
+      - results/metrics/eval_adversarial_per_trace.jsonl
+      - results/metrics/premise_judge_pilot.json
+      - results/metrics/phase6_preregistration.md
+      - results/labels/validation_sample.json
+      - results/labels/groundedness_human.json
+      - results/labels/quadrant_review_sample.json
+      - results/labels/quadrant_review_human.json
+      - results/labels/quadrant_review_categories.json
+      - results/labels/premise_sample.json
+      - results/labels/premise_human.json
+    outs:
+      - results/metrics/reliability_analysis.json:
+          cache: false
+      - results/metrics/reliability_analysis.md:
+          cache: false
+      - results/metrics/quadrant_examples.md:
+          cache: false
+      - results/plots/retrieval_vs_groundedness.png:
+          cache: false
+      - results/plots/correct_vs_grounded.png:
+          cache: false
+      - results/plots/signal_agreement.png:
+          cache: false
+      - results/plots/prompt_effect.png:
+          cache: false
+      - results/plots/adversarial_breakdown.png:
+          cache: false
+
+  select:
+    cmd: uv run --env-file configs/replay.env python scripts/09_track_experiments.py select
+    deps:
+      - scripts/09_track_experiments.py
+      - src/tracking/selection.py
+      - src/evaluation/reliability.py
+      - prompts
+      - configs/generation.yaml
+      - results/metrics/eval_per_trace.jsonl
+    outs:
+      - results/metrics/pipeline_selection.json:
+          cache: false
+
+  # MLflow is rebuilt from the results files; its store (MLFLOW_TRACKING_URI, default
+  # sqlite:///mlflow.db) is gitignored, and the manifest records what it holds.
+  track:
+    cmd: uv run --env-file configs/replay.env python scripts/09_track_experiments.py track
+    deps:
+      - scripts/09_track_experiments.py
+      - src/tracking
+      - src/serving/pipeline.py
+      - src/generation
+      - prompts
+      - configs/generation.yaml
+      - configs/evaluation.yaml
+      - results/traces/retrieved
+      - results/traces/oracle
+      - results/traces/adversarial
+      - results/metrics/index_stats.json
+      - results/metrics/retrieval_grid.json
+      - results/metrics/eval_main.json
+      - results/metrics/eval_per_trace.jsonl
+      - results/metrics/generation_runs.json
+      - results/metrics/generation_runs_adversarial.json
+      - results/metrics/reliability_analysis.json
+      - results/metrics/reliability_analysis.md
+      - results/metrics/quadrant_examples.md
+      - results/metrics/pipeline_selection.json
+      - results/plots/reliability_diagram.png
+      - results/plots/retrieval_vs_groundedness.png
+      - results/plots/correct_vs_grounded.png
+      - results/plots/signal_agreement.png
+      - results/plots/prompt_effect.png
+      - results/plots/adversarial_breakdown.png
+    outs:
+      - results/metrics/mlflow_runs.json:
+          cache: false

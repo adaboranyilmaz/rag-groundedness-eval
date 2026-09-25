@@ -65,7 +65,7 @@
       "report_date": "2019-12-31",
       "filing_date": "2020-02-27",
       "exhibits_appended": [],
-      "exhibit_lookup_error": "HTTP Error 503: Service Unavailable",
+      "exhibit_lookup_error": null,
       "cover_period_end": "2019-12-31",
       "period_check": "match",
       "n_blocks": 2088,
@@ -441,7 +441,7 @@
       "report_date": "2018-12-31",
       "filing_date": "2019-02-08",
       "exhibits_appended": [],
-      "exhibit_lookup_error": "HTTP Error 503: Service Unavailable",
+      "exhibit_lookup_error": null,
       "cover_period_end": "2018-12-31",
       "period_check": "match",
       "n_blocks": 1431,
@@ -1218,8 +1218,5 @@
     "match": 68,
     "cover_not_found": 4
   },
-  "exhibit_lookup_failed": [
-    "ACTIVISIONBLIZZARD_2019_10K",
-    "BOEING_2018_10K"
-  ]
+  "exhibit_lookup_failed": []
 }

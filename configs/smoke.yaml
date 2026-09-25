@@ -1,0 +1,25 @@
+# The 10-question smoke evaluation (scripts/10_smoke_eval.py): the pipeline scripts run end to
+# end on a small slice of the benchmark, in a separate workspace, and the traces and
+# evaluations they produce are compared with the committed ones. Run by CI on every pull
+# request and by tests/test_integration.py.
+#
+# Only the oracle condition can run on a slice: its context comes from the question's own
+# filing, while the retrieved condition searches all 72 filings (hours of embedding on CPU).
+
+n_questions: 10
+seed: 0 # draws the questions, once, from those with aligned gold evidence (oracle traces)
+condition: oracle
+models: [claude-sonnet-5, qwen2.5-3b]
+prompts: [v1_zero_shot] # the registered pipeline's prompt (results/metrics/pipeline_selection.json)
+retrieval: # the Phase 3 winner, as in configs/generation.yaml
+  chunking: fixed_size
+  embedding: bge-small-en-v1.5
+
+# Cached model outputs the slice needs (generation and judge responses, keyed by request
+# hash; the requests themselves carry filing text and are not stored), and the questions.
+fixture_dir: tests/fixtures/smoke
+
+# Trace fields compared for equality with the committed traces. Retrieval scores are compared
+# with a tolerance instead: CPU and GPU embeddings agree to ~1e-6, not bit for bit, and the
+# scores are not part of the prompt (only the chunks' order is).
+score_abs_tol: 1.0e-4

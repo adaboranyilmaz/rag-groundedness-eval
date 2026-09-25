@@ -17,6 +17,9 @@
 - The Ollama backend runs at `temperature=0` with a fixed seed. Ollama silently drops the
   start of a prompt that exceeds `num_ctx`, so the request is refused beforehand if a
   deliberately pessimistic token estimate would not fit alongside `max_tokens` of output.
+- Replay-only mode (`RAG_REPLAY_ONLY=1`, set by `dvc repro` and CI): every response must
+  come from the cache, and a miss raises `CacheMiss` instead of calling a model. A pipeline
+  rebuild therefore costs nothing and cannot silently produce new answers.
 """
 
 from __future__ import annotations
@@ -40,6 +43,14 @@ CACHE_DIR = Path("data/cache/llm")
 PESSIMISTIC_CHARS_PER_TOKEN = 1.5
 # Removed from the SDK 1.x `messages.create()` signature; sent via `extra_body` instead.
 SAMPLING_PARAMS = ("temperature", "top_p", "top_k")
+
+
+class CacheMiss(RuntimeError):
+    """A request absent from the response cache while replay-only mode is on."""
+
+
+def replay_only() -> bool:
+    return os.environ.get("RAG_REPLAY_ONLY") == "1"
 
 
 def estimate_tokens_upper(text: str) -> int:
@@ -112,7 +123,9 @@ class ResponseCache:
         path.parent.mkdir(parents=True, exist_ok=True)
         entry = {"request": asdict(request), "response": asdict(response)}
         tmp = path.with_suffix(f".tmp{os.getpid()}.{threading.get_ident()}")
-        tmp.write_text(json.dumps(entry, ensure_ascii=False, indent=1), encoding="utf-8")
+        tmp.write_text(
+            json.dumps(entry, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n"
+        )
         os.replace(tmp, path)
 
 
@@ -242,7 +255,7 @@ class SpendLedger:
             caps["project_usd"] = self.project_cap_usd
             caps[f"{self.phase}_usd"] = self.phase_cap_usd
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.path.write_text(json.dumps(self.state, indent=2), encoding="utf-8")
+            self.path.write_text(json.dumps(self.state, indent=2), encoding="utf-8", newline="\n")
         return actual
 
     def release(self, reserved: float) -> None:
@@ -405,6 +418,11 @@ def generate_cached(
     cached = cache.get(request.cache_key)
     if cached is not None:
         return cached, True, 0.0
+    if replay_only():
+        raise CacheMiss(
+            f"{request.model} request {request.cache_key[:12]} is not in the response cache "
+            "(RAG_REPLAY_ONLY=1)"
+        )
     if backend.name == "anthropic" and ledger is None:
         raise BudgetExceeded("API calls require a SpendLedger")
     reserved = ledger.reserve(request) if ledger is not None else 0.0

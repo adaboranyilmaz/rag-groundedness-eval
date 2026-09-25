@@ -268,7 +268,7 @@ def cmd_contexts(cfg: dict, gen: dict) -> dict:
         "n_approved": len(recs),
         "questions_sha256": hashlib.sha256(Path(cfg["questions"]).read_bytes()).hexdigest(),
     }
-    CONTEXTS_PATH.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8")
+    CONTEXTS_PATH.write_text(json.dumps(report, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps(report["conditions"], indent=1))
     print(f"wrote {CONTEXTS_PATH}")
     return contexts
@@ -373,7 +373,7 @@ def cmd_estimate(cfg: dict, gen: dict, ev: dict) -> None:
         }
     )
     est["total_expected_upper_usd"] = round(total_expected + est["judge_upper_bound_usd"], 4)
-    ESTIMATE_PATH.write_text(json.dumps(est, indent=1) + "\n", encoding="utf-8")
+    ESTIMATE_PATH.write_text(json.dumps(est, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps({k: v for k, v in est.items() if k != "arms"}, indent=1))
     print(f"wrote {ESTIMATE_PATH}")
 
@@ -418,7 +418,7 @@ def cmd_generate(cfg: dict, gen: dict, ev: dict) -> None:
             }
         )
         if mc["backend"] == "ollama":
-            arm["model_digest"] = backend.digest(mc["model"])
+            arm["model_digest"] = g5.arm_model_digest(backend, mc["model"], traces)
         summary["arms"][f"{condition}__{model_key}__{pid}"] = arm
         print(f"    parse {arm['parse_status']}  abstain-token {arm['abstained_token_rate']:.2f}")
     summary["meta"] = {
@@ -429,7 +429,7 @@ def cmd_generate(cfg: dict, gen: dict, ev: dict) -> None:
         "environment": g5.environment_meta(gen, list(gen["models"])),
         "api_spend_to_date_usd": round(ledger.state["total_usd"], 6),
     }
-    RUNS_PATH.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    RUNS_PATH.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"\nwrote {RUNS_PATH}; API spend to date ${ledger.state['total_usd']:.4f}")
 
 
@@ -519,10 +519,11 @@ def cmd_premise_pilot(cfg: dict, ev: dict) -> None:
             f"- **Answer:** {t['parsed']['answer']}",
             f"- **Judge:** {res.get('handling', o.get('error'))} — {res.get('reason', '')}",
         ]
-    PILOT_PATH.write_text("\n".join(out) + "\n", encoding="utf-8")
+    PILOT_PATH.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
     PILOT_IDS_PATH.write_text(
         json.dumps({"trace_ids": sorted(t["trace_id"] for t in sample)}, indent=1) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     print(f"wrote {PILOT_PATH}, {PILOT_IDS_PATH}")
 
@@ -585,6 +586,7 @@ def cmd_evaluate(cfg: dict, gen: dict, ev: dict, offline: bool) -> None:
     EVAL_PATH.write_text(
         "".join(json.dumps(r, ensure_ascii=False, sort_keys=True) + "\n" for r in records),
         encoding="utf-8",
+        newline="\n",
     )
     errors = sum(bool(r["judge_errors"]) for r in records) + sum(
         "error" in (r.get("premise") or {}) for r in records
@@ -636,6 +638,7 @@ def cmd_label(cfg: dict) -> None:
             )
             + "\n",
             encoding="utf-8",
+            newline="\n",
         )
     by_id = {t["trace_id"]: t for t in traces}
     page = [
@@ -649,7 +652,7 @@ def cmd_label(cfg: dict) -> None:
         }
         for it in items
     ]
-    PREMISE_PAGE_PATH.write_text(render_premise_page(page, sha), encoding="utf-8")
+    PREMISE_PAGE_PATH.write_text(render_premise_page(page, sha), encoding="utf-8", newline="\n")
     print(f"{len(items)} answers -> {PREMISE_PAGE_PATH}")
 
 

@@ -1,0 +1,6 @@
+# Every checkout gets LF line endings, on Windows too, so that the bytes DVC hashes into
+# dvc.lock, and the files the pipeline writes (always LF), are identical on every machine.
+* text=auto eol=lf
+*.png binary
+*.npy binary
+*.faiss binary

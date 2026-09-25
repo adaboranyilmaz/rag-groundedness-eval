@@ -6,8 +6,14 @@ Embeddings are computed once per (chunking_strategy, embedding_model) and cached
 (data/processed/embeddings/), then reused to build both backends -- re-embedding ~500k
 chunks on every rerun would be the single most wasteful thing this script could do.
 
+`--embed-only` computes (or tops up) one configuration's embeddings and builds nothing: the
+`embed` stage of the DVC pipeline (dvc.yaml), which runs once per configuration before the
+single `index` stage builds every index from the cached embeddings.
+
 Usage:
     uv run python scripts/03_build_index.py --all
+    uv run python scripts/03_build_index.py --embed-only --chunking-strategy fixed_size \
+        --embedding-model bge-small-en-v1.5
     uv run python scripts/03_build_index.py --chunking-strategy fixed_size \
         --embedding-model bge-small-en-v1.5 --backend faiss
 """
@@ -182,7 +188,20 @@ def main() -> None:
     parser.add_argument("--embedding-model", choices=list(MODEL_REGISTRY))
     parser.add_argument("--backend", choices=["faiss", "qdrant"])
     parser.add_argument("--all", action="store_true")
+    parser.add_argument("--embed-only", action="store_true")
     args = parser.parse_args()
+
+    if args.embed_only:
+        if not (args.chunking_strategy and args.embedding_model):
+            parser.error("--embed-only needs --chunking-strategy and --embedding-model")
+        print(f"=== {args.chunking_strategy} / {args.embedding_model}: embeddings only ===")
+        get_or_build_embeddings(
+            args.chunking_strategy,
+            args.embedding_model,
+            load_chunks(args.chunking_strategy),
+            EmbeddingModel(args.embedding_model),
+        )
+        return
 
     INDICES_DIR.mkdir(parents=True, exist_ok=True)
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -266,7 +285,7 @@ def main() -> None:
             results["equivalence_check"] = equivalence
             results["n_benchmark_queries"] = len(query_texts)
             out_path = RESULTS_DIR / "index_stats.json"
-            out_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+            out_path.write_text(json.dumps(results, indent=2), encoding="utf-8", newline="\n")
             print(f"  wrote (partial) {out_path}")
 
     print(f"\nDone. Final results at {RESULTS_DIR / 'index_stats.json'}")

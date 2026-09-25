@@ -33,9 +33,11 @@ from typing import Any
 from src.generation.llm import (
     AnthropicBackend,
     BudgetExceeded,
+    CacheMiss,
     GenerationRequest,
     ResponseCache,
     SpendLedger,
+    replay_only,
     response_from_message,
 )
 
@@ -61,7 +63,7 @@ def _write_record(batch_dir: Path, rec: dict) -> None:
     batch_dir.mkdir(parents=True, exist_ok=True)
     path = batch_dir / f"{rec['batch_id']}.json"
     tmp = path.with_suffix(f".tmp{os.getpid()}")
-    tmp.write_text(json.dumps(rec, ensure_ascii=False), encoding="utf-8")
+    tmp.write_text(json.dumps(rec, ensure_ascii=False), encoding="utf-8", newline="\n")
     os.replace(tmp, path)
 
 
@@ -90,6 +92,10 @@ def run_batch_cached(
     out.n_requested = len(unique)
     todo = {k: r for k, r in unique.items() if not cache.has(k)}
     out.n_cached_before = out.n_requested - len(todo)
+    if todo and replay_only():
+        raise CacheMiss(
+            f"{len(todo)} batch requests are not in the response cache (RAG_REPLAY_ONLY=1)"
+        )
 
     in_flight = pending_records(batch_dir)
     for rec in in_flight:

@@ -12,6 +12,7 @@ import pytest
 from src.generation.llm import (
     AnthropicBackend,
     BudgetExceeded,
+    CacheMiss,
     ContextOverflow,
     GenerationRequest,
     GenerationResponse,
@@ -370,6 +371,38 @@ class TestLedger:
         with pytest.raises(ConnectionError):
             generate_cached(backend, req(max_tokens=100), ResponseCache(tmp_path), led)
         led.reserve(req(max_tokens=100))  # would raise if the failed reservation leaked
+
+
+class TestReplayOnly:
+    def test_miss_raises_without_calling_backend(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("RAG_REPLAY_ONLY", "1")
+        calls = []
+        backend = SimpleNamespace(name="ollama", generate=lambda r: calls.append(r) or resp())
+        with pytest.raises(CacheMiss):
+            generate_cached(backend, req(), ResponseCache(tmp_path))
+        assert calls == []
+
+    def test_hit_is_served(self, tmp_path, monkeypatch):
+        cache = ResponseCache(tmp_path)
+        cache.put(req(), resp())
+        monkeypatch.setenv("RAG_REPLAY_ONLY", "1")
+        backend = SimpleNamespace(name="ollama", generate=lambda r: pytest.fail("called"))
+        _, was_cached, cost = generate_cached(backend, req(), cache)
+        assert (was_cached, cost) == (True, 0.0)
+
+    def test_batch_miss_raises_before_submitting(self, tmp_path, monkeypatch):
+        from src.generation.batch import run_batch_cached
+
+        monkeypatch.setenv("RAG_REPLAY_ONLY", "1")
+        client = SimpleNamespace()  # any attribute access would raise
+        with pytest.raises(CacheMiss, match="1 batch requests"):
+            run_batch_cached(
+                [req()],
+                ResponseCache(tmp_path / "c"),
+                ledger(tmp_path),
+                client,
+                batch_dir=tmp_path / "b",
+            )
 
 
 # --------------------------------------------------------------------------------------

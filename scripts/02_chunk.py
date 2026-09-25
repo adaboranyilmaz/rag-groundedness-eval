@@ -168,7 +168,7 @@ def main() -> None:
     CHUNKS_DIR.mkdir(parents=True, exist_ok=True)
     for name, chunks in per_strategy_chunks.items():
         out_path = CHUNKS_DIR / f"{name}.jsonl"
-        with open(out_path, "w", encoding="utf-8") as f:
+        with open(out_path, "w", encoding="utf-8", newline="\n") as f:
             for c in chunks:
                 f.write(json.dumps(asdict(c)) + "\n")
         print(f"  {name}: {len(chunks)} chunks -> {out_path}")
@@ -198,7 +198,7 @@ def main() -> None:
         },
     }
     out_path = RESULTS_DIR / "chunking_stats.json"
-    out_path.write_text(json.dumps(chunking_stats, indent=2), encoding="utf-8")
+    out_path.write_text(json.dumps(chunking_stats, indent=2), encoding="utf-8", newline="\n")
     print(f"\nWrote {out_path}")
 
     write_qualitative_report(stats, spot_check)
@@ -265,7 +265,7 @@ def write_qualitative_report(stats: dict, spot_check: list[dict]) -> None:
         )
         lines.append("")
     out_path = RESULTS_DIR / "chunking_table_report.md"
-    out_path.write_text("\n".join(lines), encoding="utf-8")
+    out_path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     print(f"Wrote {out_path}")
 
 

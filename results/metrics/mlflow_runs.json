@@ -1,0 +1,474 @@
+{
+  "meta": {
+    "note": "run and model ids differ on every rebuild and are not recorded here",
+    "registered_model": "rag-groundedness-pipeline",
+    "selected_arm": "retrieved__claude-sonnet-5__v1_zero_shot"
+  },
+  "experiments": {
+    "phase2-index-build": {
+      "n_runs": 18,
+      "runs": [
+        {
+          "run_name": "fixed_size__bge-small-en-v1.5__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "fixed_size__bge-small-en-v1.5__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "fixed_size__all-MiniLM-L6-v2__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "fixed_size__all-MiniLM-L6-v2__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "fixed_size__bge-base-en-v1.5__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "fixed_size__bge-base-en-v1.5__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "recursive_structural__bge-small-en-v1.5__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "recursive_structural__bge-small-en-v1.5__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "recursive_structural__all-MiniLM-L6-v2__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "recursive_structural__all-MiniLM-L6-v2__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "recursive_structural__bge-base-en-v1.5__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "recursive_structural__bge-base-en-v1.5__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "table_aware__bge-small-en-v1.5__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "table_aware__bge-small-en-v1.5__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "table_aware__all-MiniLM-L6-v2__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "table_aware__all-MiniLM-L6-v2__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "table_aware__bge-base-en-v1.5__faiss",
+          "n_params": 5,
+          "n_metrics": 6
+        },
+        {
+          "run_name": "table_aware__bge-base-en-v1.5__qdrant",
+          "n_params": 5,
+          "n_metrics": 6
+        }
+      ]
+    },
+    "phase3-retrieval-grid": {
+      "n_runs": 36,
+      "runs": [
+        {
+          "run_name": "fixed_size__bge-small-en-v1.5__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__bge-small-en-v1.5__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__bge-small-en-v1.5__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__bge-small-en-v1.5__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__all-MiniLM-L6-v2__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__all-MiniLM-L6-v2__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__all-MiniLM-L6-v2__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__all-MiniLM-L6-v2__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__bge-base-en-v1.5__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__bge-base-en-v1.5__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__bge-base-en-v1.5__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "fixed_size__bge-base-en-v1.5__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-small-en-v1.5__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-small-en-v1.5__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-small-en-v1.5__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-small-en-v1.5__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__all-MiniLM-L6-v2__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__all-MiniLM-L6-v2__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__all-MiniLM-L6-v2__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__all-MiniLM-L6-v2__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-base-en-v1.5__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-base-en-v1.5__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-base-en-v1.5__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "recursive_structural__bge-base-en-v1.5__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-small-en-v1.5__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-small-en-v1.5__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-small-en-v1.5__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-small-en-v1.5__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__all-MiniLM-L6-v2__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__all-MiniLM-L6-v2__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__all-MiniLM-L6-v2__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__all-MiniLM-L6-v2__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-base-en-v1.5__dense",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-base-en-v1.5__bm25",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-base-en-v1.5__hybrid",
+          "n_params": 6,
+          "n_metrics": 29
+        },
+        {
+          "run_name": "table_aware__bge-base-en-v1.5__hybrid_rerank",
+          "n_params": 6,
+          "n_metrics": 29
+        }
+      ]
+    },
+    "phase5-generation-eval": {
+      "n_runs": 17,
+      "runs": [
+        {
+          "run_name": "oracle__claude-sonnet-5__v1_zero_shot",
+          "n_params": 14,
+          "n_metrics": 102
+        },
+        {
+          "run_name": "oracle__claude-sonnet-5__v2_citation_required",
+          "n_params": 14,
+          "n_metrics": 106
+        },
+        {
+          "run_name": "oracle__claude-sonnet-5__v3_chain_of_thought",
+          "n_params": 14,
+          "n_metrics": 102
+        },
+        {
+          "run_name": "oracle__claude-sonnet-5__v4_abstention",
+          "n_params": 14,
+          "n_metrics": 102
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v1_zero_shot",
+          "n_params": 14,
+          "n_metrics": 102
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v2_citation_required",
+          "n_params": 14,
+          "n_metrics": 107
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v3_chain_of_thought",
+          "n_params": 14,
+          "n_metrics": 102
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v4_abstention",
+          "n_params": 14,
+          "n_metrics": 101
+        },
+        {
+          "run_name": "retrieved__claude-sonnet-5__v1_zero_shot",
+          "n_params": 14,
+          "n_metrics": 130
+        },
+        {
+          "run_name": "retrieved__claude-sonnet-5__v2_citation_required",
+          "n_params": 14,
+          "n_metrics": 132
+        },
+        {
+          "run_name": "retrieved__claude-sonnet-5__v3_chain_of_thought",
+          "n_params": 14,
+          "n_metrics": 130
+        },
+        {
+          "run_name": "retrieved__claude-sonnet-5__v4_abstention",
+          "n_params": 14,
+          "n_metrics": 130
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v1_zero_shot",
+          "n_params": 14,
+          "n_metrics": 130
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v2_citation_required",
+          "n_params": 14,
+          "n_metrics": 136
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v3_chain_of_thought",
+          "n_params": 14,
+          "n_metrics": 130
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v4_abstention",
+          "n_params": 14,
+          "n_metrics": 129
+        },
+        {
+          "run_name": "registered-pipeline",
+          "registered_model": "rag-groundedness-pipeline"
+        }
+      ]
+    },
+    "phase6-adversarial-eval": {
+      "n_runs": 16,
+      "runs": [
+        {
+          "run_name": "retrieved__claude-sonnet-5__v1_zero_shot",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "retrieved__claude-sonnet-5__v2_citation_required",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "retrieved__claude-sonnet-5__v3_chain_of_thought",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "retrieved__claude-sonnet-5__v4_abstention",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v1_zero_shot",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v2_citation_required",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v3_chain_of_thought",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "retrieved__qwen2.5-3b__v4_abstention",
+          "n_params": 9,
+          "n_metrics": 50
+        },
+        {
+          "run_name": "oracle__claude-sonnet-5__v1_zero_shot",
+          "n_params": 9,
+          "n_metrics": 20
+        },
+        {
+          "run_name": "oracle__claude-sonnet-5__v2_citation_required",
+          "n_params": 9,
+          "n_metrics": 20
+        },
+        {
+          "run_name": "oracle__claude-sonnet-5__v3_chain_of_thought",
+          "n_params": 9,
+          "n_metrics": 20
+        },
+        {
+          "run_name": "oracle__claude-sonnet-5__v4_abstention",
+          "n_params": 9,
+          "n_metrics": 20
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v1_zero_shot",
+          "n_params": 9,
+          "n_metrics": 20
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v2_citation_required",
+          "n_params": 9,
+          "n_metrics": 20
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v3_chain_of_thought",
+          "n_params": 9,
+          "n_metrics": 20
+        },
+        {
+          "run_name": "oracle__qwen2.5-3b__v4_abstention",
+          "n_params": 9,
+          "n_metrics": 20
+        }
+      ]
+    },
+    "phase6-reliability": {
+      "n_runs": 1,
+      "runs": [
+        {
+          "run_name": "reliability-analysis",
+          "n_params": 2,
+          "n_metrics": 2
+        }
+      ]
+    }
+  },
+  "n_runs": 88
+}

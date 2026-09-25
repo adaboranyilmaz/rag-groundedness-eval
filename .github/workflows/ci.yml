@@ -1,0 +1,80 @@
+# Lint, unit tests and the 10-question smoke evaluation (configs/smoke.yaml) on every pull
+# request. No step can call an LLM API: there is no key, and the smoke evaluation replays
+# model outputs from the committed fixture (RAG_REPLAY_ONLY=1).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_VERSION: "0.11.3"
+  PYTHONUTF8: "1"
+  MLFLOW_DISABLE_AGENT_HINT: "1"
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      qdrant: # the second vector-store backend; its tests skip when it is unreachable
+        image: qdrant/qdrant:v1.19.1
+        ports:
+          - 6333:6333
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+      - name: Install (locked; CPU torch on Linux)
+        run: uv sync --frozen
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Unit tests
+        run: uv run pytest -q
+
+  smoke-eval:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      # EDGAR requires a descriptive User-Agent (name + contact email). A secret, not a
+      # variable: variables are printed unmasked in the job log, and the email is personal.
+      EDGAR_USER_AGENT: ${{ secrets.EDGAR_USER_AGENT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+      - name: Install
+        run: uv sync --frozen
+      - name: Restore downloaded filings and models
+        uses: actions/cache@v4
+        with:
+          path: |
+            smoke-workspace/data/raw/edgar_cache
+            ~/.cache/huggingface
+          key: smoke-${{ hashFiles('configs/smoke.yaml', 'tests/fixtures/smoke/questions.json') }}
+      - name: Smoke evaluation (10 questions, end to end)
+        run: |
+          if [ -z "$EDGAR_USER_AGENT" ]; then
+            echo "::error::set the repository secret EDGAR_USER_AGENT (name + email)"; exit 1
+          fi
+          uv run python scripts/10_smoke_eval.py run --workspace smoke-workspace --reuse
+      - name: Upload the smoke result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-eval
+          path: smoke-workspace/smoke_eval.json
+          if-no-files-found: ignore

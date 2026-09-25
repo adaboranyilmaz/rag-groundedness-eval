@@ -2,12 +2,15 @@
 
 Every network call is disk-cached and rate-limited to stay well under SEC's fair-access
 policy (https://www.sec.gov/os/webmaster-faq#developers), and every request carries the
-descriptive User-Agent EDGAR requires.
+descriptive User-Agent EDGAR requires. With `EDGAR_OFFLINE=1` (set for pipeline rebuilds,
+configs/replay.env) a request missing from the cache raises `EdgarOffline` instead of going
+to the network, so a rebuild reads exactly the DVC-versioned raw data.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 import urllib.error
@@ -58,10 +61,16 @@ class EdgarUserAgentMissing(RuntimeError):
     """Raised when EDGAR_USER_AGENT is not configured; EDGAR blocks anonymous scrapers."""
 
 
+class EdgarOffline(RuntimeError):
+    """A request absent from the disk cache while EDGAR_OFFLINE=1."""
+
+
 def _get(url: str, user_agent: str, cache_path: Path | None = None) -> bytes:
     """Rate-limited, disk-cached, EDGAR-compliant GET."""
     if cache_path is not None and cache_path.exists():
         return cache_path.read_bytes()
+    if os.environ.get("EDGAR_OFFLINE") == "1":
+        raise EdgarOffline(f"not in the EDGAR cache (EDGAR_OFFLINE=1): {url}")
 
     if not user_agent:
         raise EdgarUserAgentMissing(

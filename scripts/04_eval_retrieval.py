@@ -17,6 +17,7 @@ Usage:
     uv run python scripts/04_eval_retrieval.py
     uv run python scripts/04_eval_retrieval.py --max-questions 5   # smoke run
     uv run python scripts/04_eval_retrieval.py --analyse-only       # re-derive analysis
+    uv run python scripts/04_eval_retrieval.py --align-only         # alignment file only
 """
 
 from __future__ import annotations
@@ -226,7 +227,7 @@ def analyse_only(cfg: dict) -> None:
         per_q.setdefault(row["cell"], []).append(row["metrics"][metric])
     grid.update(analyse(grid["cells"], per_q, cfg))
     grid["meta"]["analysis_recomputed_utc"] = datetime.now(UTC).isoformat(timespec="seconds")
-    grid_path.write_text(json.dumps(grid, indent=2), encoding="utf-8")
+    grid_path.write_text(json.dumps(grid, indent=2), encoding="utf-8", newline="\n")
     print(f"recomputed analysis in {grid_path}; winner {grid['selection']['winner']}")
 
 
@@ -237,6 +238,11 @@ def main() -> None:
         "--analyse-only",
         action="store_true",
         help="recompute selection + decomposition from saved per-question results",
+    )
+    parser.add_argument(
+        "--align-only",
+        action="store_true",
+        help="write the gold-evidence alignment and stop (used by the smoke evaluation)",
     )
     args = parser.parse_args()
 
@@ -261,8 +267,10 @@ def main() -> None:
     golds, alignment_report = align_all(questions, cfg)
     print(f"alignment: {alignment_report['status_counts']}")
     (RESULTS_DIR / f"gold_span_alignment{suffix}.json").write_text(
-        json.dumps(alignment_report, indent=2), encoding="utf-8"
+        json.dumps(alignment_report, indent=2), encoding="utf-8", newline="\n"
     )
+    if args.align_only:
+        return
     scored = [q for q in questions if golds[q["financebench_id"]]]
     print(f"{len(scored)} questions have >=1 aligned gold span and are scored")
 
@@ -454,10 +462,10 @@ def main() -> None:
         **analysis,
     }
     (RESULTS_DIR / f"retrieval_grid{suffix}.json").write_text(
-        json.dumps(output, indent=2), encoding="utf-8"
+        json.dumps(output, indent=2), encoding="utf-8", newline="\n"
     )
     (RESULTS_DIR / f"retrieval_per_question{suffix}.jsonl").write_text(
-        "\n".join(per_question_lines) + "\n", encoding="utf-8"
+        "\n".join(per_question_lines) + "\n", encoding="utf-8", newline="\n"
     )
     winner = analysis["selection"]["winner"]
     print(f"\nwinner by {sel_metric}: {winner} ({cells[winner]['metrics'][sel_metric]:.3f})")

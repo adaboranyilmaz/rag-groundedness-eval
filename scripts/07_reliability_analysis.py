@@ -249,7 +249,9 @@ def write_review_sample(q2: dict, cfg: dict, rows_by_trace: dict[str, dict]) -> 
         "sample_sha256": sha256_json(items),
         "items": items,
     }
-    path.write_text(json.dumps(sample, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(sample, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
+    )
     return sample
 
 
@@ -273,7 +275,7 @@ def write_review_page(sample: dict, recs: dict[str, dict], traces: dict[str, dic
             }
         )
     REVIEW_PAGE_PATH.write_text(
-        render_review_page(page_items, sample["sample_sha256"]), encoding="utf-8"
+        render_review_page(page_items, sample["sample_sha256"]), encoding="utf-8", newline="\n"
     )
 
 
@@ -813,11 +815,13 @@ def main() -> None:
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     (RESULTS_DIR / "reliability_analysis.json").write_text(
-        json.dumps(res, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        json.dumps(res, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
     )
-    (RESULTS_DIR / "reliability_analysis.md").write_text(report_markdown(res), encoding="utf-8")
+    (RESULTS_DIR / "reliability_analysis.md").write_text(
+        report_markdown(res), encoding="utf-8", newline="\n"
+    )
     (RESULTS_DIR / "quadrant_examples.md").write_text(
-        examples_markdown(res, recs, traces, golds), encoding="utf-8"
+        examples_markdown(res, recs, traces, golds), encoding="utf-8", newline="\n"
     )
     write_plots(res, sorted({r["model"] for r in rows}), PLOTS_DIR)
     n_unexpected = sum(1 for p in res["predictions"] if p["unexpected"])
