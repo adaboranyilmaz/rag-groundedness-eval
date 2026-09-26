@@ -1,0 +1,6 @@
+outs:
+- md5: c75797e63e3372f0916d6a9cdab67406.dir
+  size: 626374
+  nfiles: 100
+  hash: md5
+  path: llm_ragas

@@ -1,0 +1,538 @@
+{
+  "meta": {
+    "updated_utc": "2026-09-26T13:26:59+00:00",
+    "runs_included": [
+      0,
+      1,
+      2
+    ],
+    "complete": true,
+    "run_0": "the Phase 4 traces and Phase 5 records (eval_per_trace.jsonl)",
+    "std": "sample standard deviation (n-1) over the runs included",
+    "config": {
+      "arms": [
+        "retrieved__claude-sonnet-5__v1_zero_shot",
+        "retrieved__claude-sonnet-5__v2_citation_required"
+      ],
+      "runs": [
+        1,
+        2
+      ],
+      "replicate_tag": "replicates_run{run}",
+      "traces_dir": "results/replicates/traces",
+      "cache_dir": "data/cache/replicates/llm",
+      "batch_dir": "data/cache/replicates/batches",
+      "budget": {
+        "ledger": "results/metrics/api_spend.json",
+        "project_cap_usd": 30.0,
+        "phase": "arm_replicates",
+        "phase_cap_usd": 5.75,
+        "checkpoint_after_run": 1,
+        "batch_discount": 0.5,
+        "prices_as_of": "2026-06-24",
+        "prices_usd_per_mtok": {
+          "claude-sonnet-5": {
+            "input": 2.0,
+            "output": 10.0
+          }
+        }
+      }
+    },
+    "judge": {
+      "model": "claude-sonnet-5",
+      "prompts": {
+        "decompose": "judge_decompose",
+        "verify": "judge_verify",
+        "correctness": "judge_correctness"
+      },
+      "max_tokens": {
+        "decompose": 2048,
+        "verify": 4096,
+        "correctness": 1024
+      }
+    },
+    "phase_spent_usd": 5.25897,
+    "environment": {
+      "python": "3.12.13",
+      "anthropic": "1.8.0"
+    }
+  },
+  "arms": {
+    "retrieved__claude-sonnet-5__v1_zero_shot": {
+      "runs": {
+        "0": {
+          "n": 150,
+          "n_correct_and_grounded": 12,
+          "correct_and_grounded": 0.08,
+          "n_correct": 16,
+          "accuracy_all": 0.10666666666666667,
+          "accuracy_answered": 0.4,
+          "n_declined": 110,
+          "declined_rate": 0.7333333333333333,
+          "n_answered_or_partial": 40,
+          "n_groundedness_scored": 39,
+          "mean_groundedness": 0.8045648795648795,
+          "fully_grounded_rate": 0.5897435897435898,
+          "citation_precision": 0.9038461538461539,
+          "citation_recall": 1.0,
+          "gold_cited_rate": 0.8666666666666667,
+          "n_judge_errors": 0
+        },
+        "1": {
+          "n": 150,
+          "n_correct_and_grounded": 10,
+          "correct_and_grounded": 0.06666666666666667,
+          "n_correct": 14,
+          "accuracy_all": 0.09333333333333334,
+          "accuracy_answered": 0.358974358974359,
+          "n_declined": 111,
+          "declined_rate": 0.74,
+          "n_answered_or_partial": 39,
+          "n_groundedness_scored": 39,
+          "mean_groundedness": 0.8059579309579309,
+          "fully_grounded_rate": 0.5641025641025641,
+          "citation_precision": 0.9583333333333333,
+          "citation_recall": 1.0,
+          "gold_cited_rate": 0.8461538461538461,
+          "n_judge_errors": 0
+        },
+        "2": {
+          "n": 150,
+          "n_correct_and_grounded": 8,
+          "correct_and_grounded": 0.05333333333333334,
+          "n_correct": 13,
+          "accuracy_all": 0.08666666666666667,
+          "accuracy_answered": 0.34210526315789475,
+          "n_declined": 112,
+          "declined_rate": 0.7466666666666667,
+          "n_answered_or_partial": 38,
+          "n_groundedness_scored": 37,
+          "mean_groundedness": 0.8295581295581296,
+          "fully_grounded_rate": 0.5675675675675675,
+          "citation_precision": 0.8963963963963963,
+          "citation_recall": 1.0,
+          "gold_cited_rate": 0.8571428571428571,
+          "n_judge_errors": 0
+        }
+      },
+      "spread": {
+        "correct_and_grounded": {
+          "n_runs": 3,
+          "values": [
+            0.08,
+            0.06666666666666667,
+            0.05333333333333334
+          ],
+          "mean": 0.06666666666666667,
+          "std": 0.013333333333333332,
+          "min": 0.05333333333333334,
+          "max": 0.08
+        },
+        "accuracy_all": {
+          "n_runs": 3,
+          "values": [
+            0.10666666666666667,
+            0.09333333333333334,
+            0.08666666666666667
+          ],
+          "mean": 0.09555555555555556,
+          "std": 0.010183501544346314,
+          "min": 0.08666666666666667,
+          "max": 0.10666666666666667
+        },
+        "accuracy_answered": {
+          "n_runs": 3,
+          "values": [
+            0.4,
+            0.358974358974359,
+            0.34210526315789475
+          ],
+          "mean": 0.3670265407107512,
+          "std": 0.029775465765308734,
+          "min": 0.34210526315789475,
+          "max": 0.4
+        },
+        "declined_rate": {
+          "n_runs": 3,
+          "values": [
+            0.7333333333333333,
+            0.74,
+            0.7466666666666667
+          ],
+          "mean": 0.7399999999999999,
+          "std": 0.00666666666666671,
+          "min": 0.7333333333333333,
+          "max": 0.7466666666666667
+        },
+        "mean_groundedness": {
+          "n_runs": 3,
+          "values": [
+            0.8045648795648795,
+            0.8059579309579309,
+            0.8295581295581296
+          ],
+          "mean": 0.8133603133603134,
+          "std": 0.01404500214416499,
+          "min": 0.8045648795648795,
+          "max": 0.8295581295581296
+        },
+        "fully_grounded_rate": {
+          "n_runs": 3,
+          "values": [
+            0.5897435897435898,
+            0.5641025641025641,
+            0.5675675675675675
+          ],
+          "mean": 0.5738045738045737,
+          "std": 0.013911891822511957,
+          "min": 0.5641025641025641,
+          "max": 0.5897435897435898
+        },
+        "citation_precision": {
+          "n_runs": 3,
+          "values": [
+            0.9038461538461539,
+            0.9583333333333333,
+            0.8963963963963963
+          ],
+          "mean": 0.9195252945252945,
+          "std": 0.03381453280188471,
+          "min": 0.8963963963963963,
+          "max": 0.9583333333333333
+        },
+        "citation_recall": {
+          "n_runs": 3,
+          "values": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mean": 1.0,
+          "std": 0.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "gold_cited_rate": {
+          "n_runs": 3,
+          "values": [
+            0.8666666666666667,
+            0.8461538461538461,
+            0.8571428571428571
+          ],
+          "mean": 0.8566544566544566,
+          "std": 0.010265127988758846,
+          "min": 0.8461538461538461,
+          "max": 0.8666666666666667
+        }
+      },
+      "stability": {
+        "n_questions": 150,
+        "correct_and_grounded_changes": 4,
+        "correct_changes": 4,
+        "correctness_label_changes": 16,
+        "declined_changes": 8,
+        "n_correct_and_grounded_in_every_run": 8,
+        "n_correct_and_grounded_in_some_run": 12
+      }
+    },
+    "retrieved__claude-sonnet-5__v2_citation_required": {
+      "runs": {
+        "0": {
+          "n": 150,
+          "n_correct_and_grounded": 12,
+          "correct_and_grounded": 0.08,
+          "n_correct": 14,
+          "accuracy_all": 0.09333333333333334,
+          "accuracy_answered": 0.3783783783783784,
+          "n_declined": 113,
+          "declined_rate": 0.7533333333333333,
+          "n_answered_or_partial": 37,
+          "n_groundedness_scored": 36,
+          "mean_groundedness": 0.7618686868686868,
+          "fully_grounded_rate": 0.5833333333333334,
+          "citation_precision": 0.9142857142857143,
+          "citation_recall": 1.0,
+          "gold_cited_rate": 0.8461538461538461,
+          "n_judge_errors": 0
+        },
+        "1": {
+          "n": 150,
+          "n_correct_and_grounded": 9,
+          "correct_and_grounded": 0.06,
+          "n_correct": 15,
+          "accuracy_all": 0.1,
+          "accuracy_answered": 0.42857142857142855,
+          "n_declined": 115,
+          "declined_rate": 0.7666666666666667,
+          "n_answered_or_partial": 35,
+          "n_groundedness_scored": 35,
+          "mean_groundedness": 0.8426406926406926,
+          "fully_grounded_rate": 0.6,
+          "citation_precision": 0.9607843137254901,
+          "citation_recall": 0.9939393939393939,
+          "gold_cited_rate": 0.8461538461538461,
+          "n_judge_errors": 0
+        },
+        "2": {
+          "n": 150,
+          "n_correct_and_grounded": 7,
+          "correct_and_grounded": 0.04666666666666667,
+          "n_correct": 12,
+          "accuracy_all": 0.08,
+          "accuracy_answered": 0.3333333333333333,
+          "n_declined": 114,
+          "declined_rate": 0.76,
+          "n_answered_or_partial": 36,
+          "n_groundedness_scored": 36,
+          "mean_groundedness": 0.8127535273368607,
+          "fully_grounded_rate": 0.5833333333333334,
+          "citation_precision": 0.9166666666666666,
+          "citation_recall": 0.9901960784313725,
+          "gold_cited_rate": 0.8571428571428571,
+          "n_judge_errors": 0
+        }
+      },
+      "spread": {
+        "correct_and_grounded": {
+          "n_runs": 3,
+          "values": [
+            0.08,
+            0.06,
+            0.04666666666666667
+          ],
+          "mean": 0.06222222222222223,
+          "std": 0.01677740985615722,
+          "min": 0.04666666666666667,
+          "max": 0.08
+        },
+        "accuracy_all": {
+          "n_runs": 3,
+          "values": [
+            0.09333333333333334,
+            0.1,
+            0.08
+          ],
+          "mean": 0.0911111111111111,
+          "std": 0.010183501544346314,
+          "min": 0.08,
+          "max": 0.1
+        },
+        "accuracy_answered": {
+          "n_runs": 3,
+          "values": [
+            0.3783783783783784,
+            0.42857142857142855,
+            0.3333333333333333
+          ],
+          "mean": 0.3800943800943801,
+          "std": 0.04764223118790843,
+          "min": 0.3333333333333333,
+          "max": 0.42857142857142855
+        },
+        "declined_rate": {
+          "n_runs": 3,
+          "values": [
+            0.7533333333333333,
+            0.7666666666666667,
+            0.76
+          ],
+          "mean": 0.7600000000000001,
+          "std": 0.00666666666666671,
+          "min": 0.7533333333333333,
+          "max": 0.7666666666666667
+        },
+        "mean_groundedness": {
+          "n_runs": 3,
+          "values": [
+            0.7618686868686868,
+            0.8426406926406926,
+            0.8127535273368607
+          ],
+          "mean": 0.80575430228208,
+          "std": 0.04083835320668351,
+          "min": 0.7618686868686868,
+          "max": 0.8426406926406926
+        },
+        "fully_grounded_rate": {
+          "n_runs": 3,
+          "values": [
+            0.5833333333333334,
+            0.6,
+            0.5833333333333334
+          ],
+          "mean": 0.5888888888888889,
+          "std": 0.009622504486493728,
+          "min": 0.5833333333333334,
+          "max": 0.6
+        },
+        "citation_precision": {
+          "n_runs": 3,
+          "values": [
+            0.9142857142857143,
+            0.9607843137254901,
+            0.9166666666666666
+          ],
+          "mean": 0.930578898225957,
+          "std": 0.026185732330501418,
+          "min": 0.9142857142857143,
+          "max": 0.9607843137254901
+        },
+        "citation_recall": {
+          "n_runs": 3,
+          "values": [
+            1.0,
+            0.9939393939393939,
+            0.9901960784313725
+          ],
+          "mean": 0.9947118241235887,
+          "std": 0.0049473938415130776,
+          "min": 0.9901960784313725,
+          "max": 1.0
+        },
+        "gold_cited_rate": {
+          "n_runs": 3,
+          "values": [
+            0.8461538461538461,
+            0.8461538461538461,
+            0.8571428571428571
+          ],
+          "mean": 0.8498168498168498,
+          "std": 0.006344508452633227,
+          "min": 0.8461538461538461,
+          "max": 0.8571428571428571
+        }
+      },
+      "stability": {
+        "n_questions": 150,
+        "correct_and_grounded_changes": 7,
+        "correct_changes": 6,
+        "correctness_label_changes": 20,
+        "declined_changes": 14,
+        "n_correct_and_grounded_in_every_run": 6,
+        "n_correct_and_grounded_in_some_run": 13
+      }
+    }
+  },
+  "selection_per_run": {
+    "0": {
+      "ranking": [
+        "retrieved__claude-sonnet-5__v1_zero_shot",
+        "retrieved__claude-sonnet-5__v2_citation_required"
+      ],
+      "winner": "retrieved__claude-sonnet-5__v1_zero_shot",
+      "rates": {
+        "retrieved__claude-sonnet-5__v1_zero_shot": {
+          "correct_and_grounded": 0.08,
+          "correct_and_grounded_ci95": [
+            0.04,
+            0.12666666666666668
+          ],
+          "accuracy_all": 0.10666666666666667
+        },
+        "retrieved__claude-sonnet-5__v2_citation_required": {
+          "correct_and_grounded": 0.08,
+          "correct_and_grounded_ci95": [
+            0.04,
+            0.12666666666666668
+          ],
+          "accuracy_all": 0.09333333333333334
+        }
+      },
+      "first_minus_second": {
+        "a": "retrieved__claude-sonnet-5__v1_zero_shot",
+        "b": "retrieved__claude-sonnet-5__v2_citation_required",
+        "n_questions": 150,
+        "diff": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    "1": {
+      "ranking": [
+        "retrieved__claude-sonnet-5__v1_zero_shot",
+        "retrieved__claude-sonnet-5__v2_citation_required"
+      ],
+      "winner": "retrieved__claude-sonnet-5__v1_zero_shot",
+      "rates": {
+        "retrieved__claude-sonnet-5__v1_zero_shot": {
+          "correct_and_grounded": 0.06666666666666667,
+          "correct_and_grounded_ci95": [
+            0.02666666666666667,
+            0.10666666666666667
+          ],
+          "accuracy_all": 0.09333333333333334
+        },
+        "retrieved__claude-sonnet-5__v2_citation_required": {
+          "correct_and_grounded": 0.06,
+          "correct_and_grounded_ci95": [
+            0.02666666666666667,
+            0.1
+          ],
+          "accuracy_all": 0.1
+        }
+      },
+      "first_minus_second": {
+        "a": "retrieved__claude-sonnet-5__v1_zero_shot",
+        "b": "retrieved__claude-sonnet-5__v2_citation_required",
+        "n_questions": 150,
+        "diff": 0.006666666666666667,
+        "ci95": [
+          -0.02,
+          0.03333333333333333
+        ]
+      }
+    },
+    "2": {
+      "ranking": [
+        "retrieved__claude-sonnet-5__v1_zero_shot",
+        "retrieved__claude-sonnet-5__v2_citation_required"
+      ],
+      "winner": "retrieved__claude-sonnet-5__v1_zero_shot",
+      "rates": {
+        "retrieved__claude-sonnet-5__v1_zero_shot": {
+          "correct_and_grounded": 0.05333333333333334,
+          "correct_and_grounded_ci95": [
+            0.02,
+            0.09333333333333334
+          ],
+          "accuracy_all": 0.08666666666666667
+        },
+        "retrieved__claude-sonnet-5__v2_citation_required": {
+          "correct_and_grounded": 0.04666666666666667,
+          "correct_and_grounded_ci95": [
+            0.013333333333333334,
+            0.08
+          ],
+          "accuracy_all": 0.08
+        }
+      },
+      "first_minus_second": {
+        "a": "retrieved__claude-sonnet-5__v1_zero_shot",
+        "b": "retrieved__claude-sonnet-5__v2_citation_required",
+        "n_questions": 150,
+        "diff": 0.006666666666666667,
+        "ci95": [
+          -0.013333333333333334,
+          0.03333333333333333
+        ]
+      }
+    }
+  },
+  "winner_counts": {
+    "retrieved__claude-sonnet-5__v1_zero_shot": 3,
+    "retrieved__claude-sonnet-5__v2_citation_required": 0
+  },
+  "pooled_difference": {
+    "a": "retrieved__claude-sonnet-5__v1_zero_shot",
+    "b": "retrieved__claude-sonnet-5__v2_citation_required",
+    "n_questions": 150,
+    "n_runs": 3,
+    "diff": 0.004444444444444445,
+    "ci95": [
+      -0.006666666666666667,
+      0.01777777777777778
+    ]
+  }
+}

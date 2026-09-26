@@ -1,0 +1,36 @@
+# RAGAS faithfulness on the 50 hand-labelled answers, compared with the project's own
+# groundedness judge and the author's labels (scripts/15_ragas_faithfulness.py).
+# Every value here is copied into results/metrics/ragas_faithfulness.json.
+
+ragas_version: "0.4.3" # the metric is ragas.metrics.collections.Faithfulness
+
+# The same model and setting as the project's judge (configs/evaluation.yaml), so a
+# difference between the two measures the method (prompts, statement split, binary
+# verdicts), not the model. Sonnet 5 rejects sampling parameters, so RAGAS's own defaults
+# (temperature 0.01, top_p 0.1) are not sent.
+model:
+  backend: anthropic
+  model: claude-sonnet-5
+  thinking: disabled
+# RAGAS's default is 1024. A cut-off output is a transport failure, not a verdict, so the
+# ceiling is raised; the call's real output length is recorded either way.
+max_tokens: 2048
+concurrency: 4 # answers scored at once (standard API; RAGAS has no batch path)
+
+cache_dir: data/cache/llm_ragas # its own DVC root, so new responses stale no other stage
+sample: results/labels/validation_sample.json
+agreement: results/metrics/judge_agreement.json # per-claim human and judge verdicts
+
+budget:
+  ledger: results/metrics/api_spend.json
+  project_cap_usd: 30.0
+  phase: ragas_faithfulness
+  phase_cap_usd: 1.75 # the author's approval, 2026-09-26 (estimate ~$1.25, up to $1.90)
+  batch_discount: 0.5
+  prices_as_of: "2026-06-24"
+  prices_usd_per_mtok:
+    claude-sonnet-5: { input: 2.0, output: 10.0 }
+
+bootstrap:
+  n_resamples: 10000
+  seed: 0
