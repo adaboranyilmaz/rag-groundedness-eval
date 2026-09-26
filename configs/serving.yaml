@@ -1,0 +1,60 @@
+# Phase 8 serving. See PROJECT_SPEC.md §6 Phase 8, scripts/12_serving.py (bundle, check) and
+# src/serving/app.py. The pipeline itself is not configured here: it is the registered one,
+# `pipeline_config` in results/metrics/pipeline_selection.json. The groundedness judge is
+# the Phase 5 judge exactly (model, prompts, output ceilings: configs/evaluation.yaml), so a
+# served score is the measurement that was validated against the author's labels.
+
+selection: results/metrics/pipeline_selection.json
+evaluation_config: configs/evaluation.yaml
+
+# The selected arm's Phase 4 traces and Phase 5 evaluations: the bundle carries their cached
+# responses, and `check` requires the service to reproduce them.
+arm_traces: results/traces/retrieved/claude-sonnet-5__v1_zero_shot.jsonl
+arm_evaluations: results/metrics/eval_per_trace.jsonl
+judge_agreement: results/metrics/judge_agreement.json
+
+# The embedding model's weights, pinned to the revision the indices were built with (the
+# snapshot in the local Hugging Face cache since Phase 2), and baked into the image so the
+# container needs no download at start-up.
+embedding_revision: 5c38ec7c405ec4b44b94cc5a9bb96e735b38267a
+
+bundle_dir: build/serving
+
+# A container's own API spend cap (USD), across restarts while its log volume lives; the
+# RAG_SERVE_MAX_USD environment variable overrides it. When it is reached, uncached
+# questions are refused (503).
+serve_cap_usd: 1.0
+
+# Anthropic client settings for serving: a request should fail within a minute, not after
+# the SDK's default 10-minute timeout.
+api_timeout_s: 60
+api_max_retries: 2
+
+# `check`: the embedding device. The container embeds queries on CPU, so the check that
+# the service reproduces the evaluated answers runs on CPU too.
+check_device: cpu
+
+# scripts/08_load_test.py -> results/metrics/load_test.json
+load_test:
+  # replay: the container in replay-only mode, closed-loop users (each sends its next
+  # request as soon as the last returns) drawing the 150 benchmark questions in a seeded
+  # random order; every model response comes from the baked-in cache, so this measures the
+  # service (embedding, search, cache reads, judge parsing), not the model API
+  replay:
+    url: http://localhost:8000
+    users: [1, 2, 4, 8, 16]
+    duration_s: 120 # measured window per stage
+    settle_s: 10 # per stage, after all users have started, before measuring
+    warmup_requests: 20 # sequential, before the first stage, not recorded
+    seed: 0
+  # live: the same pipeline in-process (CPU embeddings, as in the container) answering a
+  # seeded sample of the benchmark questions one at a time with real API calls (a cache of
+  # its own, so nothing comes from the benchmark responses): the model API's latency per
+  # call, and how often a fresh answer differs from the evaluated one. Spend goes to the
+  # project ledger under its own phase cap.
+  live:
+    n_questions: 20
+    seed: 0
+    state_dir: data/cache/llm_live # responses land in its cache/ subdirectory
+    phase: phase8_serving
+    phase_cap_usd: 1.0

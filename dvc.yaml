@@ -11,6 +11,12 @@
 # EDGAR document missing from the raw cache, stops the stage instead of calling the network.
 # A rebuild therefore costs no API spend and reads only the versioned raw data.
 #
+# The API spend ledger (results/metrics/api_spend.json) is not a dependency of any stage:
+# it is read only to enforce the caps (a rebuild spends nothing) and for the spend
+# snapshot some run files record, which scripts/11_verify_reproduction.py exempts. As a
+# dependency it made every generation and evaluation stage stale whenever any later
+# phase spent money (found in Phase 8).
+#
 # Not stages: the dry-run cost estimates (they call the token-counting endpoint and record
 # what was expected before money was spent), the drawing of labelling samples, and the
 # labelling pages. The Qdrant indices' vectors live in the Qdrant server's volume (only their
@@ -173,7 +179,6 @@ stages:
       - data/indices/fixed_size__bge-small-en-v1.5__faiss
       - data/cache/llm
       - results/metrics/retrieval_per_question.jsonl
-      - results/metrics/api_spend.json
     outs:
       - results/traces/retrieved:
           cache: false
@@ -208,7 +213,6 @@ stages:
       - results/traces/retrieved
       - results/traces/oracle
       - results/metrics/gold_span_alignment.json
-      - results/metrics/api_spend.json
       - results/labels/out_of_corpus_audit.json
     outs:
       - results/metrics/eval_per_trace.jsonl:
@@ -243,7 +247,6 @@ stages:
       - results/traces/retrieved
       - results/traces/oracle
       - results/metrics/gold_span_alignment.json
-      - results/metrics/api_spend.json
       - results/labels/validation_sample.json
       - results/labels/groundedness_human.json
     outs:
@@ -297,7 +300,6 @@ stages:
       - data/processed/chunks/fixed_size.jsonl
       - data/indices/fixed_size__bge-small-en-v1.5__faiss
       - data/cache/llm
-      - results/metrics/api_spend.json
     outs:
       - results/traces/adversarial:
           cache: false
@@ -316,7 +318,6 @@ stages:
       - data/adversarial/questions.jsonl
       - data/cache/llm
       - results/traces/adversarial
-      - results/metrics/api_spend.json
     outs:
       - results/metrics/premise_judge_pilot.json:
           cache: false
@@ -347,7 +348,6 @@ stages:
       - data/cache/llm
       - results/traces/adversarial
       - results/metrics/eval_per_trace.jsonl
-      - results/metrics/api_spend.json
     outs:
       - results/metrics/eval_adversarial_per_trace.jsonl:
           cache: false
@@ -453,4 +453,44 @@ stages:
       - results/plots/adversarial_breakdown.png
     outs:
       - results/metrics/mlflow_runs.json:
+          cache: false
+
+  # Phase 8. The serving bundle the API image bakes in (the selected index, the pinned
+  # embedding weights, the selected arm's cached responses; scripts/12_serving.py). The
+  # weights come from the Hugging Face cache at the pinned revision (downloaded if absent,
+  # as the embed stages download them). Not DVC-cached: it is rebuilt from cached data.
+  serving_bundle:
+    cmd: uv run --env-file configs/replay.env python scripts/12_serving.py bundle
+    deps:
+      - scripts/12_serving.py
+      - configs/serving.yaml
+      - data/indices/fixed_size__bge-small-en-v1.5__faiss
+      - data/cache/llm
+      - results/traces/retrieved/claude-sonnet-5__v1_zero_shot.jsonl
+      - results/metrics/eval_per_trace.jsonl
+      - results/metrics/pipeline_selection.json
+      - results/metrics/judge_agreement.json
+    outs:
+      - build/serving:
+          cache: false
+
+  # The service, loaded from the bundle alone on CPU, must reproduce every evaluated answer
+  # of the selected arm and its groundedness.
+  serving_check:
+    cmd: uv run --env-file configs/replay.env python scripts/12_serving.py check
+    deps:
+      - scripts/12_serving.py
+      - configs/serving.yaml
+      - configs/evaluation.yaml
+      - src/serving
+      - src/generation
+      - src/evaluation/judge.py
+      - src/evaluation/groundedness.py
+      - src/evaluation/abstention.py
+      - src/retrieval/embeddings.py
+      - src/retrieval/scoped.py
+      - prompts
+      - build/serving
+    outs:
+      - results/metrics/serving_check.json:
           cache: false

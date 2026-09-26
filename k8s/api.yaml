@@ -1,0 +1,105 @@
+# The API on Kubernetes: namespace, configmap, deployment, service and a CPU-based
+# horizontal pod autoscaler. Verified on a local kind cluster (k8s/kind-config.yaml,
+# scripts/13_k8s_check.py); k8s/README.md covers what a real cluster would change.
+#
+# Only the API is deployed: `/query` needs neither Qdrant nor MLflow, whose reachability
+# `/health` reports and which a cluster would run as their own services. The image carries
+# the serving bundle, so a pod needs no volume of data. The API key is an optional secret:
+#   kubectl -n rag create secret generic anthropic --from-literal=api-key=...
+# Without it the pods answer only the 150 benchmark questions whose responses are baked in.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rag
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rag-api
+  namespace: rag
+data:
+  RAG_SERVE_MAX_USD: "1.0" # per pod: each pod has its own state directory (emptyDir)
+  RAG_REPLAY_ONLY: "1" # the local check runs replay-only; set "0" to allow API calls
+  MLFLOW_TRACKING_URI: "" # not deployed here
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-api
+  namespace: rag
+  labels: { app: rag-api }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: rag-api }
+  template:
+    metadata:
+      labels: { app: rag-api }
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: api
+          image: ghcr.io/adaboranyilmaz/rag-groundedness-eval-api:0.2.0
+          imagePullPolicy: IfNotPresent # kind: loaded with `kind load docker-image`
+          ports:
+            - { name: http, containerPort: 8000 }
+          envFrom:
+            - configMapRef: { name: rag-api }
+          env:
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef: { name: anthropic, key: api-key, optional: true }
+          resources:
+            # measured: ~1.3 GiB resident under load (docker stats, replay load test)
+            requests: { cpu: 500m, memory: 1536Mi }
+            limits: { cpu: "2", memory: 3Gi }
+          startupProbe: # loading the index and the model takes ~10 s
+            httpGet: { path: /ready, port: http }
+            periodSeconds: 2
+            failureThreshold: 60
+          readinessProbe:
+            httpGet: { path: /ready, port: http }
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 20
+            timeoutSeconds: 5
+          volumeMounts:
+            - { name: state, mountPath: /app/state }
+      volumes:
+        - name: state # request logs, new responses, the spend ledger: lost with the pod
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rag-api
+  namespace: rag
+spec:
+  selector: { app: rag-api }
+  ports:
+    - { name: http, port: 80, targetPort: http }
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: rag-api
+  namespace: rag
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: rag-api
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: { type: Utilization, averageUtilization: 70 } # of the 500m request
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 60 # the default 300 s outlasts a short local check

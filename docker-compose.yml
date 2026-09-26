@@ -1,17 +1,33 @@
 # The stack: the API, Qdrant (the second vector-store backend) and the MLflow tracking server.
-#   docker compose up -d --build
-#   curl http://localhost:8000/health     # the API, with Qdrant's and MLflow's reachability
+#   cp .env.example .env                  # then set ANTHROPIC_API_KEY (optional, see below)
+#   docker compose up -d
+#   curl http://localhost:8000/health     # readiness, and Qdrant's and MLflow's reachability
+#   curl -X POST http://localhost:8000/query -H "Content-Type: application/json" \
+#        -d '{"question": "What was Nike'"'"'s FY2023 revenue?"}'
 #   open  http://localhost:5000           # MLflow UI; fill it with
 #         MLFLOW_TRACKING_URI=http://localhost:5000 uv run python scripts/09_track_experiments.py track
+#
+# The API image is published with the serving bundle baked in; `up` pulls it, and builds
+# from source only when the pull fails. To build your own (needs build/serving, i.e. the
+# DVC data and `scripts/12_serving.py bundle`): `docker compose up -d --build`.
+# Without ANTHROPIC_API_KEY the API answers only the 150 benchmark questions whose responses
+# are baked in; with it, any question, up to RAG_SERVE_MAX_USD of API spend per state
+# volume. RAG_REPLAY_ONLY=1 forbids API calls altogether (the load test's mode).
 services:
   api:
-    build: . # no fixed image name: each checkout builds and runs its own image
+    image: ghcr.io/adaboranyilmaz/rag-groundedness-eval-api:0.2.0
+    build: .
     ports:
       - "8000:8000"
     environment:
       QDRANT_HOST: qdrant
       QDRANT_PORT: "6333"
       MLFLOW_TRACKING_URI: http://mlflow:5000
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      RAG_SERVE_MAX_USD: ${RAG_SERVE_MAX_USD:-1.0}
+      RAG_REPLAY_ONLY: ${RAG_REPLAY_ONLY:-0}
+    volumes:
+      - api_state:/app/state # request logs, new responses, the spend ledger
     depends_on:
       qdrant:
         condition: service_healthy
@@ -54,5 +70,6 @@ services:
       start_period: 20s
 
 volumes:
+  api_state:
   qdrant_storage:
   mlflow_data:

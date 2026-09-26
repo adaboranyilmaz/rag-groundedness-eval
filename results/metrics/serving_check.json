@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "selected_arm": "retrieved__claude-sonnet-5__v1_zero_shot",
+    "bundle_sha256": "0a7b845da8a067614d1bd2148ec153f12455fe91028cc7b1ceffd6917f92f0ef",
+    "embedding_device": "cpu",
+    "replay_only": true,
+    "score_tolerance": 1e-05,
+    "api_spend_usd": 0.0,
+    "note": "the service, loaded from the bundle alone, answering every benchmark question of the selected arm; compared with the Phase 4 traces and the Phase 5 evaluations"
+  },
+  "n_questions": 150,
+  "n_matching": {
+    "chunks": 150,
+    "scores_within_tol": 150,
+    "generation_request": 150,
+    "answer": 150,
+    "citations": 150,
+    "status": 150,
+    "judge_requests": 150,
+    "groundedness": 150,
+    "all_cached": 150
+  },
+  "max_score_abs_diff": 1.0000000000287557e-06,
+  "mismatches": [],
+  "passed": true
+}
