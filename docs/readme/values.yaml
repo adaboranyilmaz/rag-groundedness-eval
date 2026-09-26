@@ -77,6 +77,10 @@ values:
     { file: metrics/judge_agreement.json, path: agreement/judge__vs__judge_retest/document_claims/claim_supported/kappa, fmt: f2 }
   ja.second.claim_k:
     { file: metrics/judge_agreement.json, path: agreement/judge__vs__second_judge/document_claims/claim_supported/kappa, fmt: f2 }
+  ja.retest.answer_k:
+    { file: metrics/judge_agreement.json, path: agreement/judge__vs__judge_retest/document_claims/answer_fully_grounded/kappa, fmt: f2 }
+  ja.second.answer_k:
+    { file: metrics/judge_agreement.json, path: agreement/judge__vs__second_judge/document_claims/answer_fully_grounded/kappa, fmt: f2 }
   ja.adjudicated_n: { file: metrics/judge_agreement.json, path: meta/adjudication/n_claims_changed, fmt: int }
   ja.adjudicated.claim_k:
     { file: metrics/judge_agreement.json, path: agreement/human_adjudicated__vs__judge/document_claims/claim_supported/kappa, fmt: f2 }
@@ -220,6 +224,24 @@ values:
   rep.pooled.diff_pp: { file: metrics/replicates.json, path: pooled_difference/diff, fmt: pp1 }
   rep.pooled.diff_ci: { file: metrics/replicates.json, path: pooled_difference/ci95, fmt: ppci1 }
 
+  # ---- the short README: the same fields, as percentages
+  ev.or_sonnet.acc_pct:
+    { file: metrics/eval_main.json, path: by_condition_model/oracle__claude-sonnet-5/correctness/accuracy_all/rate, fmt: pct0 }
+  ev.ret_sonnet.acc_pct:
+    { file: metrics/eval_main.json, path: by_condition_model/retrieved__claude-sonnet-5/correctness/accuracy_all/rate, fmt: pct0 }
+  rev.right_pct: { expr: "rev.right", fmt: pct0 }
+  q4.prem.sonnet_pct: { expr: "q4.prem.sonnet", fmt: pct0 }
+  q4.prem.qwen_pct: { expr: "q4.prem.qwen", fmt: pct0 }
+  q5.or_sonnet.v2.g_pp:
+    { file: metrics/reliability_analysis.json, path: q5/oracle__claude-sonnet-5/v2_citation_required_vs_v1_zero_shot/differences/groundedness/mean, fmt: pp0 }
+  q5.or_sonnet.v2.cp_pp:
+    { file: metrics/reliability_analysis.json, path: q5/oracle__claude-sonnet-5/v2_citation_required_vs_v1_zero_shot/differences/citation_precision/mean, fmt: pp0 }
+  rep.v1.declined_pct:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/spread/declined_rate/mean, fmt: pct0 }
+  rep.v1.cg_run0_pct: { expr: "rep.v1.cg_run0", fmt: pct1 }
+  rep.v1.cg_mean_pct:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/spread/correct_and_grounded/mean, fmt: pct1 }
+
   # ---- deployment
   serve.n: { file: metrics/serving_check.json, path: n_matching/groundedness, fmt: int }
   load.max_rps: { file: metrics/load_test.json, path: replay/levels/2/throughput_rps, fmt: f0 }
@@ -249,6 +271,11 @@ values:
   release.raw_mb: { expr: "release.raw_bytes / 1000000", fmt: f0 }
   release.caches_mb: { expr: "release.caches_bytes / 1000000", fmt: f0 }
 
+  # ---- runtimes (scripts/18_stage_runtimes.py)
+  runtime.scratch_s: { file: metrics/runtimes.json, path: from_scratch, sum_of: seconds, fmt: int }
+  runtime.replayed_s: { file: metrics/runtimes.json, path: replayed, sum_of: seconds, fmt: int }
+  runtime.total: { expr: "runtime.scratch_s + runtime.replayed_s", fmt: dur }
+
   # ---- spend
   spend.total_usd: { file: metrics/api_spend.json, path: total_usd, fmt: usd2 }
   spend.n_calls: { file: metrics/api_spend.json, path: n_calls, fmt: int }
@@ -256,3 +283,4 @@ values:
 # Decimals the template may type outside a placeholder: model versions, not results.
 allowed_literals:
   - "4.5" # Haiku 4.5
+  - "1%" # the numeric tolerance (configs/evaluation.yaml rel_tol), a setting
