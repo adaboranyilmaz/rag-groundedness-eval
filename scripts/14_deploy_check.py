@@ -37,8 +37,11 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 OUT_PATH = Path("results/metrics/deploy_check.json")
 SERVING_CONFIG = Path("configs/serving.yaml")
+EVAL_CONFIG = Path("configs/evaluation.yaml")
 LIMIT_S = 300
 URL = "http://localhost:8000"
 # A benchmark question with a grounded answer (the demo's), served from the baked-in cache
@@ -72,6 +75,34 @@ def image_present(image: str) -> bool:
     return r.returncode == 0
 
 
+def image_sizes(images: list[str]) -> dict:
+    """What `docker image inspect .Size` measures depends on the image store: with the
+    containerd snapshotter (Docker Desktop's default) it is the compressed content, i.e. what
+    was downloaded; with the classic store it is the unpacked size. Both are recorded, with
+    the store, so the number is not misread (the first report called the compressed size
+    "uncompressed")."""
+    store = run(["docker", "info", "--format", "{{json .DriverStatus}}"])
+    containerd = "io.containerd.snapshotter" in store
+    listed = dict(
+        line.rsplit(" ", 1)
+        for line in run(["docker", "images", "--format", "{{.Repository}}:{{.Tag}} {{.Size}}"])
+        .strip()
+        .splitlines()
+    )
+    out = {"image_store": "containerd" if containerd else "classic", "images": {}}
+    for image in images:
+        size = int(run(["docker", "image", "inspect", image, "--format", "{{.Size}}"]).strip())
+        out["images"][image] = {
+            ("download_mb_compressed" if containerd else "unpacked_mb"): round(size / 1e6, 1),
+            "on_disk": listed.get(image),  # `docker images`, as Docker prints it
+        }
+    if containerd:
+        out["download_mb_compressed_total"] = round(
+            sum(v["download_mb_compressed"] for v in out["images"].values()), 1
+        )
+    return out
+
+
 def ask(question: str) -> tuple[float, int, dict]:
     t0 = time.perf_counter()
     req = urllib.request.Request(
@@ -102,15 +133,68 @@ def answer_summary(elapsed: float, status: int, body: dict) -> dict:
     }
 
 
+def record_spend(clone: Path, project: str, report: dict) -> None:
+    """Copy the container's paid calls into the project's spend ledger. The container keeps
+    its own ledger in its state volume (its cap); the project ledger is what the project cap
+    is enforced against, so every call must reach it. Once per run: the report records it."""
+    from src.generation.llm import SpendLedger
+
+    if report.get("spend_recorded_in_project_ledger"):
+        sys.exit("this run's spend is already in the project ledger")
+    read = (
+        "import json, pathlib\n"
+        "for f in sorted(pathlib.Path('/app/state/cache').rglob('*.json')):\n"
+        "    e = json.loads(f.read_text()); r = e['response']\n"
+        "    print(e['request']['model'], r['input_tokens'], r['output_tokens'])\n"
+    )
+    out = run(["docker", "compose", "-p", project, "exec", "-T", "api", "python", "-c", read],
+              cwd=clone)  # fmt: skip
+    calls = [(m, int(i), int(o)) for m, i, o in (ln.split() for ln in out.splitlines())]
+    ecfg = yaml.safe_load(EVAL_CONFIG.read_text(encoding="utf-8"))
+    lc = yaml.safe_load(SERVING_CONFIG.read_text(encoding="utf-8"))["load_test"]["live"]
+    b = ecfg["budget"]
+    ledger = SpendLedger(Path(b["ledger"]), b["prices_usd_per_mtok"], b["project_cap_usd"],
+                         lc["phase"], lc["phase_cap_usd"], b["batch_discount"])  # fmt: skip
+    usd = sum(ledger.settle(0.0, m, i, o) for m, i, o in calls)
+    report["spend_recorded_in_project_ledger"] = {"n_calls": len(calls), "usd": round(usd, 6)}
+    print(f"recorded {len(calls)} calls, ${usd:.6f}, in {b['ledger']} ({lc['phase']})")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--clone", type=Path, required=True)
-    parser.add_argument("--clone-seconds", type=float, required=True)
+    parser.add_argument("--clone-seconds", type=float)
+    parser.add_argument(
+        "--sizes-only",
+        action="store_true",
+        help="rewrite only the image-size block of the existing report (the sizes are "
+        "properties of the images, not measurements of the run)",
+    )
+    parser.add_argument(
+        "--record-spend-only",
+        action="store_true",
+        help="copy the running stack's paid calls into the project ledger, for a report "
+        "written before this step existed",
+    )
     args = parser.parse_args()
     clone = args.clone.resolve()
     project = clone.name
 
     images = compose_images(clone)
+    if args.sizes_only:
+        report = json.loads(OUT_PATH.read_text(encoding="utf-8"))
+        report.pop("images_pulled_mb_uncompressed", None)
+        report = {"meta": report.pop("meta"), "images": image_sizes(images), **report}
+        OUT_PATH.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
+        print(json.dumps(report["images"]))
+        return
+    if args.record_spend_only:
+        report = json.loads(OUT_PATH.read_text(encoding="utf-8"))
+        record_spend(clone, project, report)
+        OUT_PATH.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
+        return
+    if args.clone_seconds is None:
+        parser.error("--clone-seconds is required")
     present = [i for i in images if image_present(i)]
     if present:
         sys.exit(f"remove the local images first, so they are pulled as on a new machine: "
@@ -146,10 +230,6 @@ def main() -> None:
     first_answer_at = time.perf_counter() - t0
     live = answer_summary(*ask(LIVE_QUESTION))
 
-    sizes = {}
-    for image in images:
-        out = run(["docker", "image", "inspect", image, "--format", "{{.Size}}"])
-        sizes[image] = round(int(out.strip()) / 1e6, 1)
     clone_to_answer = args.clone_seconds + first_answer_at
     report = {
         "meta": {
@@ -160,7 +240,7 @@ def main() -> None:
             "docker": run(["docker", "version", "--format", "{{.Server.Version}}"]).strip(),
             "compose": run(["docker", "compose", "version", "--short"]).strip(),
         },
-        "images_pulled_mb_uncompressed": sizes,
+        "images": image_sizes(images),
         "seconds": {
             "clone": round(args.clone_seconds, 1),
             "compose_up_returned": round(t_up, 1),
@@ -179,6 +259,7 @@ def main() -> None:
         and len(live["model_calls"]) >= 1
         and not any(cached for _, cached in live["model_calls"]),
     }
+    record_spend(clone, project, report)
     OUT_PATH.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps(report["seconds"]), f"passed={report['passed']}")
     print(f"wrote {OUT_PATH}")
