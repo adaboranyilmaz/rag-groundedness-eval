@@ -718,10 +718,6 @@ stages:
       hash: md5
       md5: 6e57bfc8b016308d8efc0f54b98d038b
       size: 1181
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: results/metrics/retrieval_per_question.jsonl
       hash: md5
       md5: 9a77b8f4934b6d582f30d80d9bfd9d50
@@ -819,10 +815,6 @@ stages:
       hash: md5
       md5: 6e57bfc8b016308d8efc0f54b98d038b
       size: 1181
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: results/metrics/retrieval_per_question.jsonl
       hash: md5
       md5: 9a77b8f4934b6d582f30d80d9bfd9d50
@@ -898,10 +890,6 @@ stages:
       hash: md5
       md5: 144dde1413fbb6db9d22ef63dc8473fb
       size: 15335
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: results/metrics/gold_span_alignment.json
       hash: md5
       md5: f023b7efb662f502a1c1a381a982a34e
@@ -982,10 +970,6 @@ stages:
       hash: md5
       md5: 144dde1413fbb6db9d22ef63dc8473fb
       size: 15335
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: results/metrics/gold_span_alignment.json
       hash: md5
       md5: f023b7efb662f502a1c1a381a982a34e
@@ -1058,10 +1042,6 @@ stages:
       hash: md5
       md5: 6ed24684c499e8edab32c62c61d1e1af
       size: 224733
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: results/metrics/gold_span_alignment.json
       hash: md5
       md5: f023b7efb662f502a1c1a381a982a34e
@@ -1229,10 +1209,6 @@ stages:
       md5: f4fe432ff866f1b0f78f8ae5b3b3db0f.dir
       size: 14002
       nfiles: 9
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: scripts/04_eval_retrieval.py
       hash: md5
       md5: 73a066956d9fc1f4282fa443a37c9302
@@ -1300,10 +1276,6 @@ stages:
       md5: c9995662f7e1cbdf5d446464f53bfd4c.dir
       size: 9519
       nfiles: 4
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: results/traces/adversarial
       hash: md5
       md5: f4588a5582e6cfd9753d1d687e85fa1e.dir
@@ -1380,10 +1352,6 @@ stages:
       md5: f4fe432ff866f1b0f78f8ae5b3b3db0f.dir
       size: 14002
       nfiles: 9
-    - path: results/metrics/api_spend.json
-      hash: md5
-      md5: ddcb63cca1268ed7e5cfa20688ffb79d
-      size: 1102
     - path: results/metrics/eval_per_trace.jsonl
       hash: md5
       md5: 0ed4c7218eb65630928c696cb3dd79e2
@@ -1736,8 +1704,8 @@ stages:
       nfiles: 7
     - path: src/serving/pipeline.py
       hash: md5
-      md5: dab8c35447986d03ca999b468ebf9ad9
-      size: 4355
+      md5: e76614b629b6adf666468875f5ab7d18
+      size: 6429
     - path: src/tracking
       hash: md5
       md5: f39ff77abc3fa8446ed567c7fd87c77c.dir
@@ -1748,3 +1716,107 @@ stages:
       hash: md5
       md5: ffc1bbb30fdca98749dddf56f7517f94
       size: 12809
+  serving_bundle:
+    cmd: uv run --env-file configs/replay.env python scripts/12_serving.py 
+      bundle
+    deps:
+    - path: configs/serving.yaml
+      hash: md5
+      md5: 2659fc85f9e6d3ec2bc97c5028e729f4
+      size: 3028
+    - path: data/cache/llm
+      hash: md5
+      md5: 824802260d3f4433e3a4c83556f045a7.dir
+      size: 40728319
+      nfiles: 7808
+    - path: data/indices/fixed_size__bge-small-en-v1.5__faiss
+      hash: md5
+      md5: 3c1de8b2489f201cb5a60c74717e9405.dir
+      size: 175117576
+      nfiles: 2
+    - path: results/metrics/eval_per_trace.jsonl
+      hash: md5
+      md5: 0ed4c7218eb65630928c696cb3dd79e2
+      size: 5419668
+    - path: results/metrics/judge_agreement.json
+      hash: md5
+      md5: 28ec6d5ce7fa155405649fb388a3c627
+      size: 203460
+    - path: results/metrics/pipeline_selection.json
+      hash: md5
+      md5: 0e3ba477f80878169f47a09d0631e65c
+      size: 9572
+    - path: results/traces/retrieved/claude-sonnet-5__v1_zero_shot.jsonl
+      hash: md5
+      md5: b3d606b54c8b74eab3138dbaa0a5467e
+      size: 922371
+    - path: scripts/12_serving.py
+      hash: md5
+      md5: 862b6e9df24dc5c993ba69175b2739ea
+      size: 11630
+    outs:
+    - path: build/serving
+      hash: md5
+      md5: 52d757ffbd147648cc37ffbd97bec631.dir
+      size: 312468317
+      nfiles: 466
+  serving_check:
+    cmd: uv run --env-file configs/replay.env python scripts/12_serving.py check
+    deps:
+    - path: build/serving
+      hash: md5
+      md5: 52d757ffbd147648cc37ffbd97bec631.dir
+      size: 312468317
+      nfiles: 466
+    - path: configs/evaluation.yaml
+      hash: md5
+      md5: ee02647108fa90ba473d123630a34b86
+      size: 2879
+    - path: configs/serving.yaml
+      hash: md5
+      md5: 2659fc85f9e6d3ec2bc97c5028e729f4
+      size: 3028
+    - path: prompts
+      hash: md5
+      md5: f4fe432ff866f1b0f78f8ae5b3b3db0f.dir
+      size: 14002
+      nfiles: 9
+    - path: scripts/12_serving.py
+      hash: md5
+      md5: 862b6e9df24dc5c993ba69175b2739ea
+      size: 11630
+    - path: src/evaluation/abstention.py
+      hash: md5
+      md5: c8137f509b778d04df7bdc01d999b290
+      size: 5902
+    - path: src/evaluation/groundedness.py
+      hash: md5
+      md5: 19533a7d3354d4b643a6071e3e7cd4ec
+      size: 2651
+    - path: src/evaluation/judge.py
+      hash: md5
+      md5: dfa8e602eabb7ca3364c68031310e83b
+      size: 11813
+    - path: src/generation
+      hash: md5
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
+      nfiles: 7
+    - path: src/retrieval/embeddings.py
+      hash: md5
+      md5: c94900d5d9d7548bd370250b52f26599
+      size: 2436
+    - path: src/retrieval/scoped.py
+      hash: md5
+      md5: f6e787331f24a7726aaf8abcd6b90066
+      size: 2305
+    - path: src/serving
+      hash: md5
+      md5: 58fca56ecc13b85f7623461fbf36b386.dir
+      size: 39849
+      nfiles: 7
+    outs:
+    - path: results/metrics/serving_check.json
+      hash: md5
+      md5: 892d6e960f7ad49f939ff719a01625f5
+      size: 804

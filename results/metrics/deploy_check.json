@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "single_run": true,
+    "note": "fresh clone, no local images of the stack, .env with an API key; timed on the author's machine and network (the pull dominates)",
+    "limit_seconds": 300,
+    "docker": "29.7.2",
+    "compose": "5.5.1"
+  },
+  "images": {
+    "image_store": "containerd",
+    "images": {
+      "ghcr.io/adaboranyilmaz/rag-groundedness-eval-api:0.2.0": {
+        "download_mb_compressed": 643.2,
+        "on_disk": "2.59GB"
+      },
+      "qdrant/qdrant:v1.19.1": {
+        "download_mb_compressed": 74.1,
+        "on_disk": "288MB"
+      },
+      "ghcr.io/mlflow/mlflow:v3.16.0": {
+        "download_mb_compressed": 290.2,
+        "on_disk": "1.28GB"
+      }
+    },
+    "download_mb_compressed_total": 1007.5
+  },
+  "seconds": {
+    "clone": 4.0,
+    "compose_up_returned": 262.0,
+    "api_ready": 273.3,
+    "first_answer": 273.4,
+    "clone_to_first_answer": 277.4
+  },
+  "benchmark_question": {
+    "question": "How much has the effective tax rate of Corning changed between FY2021 and FY2022?",
+    "seconds": 0.16,
+    "http_status": 200,
+    "answer_status": "answered",
+    "has_answer_text": true,
+    "groundedness_score": 1.0,
+    "groundedness_unavailable_reason": null,
+    "model_calls": [
+      [
+        "generate",
+        true
+      ],
+      [
+        "judge_decompose",
+        true
+      ],
+      [
+        "judge_verify",
+        true
+      ]
+    ],
+    "cost_usd": 0.0,
+    "error": null
+  },
+  "live_question": {
+    "question": "What were Nike's total revenues in fiscal 2023?",
+    "seconds": 6.99,
+    "http_status": 200,
+    "answer_status": "answered",
+    "has_answer_text": true,
+    "groundedness_score": 1.0,
+    "groundedness_unavailable_reason": null,
+    "model_calls": [
+      [
+        "generate",
+        false
+      ],
+      [
+        "judge_decompose",
+        false
+      ],
+      [
+        "judge_verify",
+        false
+      ]
+    ],
+    "cost_usd": 0.01458,
+    "error": null
+  },
+  "passed": true,
+  "spend_recorded_in_project_ledger": {
+    "n_calls": 3,
+    "usd": 0.01458
+  }
+}

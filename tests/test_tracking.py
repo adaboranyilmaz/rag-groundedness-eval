@@ -209,7 +209,7 @@ class TestPipeline:
         out = p.answer("What was revenue?")
         assert out["cache_key"] == req.cache_key and out["from_cache"]
         assert out["answer"] == "$5" and out["citations"] == ["C2"] and out["confidence"] == 80
-        assert set(out["timings_ms"]) == {"retrieve", "generate"}
+        assert set(out["timings_ms"]) == {"embed", "search", "generate"}
 
     def test_uncached_api_call_without_ledger_is_refused(self, tmp_path):
         from src.generation.llm import BudgetExceeded
@@ -268,6 +268,8 @@ class TestApp:
             app_module, "_probe", lambda url, timeout=2.0: {"status": "unreachable"}
         )
         monkeypatch.setenv("MLFLOW_TRACKING_URI", "http://mlflow:5000")
+        # a loaded service (the API's own tests are in test_serving.py)
+        monkeypatch.setattr(app_module.state, "service", SimpleNamespace(status=lambda: {}))
         return TestClient(app_module.app), app_module, path
 
     def test_health_reports_unreachable_dependencies_as_degraded(self, client):

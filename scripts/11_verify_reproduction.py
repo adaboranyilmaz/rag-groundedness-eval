@@ -41,6 +41,13 @@ EXEMPT: list[tuple[str, str, str, float | None]] = [
         None,
     ),
     (
+        "metrics/eval_main.json",
+        r"\.meta\.spend\.project_spent_usd$",
+        "the same ledger snapshot, taken by the evaluation (its own phase's spend, "
+        "phase_spent_usd, is compared)",
+        None,
+    ),
+    (
         "metrics/generation_runs*.json",
         r"\.this_run\.(cache_hits|new_calls|new_cost_usd)$",
         "what that invocation took from the response cache versus paid for; a rebuild "

@@ -54,3 +54,6 @@ data/adversarial/review_candidates.md
 
 # smoke-evaluation workspace (scripts/10_smoke_eval.py; CI)
 smoke-workspace/
+
+# serving state: request logs, new API responses, the spend ledger (src/serving/service.py)
+state/

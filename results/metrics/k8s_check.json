@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "single_run": true,
+    "note": "local kind cluster on one machine; replay-only (no API calls)",
+    "image": "ghcr.io/adaboranyilmaz/rag-groundedness-eval-api:0.2.0",
+    "manifests": "k8s/api.yaml"
+  },
+  "cluster": {
+    "create_s": 14.7,
+    "image_load_s": 101.2,
+    "metrics_server": "https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.8.0/components.yaml",
+    "versions": {
+      "kind": "kind v0.33.0 go1.26.7 windows/amd64",
+      "kubectl_server": "v1.37.0"
+    }
+  },
+  "deploy": {
+    "rollout_s": 10.6,
+    "query": {
+      "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_00070",
+      "status": "partial",
+      "groundedness": 0.6666666666666666,
+      "evaluated_groundedness": 0.6666666666666666,
+      "matches_evaluation": true,
+      "all_cached": true
+    }
+  },
+  "autoscale": {
+    "load": "8 closed-loop users in a pod of the same image, to the service's cluster address; 50 benchmark questions (seed 0)",
+    "hpa": "cpu averageUtilization 70% of the 500m request, 1-3 replicas",
+    "scaled_out": true,
+    "first_extra_replica_ready_s": 51,
+    "max_ready_replicas": 3,
+    "timeline": [
+      {
+        "t_s": 0,
+        "cpu_utilization_pct": null,
+        "desired_replicas": 0,
+        "ready_replicas": 1
+      },
+      {
+        "t_s": 10,
+        "cpu_utilization_pct": null,
+        "desired_replicas": 0,
+        "ready_replicas": 1
+      },
+      {
+        "t_s": 21,
+        "cpu_utilization_pct": null,
+        "desired_replicas": 0,
+        "ready_replicas": 1
+      },
+      {
+        "t_s": 31,
+        "cpu_utilization_pct": null,
+        "desired_replicas": 0,
+        "ready_replicas": 1
+      },
+      {
+        "t_s": 41,
+        "cpu_utilization_pct": 399,
+        "desired_replicas": 3,
+        "ready_replicas": 1
+      },
+      {
+        "t_s": 51,
+        "cpu_utilization_pct": 399,
+        "desired_replicas": 3,
+        "ready_replicas": 3
+      },
+      {
+        "t_s": 61,
+        "cpu_utilization_pct": 399,
+        "desired_replicas": 3,
+        "ready_replicas": 3
+      },
+      {
+        "t_s": 72,
+        "cpu_utilization_pct": 398,
+        "desired_replicas": 3,
+        "ready_replicas": 3
+      },
+      {
+        "t_s": 82,
+        "cpu_utilization_pct": 280,
+        "desired_replicas": 3,
+        "ready_replicas": 3
+      },
+      {
+        "t_s": 92,
+        "cpu_utilization_pct": 280,
+        "desired_replicas": 3,
+        "ready_replicas": 3
+      },
+      {
+        "t_s": 102,
+        "cpu_utilization_pct": 284,
+        "desired_replicas": 3,
+        "ready_replicas": 3
+      },
+      {
+        "t_s": 112,
+        "cpu_utilization_pct": 266,
+        "desired_replicas": 3,
+        "ready_replicas": 3
+      }
+    ],
+    "requests_per_pod": {
+      "rag-api-55767c9bd7-c449j": 517.0,
+      "rag-api-55767c9bd7-lpw6v": 587.0,
+      "rag-api-55767c9bd7-whqrk": 1022.0
+    }
+  },
+  "passed": true
+}

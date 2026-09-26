@@ -1,0 +1,1065 @@
+{
+  "live": {
+    "meta": {
+      "single_run": true,
+      "what": "the served pipeline in-process (CPU embeddings) answering a seeded sample of the benchmark questions one at a time with real API calls, each through a cache of its own; stage latencies of model calls are the calls' own, recorded when made (so a re-run replays them)",
+      "settings": {
+        "n_questions": 20,
+        "seed": 0,
+        "state_dir": "data/cache/llm_live",
+        "phase": "phase8_serving",
+        "phase_cap_usd": 1.0
+      },
+      "pipeline": {
+        "selected_arm": "retrieved__claude-sonnet-5__v1_zero_shot",
+        "chunking": "fixed_size",
+        "embedding": "bge-small-en-v1.5",
+        "retriever": "dense",
+        "k": 5,
+        "generator": "claude-sonnet-5",
+        "prompt_id": "v1_zero_shot"
+      },
+      "judge": {
+        "model": "claude-sonnet-5",
+        "decompose_prompt": "judge_decompose",
+        "verify_prompt": "judge_verify"
+      },
+      "cost_basis": "tokens of each response at the standard price (configs/evaluation.yaml budget.prices_usd_per_mtok)",
+      "host": {
+        "os": "Windows 10",
+        "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "logical_cpus": 12,
+        "docker": {
+          "cpus": 12,
+          "memory_gb": 7.4,
+          "server_version": "29.7.2"
+        }
+      }
+    },
+    "n_questions": 20,
+    "stage_ms": {
+      "embed": {
+        "n": 20,
+        "mean": 103.15,
+        "p50": 25.745,
+        "p95": 110.444,
+        "p99": 1268.232,
+        "max": 1557.679
+      },
+      "search": {
+        "n": 20,
+        "mean": 7.191,
+        "p50": 7.163,
+        "p95": 7.668,
+        "p99": 11.099,
+        "max": 11.957
+      },
+      "generate": {
+        "n": 20,
+        "mean": 2231.305,
+        "p50": 1960.359,
+        "p95": 3866.916,
+        "p99": 4084.058,
+        "max": 4138.343
+      },
+      "judge_decompose": {
+        "n": 20,
+        "mean": 3191.437,
+        "p50": 2758.167,
+        "p95": 5085.512,
+        "p99": 5366.956,
+        "max": 5437.317
+      },
+      "judge_verify": {
+        "n": 20,
+        "mean": 3881.262,
+        "p50": 3175.834,
+        "p95": 7888.126,
+        "p99": 8927.416,
+        "max": 9187.238
+      },
+      "total": {
+        "n": 20,
+        "mean": 9414.346,
+        "p50": 8419.694,
+        "p95": 17463.7,
+        "p99": 18007.298,
+        "max": 18143.197
+      }
+    },
+    "cost_usd": {
+      "total": 0.326876,
+      "per_question": {
+        "n": 20,
+        "mean": 0.016,
+        "p50": 0.015,
+        "p95": 0.027,
+        "p99": 0.029,
+        "max": 0.029
+      },
+      "by_call": {
+        "generate": 0.081096,
+        "judge_decompose": 0.092738,
+        "judge_verify": 0.153042
+      }
+    },
+    "judge_share": {
+      "cost": 0.7519,
+      "latency": 0.7513
+    },
+    "spent_this_run_usd": 0.0,
+    "vs_evaluated": {
+      "same_answer_text": 3,
+      "same_status": 18,
+      "same_groundedness": 15,
+      "both_scored": 8,
+      "mean_abs_groundedness_diff_both_scored": 0.217857
+    },
+    "questions": [
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_02416",
+        "stage_ms": {
+          "embed": 1557.679,
+          "search": 11.957,
+          "generate": 2132.594,
+          "judge_decompose": 2225.547,
+          "judge_verify": 2541.559,
+          "total": 8469.336
+        },
+        "cost_usd": 0.013514,
+        "cost_by_call_usd": {
+          "generate": 0.004226,
+          "judge_decompose": 0.003098,
+          "judge_verify": 0.00619
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_03471",
+        "stage_ms": {
+          "embed": 32.293,
+          "search": 7.323,
+          "generate": 1839.856,
+          "judge_decompose": 2471.181,
+          "judge_verify": 2957.289,
+          "total": 7307.942
+        },
+        "cost_usd": 0.012646,
+        "cost_by_call_usd": {
+          "generate": 0.003164,
+          "judge_decompose": 0.00378,
+          "judge_verify": 0.005702
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_00302",
+        "stage_ms": {
+          "embed": 22.368,
+          "search": 7.078,
+          "generate": 2004.73,
+          "judge_decompose": 4173.05,
+          "judge_verify": 3006.242,
+          "total": 9213.468
+        },
+        "cost_usd": 0.014116,
+        "cost_by_call_usd": {
+          "generate": 0.003616,
+          "judge_decompose": 0.004242,
+          "judge_verify": 0.006258
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_01226",
+        "stage_ms": {
+          "embed": 28.925,
+          "search": 7.408,
+          "generate": 3852.63,
+          "judge_decompose": 5066.996,
+          "judge_verify": 9187.238,
+          "total": 18143.197
+        },
+        "cost_usd": 0.028898,
+        "cost_by_call_usd": {
+          "generate": 0.00606,
+          "judge_decompose": 0.008586,
+          "judge_verify": 0.014252
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "partial"
+        },
+        "groundedness": {
+          "evaluated": 0.0,
+          "live": 0.75,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_04784",
+        "stage_ms": {
+          "embed": 26.669,
+          "search": 6.567,
+          "generate": 1763.168,
+          "judge_decompose": 2690.333,
+          "judge_verify": 3883.315,
+          "total": 8370.052
+        },
+        "cost_usd": 0.016488,
+        "cost_by_call_usd": {
+          "generate": 0.004068,
+          "judge_decompose": 0.004532,
+          "judge_verify": 0.007888
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "partial",
+          "live": "answered"
+        },
+        "groundedness": {
+          "evaluated": 1.0,
+          "live": 1.0,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_04458",
+        "stage_ms": {
+          "embed": 33.916,
+          "search": 7.256,
+          "generate": 1715.819,
+          "judge_decompose": 2637.203,
+          "judge_verify": 3419.502,
+          "total": 7813.696
+        },
+        "cost_usd": 0.014928,
+        "cost_by_call_usd": {
+          "generate": 0.003412,
+          "judge_decompose": 0.004398,
+          "judge_verify": 0.007118
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_03029",
+        "stage_ms": {
+          "embed": 25.743,
+          "search": 7.274,
+          "generate": 1639.819,
+          "judge_decompose": 2621.786,
+          "judge_verify": 2505.706,
+          "total": 6800.327
+        },
+        "cost_usd": 0.011422,
+        "cost_by_call_usd": {
+          "generate": 0.00316,
+          "judge_decompose": 0.003304,
+          "judge_verify": 0.004958
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_01476",
+        "stage_ms": {
+          "embed": 25.191,
+          "search": 7.175,
+          "generate": 1753.226,
+          "judge_decompose": 2251.222,
+          "judge_verify": 2051.839,
+          "total": 6088.653
+        },
+        "cost_usd": 0.012642,
+        "cost_by_call_usd": {
+          "generate": 0.003616,
+          "judge_decompose": 0.003338,
+          "judge_verify": 0.005688
+        },
+        "made_this_run": 0,
+        "same_answer_text": true,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_04412",
+        "stage_ms": {
+          "embed": 34.274,
+          "search": 5.83,
+          "generate": 2106.442,
+          "judge_decompose": 3121.186,
+          "judge_verify": 3238.25,
+          "total": 8505.982
+        },
+        "cost_usd": 0.01568,
+        "cost_by_call_usd": {
+          "generate": 0.004196,
+          "judge_decompose": 0.00442,
+          "judge_verify": 0.007064
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_01935",
+        "stage_ms": {
+          "embed": 21.398,
+          "search": 5.736,
+          "generate": 1975.64,
+          "judge_decompose": 2185.066,
+          "judge_verify": 2171.548,
+          "total": 6359.389
+        },
+        "cost_usd": 0.012008,
+        "cost_by_call_usd": {
+          "generate": 0.003424,
+          "judge_decompose": 0.003182,
+          "judge_verify": 0.005402
+        },
+        "made_this_run": 0,
+        "same_answer_text": true,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_10499",
+        "stage_ms": {
+          "embed": 29.652,
+          "search": 7.239,
+          "generate": 1851.671,
+          "judge_decompose": 2430.444,
+          "judge_verify": 2839.531,
+          "total": 7158.537
+        },
+        "cost_usd": 0.01505,
+        "cost_by_call_usd": {
+          "generate": 0.004238,
+          "judge_decompose": 0.003954,
+          "judge_verify": 0.006858
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_00956",
+        "stage_ms": {
+          "embed": 19.294,
+          "search": 7.082,
+          "generate": 3462.59,
+          "judge_decompose": 3614.812,
+          "judge_verify": 5919.623,
+          "total": 13023.401
+        },
+        "cost_usd": 0.020882,
+        "cost_by_call_usd": {
+          "generate": 0.004804,
+          "judge_decompose": 0.006032,
+          "judge_verify": 0.010046
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "answered",
+          "live": "answered"
+        },
+        "groundedness": {
+          "evaluated": 0.2857142857142857,
+          "live": 0.5,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_04735",
+        "stage_ms": {
+          "embed": 31.704,
+          "search": 6.898,
+          "generate": 1834.602,
+          "judge_decompose": 4551.166,
+          "judge_verify": 2575.709,
+          "total": 9000.079
+        },
+        "cost_usd": 0.012852,
+        "cost_by_call_usd": {
+          "generate": 0.00344,
+          "judge_decompose": 0.003618,
+          "judge_verify": 0.005794
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_00684",
+        "stage_ms": {
+          "embed": 25.736,
+          "search": 6.79,
+          "generate": 4138.343,
+          "judge_decompose": 5437.317,
+          "judge_verify": 7819.752,
+          "total": 17427.937
+        },
+        "cost_usd": 0.026918,
+        "cost_by_call_usd": {
+          "generate": 0.005528,
+          "judge_decompose": 0.00801,
+          "judge_verify": 0.01338
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": 1.0,
+          "live": 0.3333333333333333,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_01319",
+        "stage_ms": {
+          "embed": 24.993,
+          "search": 7.015,
+          "generate": 1945.078,
+          "judge_decompose": 3174.492,
+          "judge_verify": 3113.419,
+          "total": 8264.997
+        },
+        "cost_usd": 0.013652,
+        "cost_by_call_usd": {
+          "generate": 0.003466,
+          "judge_decompose": 0.003658,
+          "judge_verify": 0.006528
+        },
+        "made_this_run": 0,
+        "same_answer_text": true,
+        "status": {
+          "evaluated": "answered",
+          "live": "answered"
+        },
+        "groundedness": {
+          "evaluated": 0.0,
+          "live": 0.0,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_00563",
+        "stage_ms": {
+          "embed": 23.618,
+          "search": 7.295,
+          "generate": 2099.916,
+          "judge_decompose": 2826.0,
+          "judge_verify": 3658.323,
+          "total": 8615.153
+        },
+        "cost_usd": 0.01406,
+        "cost_by_call_usd": {
+          "generate": 0.00329,
+          "judge_decompose": 0.004422,
+          "judge_verify": 0.006348
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "answered",
+          "live": "answered"
+        },
+        "groundedness": {
+          "evaluated": 0.75,
+          "live": 0.6666666666666666,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_01163",
+        "stage_ms": {
+          "embed": 25.747,
+          "search": 7.324,
+          "generate": 1803.163,
+          "judge_decompose": 2632.056,
+          "judge_verify": 2818.94,
+          "total": 7287.23
+        },
+        "cost_usd": 0.01461,
+        "cost_by_call_usd": {
+          "generate": 0.003776,
+          "judge_decompose": 0.004242,
+          "judge_verify": 0.006592
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_06272",
+        "stage_ms": {
+          "embed": 30.087,
+          "search": 7.442,
+          "generate": 2005.546,
+          "judge_decompose": 3216.435,
+          "judge_verify": 4160.122,
+          "total": 9419.632
+        },
+        "cost_usd": 0.018118,
+        "cost_by_call_usd": {
+          "generate": 0.004424,
+          "judge_decompose": 0.005214,
+          "judge_verify": 0.00848
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "answered",
+          "live": "answered"
+        },
+        "groundedness": {
+          "evaluated": 1.0,
+          "live": 1.0,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_00702",
+        "stage_ms": {
+          "embed": 22.244,
+          "search": 7.152,
+          "generate": 2891.736,
+          "judge_decompose": 3926.967,
+          "judge_verify": 6514.508,
+          "total": 13362.608
+        },
+        "cost_usd": 0.023892,
+        "cost_by_call_usd": {
+          "generate": 0.005376,
+          "judge_decompose": 0.006626,
+          "judge_verify": 0.01189
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "answered",
+          "live": "answered"
+        },
+        "groundedness": {
+          "evaluated": 0.6,
+          "live": 0.5714285714285714,
+          "live_unavailable_reason": null
+        }
+      },
+      {
+        "trace_id": "retrieved__claude-sonnet-5__v1_zero_shot__financebench_id_01484",
+        "stage_ms": {
+          "embed": 21.472,
+          "search": 5.989,
+          "generate": 1809.53,
+          "judge_decompose": 2575.49,
+          "judge_verify": 3242.816,
+          "total": 7655.297
+        },
+        "cost_usd": 0.0145,
+        "cost_by_call_usd": {
+          "generate": 0.003812,
+          "judge_decompose": 0.004082,
+          "judge_verify": 0.006606
+        },
+        "made_this_run": 0,
+        "same_answer_text": false,
+        "status": {
+          "evaluated": "declined",
+          "live": "declined"
+        },
+        "groundedness": {
+          "evaluated": null,
+          "live": null,
+          "live_unavailable_reason": "no_document_claims"
+        }
+      }
+    ]
+  },
+  "replay": {
+    "meta": {
+      "single_run": true,
+      "what": "the served API in replay-only mode: every model response is the cached one, so latency is the service's own (CPU query embedding, FAISS search over the full index, cache reads, parsing, JSON), not the model API's",
+      "load": "closed loop: each user sends its next request when the last returns; questions: the selected arm's 150 benchmark questions in a seeded random order",
+      "caveat": "the load generator (locust) runs on the same machine as the container and competes with it for CPU",
+      "settings": {
+        "url": "http://localhost:8000",
+        "users": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ],
+        "duration_s": 120,
+        "settle_s": 10,
+        "warmup_requests": 20,
+        "seed": 0
+      },
+      "bundle_sha256": "0a7b845da8a067614d1bd2148ec153f12455fe91028cc7b1ceffd6917f92f0ef",
+      "pipeline": {
+        "selected_arm": "retrieved__claude-sonnet-5__v1_zero_shot",
+        "chunking": "fixed_size",
+        "embedding": "bge-small-en-v1.5",
+        "retriever": "dense",
+        "k": 5,
+        "generator": "claude-sonnet-5",
+        "prompt_id": "v1_zero_shot"
+      },
+      "host": {
+        "os": "Windows 10",
+        "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+        "logical_cpus": 12,
+        "docker": {
+          "cpus": 12,
+          "memory_gb": 7.4,
+          "server_version": "29.7.2"
+        }
+      }
+    },
+    "levels": [
+      {
+        "users": 1,
+        "window_s": 120.01,
+        "n_requests": 1674,
+        "n_errors": 0,
+        "error_rate": 0.0,
+        "errors_by_status": {},
+        "throughput_rps": 13.949,
+        "latency_ms": {
+          "n": 1674,
+          "mean": 71.511,
+          "p50": 75.736,
+          "p95": 123.994,
+          "p99": 143.231,
+          "max": 205.686
+        },
+        "server_stage_ms": {
+          "embed": {
+            "n": 1674,
+            "mean": 29.481,
+            "p50": 24.509,
+            "p95": 69.083,
+            "p99": 89.277,
+            "max": 151.956
+          },
+          "search": {
+            "n": 1674,
+            "mean": 6.544,
+            "p50": 6.355,
+            "p95": 7.862,
+            "p99": 9.537,
+            "max": 22.496
+          },
+          "generate": {
+            "n": 1674,
+            "mean": 0.438,
+            "p50": 0.425,
+            "p95": 0.551,
+            "p99": 0.722,
+            "max": 1.535
+          },
+          "judge_decompose": {
+            "n": 1674,
+            "mean": 0.242,
+            "p50": 0.228,
+            "p95": 0.328,
+            "p99": 0.445,
+            "max": 1.021
+          },
+          "judge_verify": {
+            "n": 1674,
+            "mean": 0.263,
+            "p50": 0.25,
+            "p95": 0.348,
+            "p99": 0.47,
+            "max": 4.827
+          },
+          "total": {
+            "n": 1674,
+            "mean": 37.489,
+            "p50": 32.45,
+            "p95": 78.892,
+            "p99": 98.922,
+            "max": 161.214
+          }
+        },
+        "n_uncached_model_calls": 0
+      },
+      {
+        "users": 2,
+        "window_s": 120.011,
+        "n_requests": 2961,
+        "n_errors": 0,
+        "error_rate": 0.0,
+        "errors_by_status": {},
+        "throughput_rps": 24.673,
+        "latency_ms": {
+          "n": 2961,
+          "mean": 80.878,
+          "p50": 73.639,
+          "p95": 131.052,
+          "p99": 171.878,
+          "max": 396.688
+        },
+        "server_stage_ms": {
+          "embed": {
+            "n": 2961,
+            "mean": 63.281,
+            "p50": 56.617,
+            "p95": 110.334,
+            "p99": 149.827,
+            "max": 377.928
+          },
+          "search": {
+            "n": 2961,
+            "mean": 8.694,
+            "p50": 7.836,
+            "p95": 13.648,
+            "p99": 20.545,
+            "max": 34.03
+          },
+          "generate": {
+            "n": 2961,
+            "mean": 0.825,
+            "p50": 0.607,
+            "p95": 1.948,
+            "p99": 4.749,
+            "max": 8.568
+          },
+          "judge_decompose": {
+            "n": 2961,
+            "mean": 0.532,
+            "p50": 0.37,
+            "p95": 1.329,
+            "p99": 3.929,
+            "max": 13.248
+          },
+          "judge_verify": {
+            "n": 2961,
+            "mean": 0.52,
+            "p50": 0.391,
+            "p95": 1.148,
+            "p99": 2.97,
+            "max": 7.359
+          },
+          "total": {
+            "n": 2961,
+            "mean": 74.573,
+            "p50": 67.505,
+            "p95": 123.126,
+            "p99": 164.74,
+            "max": 389.883
+          }
+        },
+        "n_uncached_model_calls": 0
+      },
+      {
+        "users": 4,
+        "window_s": 120.013,
+        "n_requests": 3135,
+        "n_errors": 0,
+        "error_rate": 0.0,
+        "errors_by_status": {},
+        "throughput_rps": 26.122,
+        "latency_ms": {
+          "n": 3135,
+          "mean": 152.904,
+          "p50": 149.212,
+          "p95": 194.38,
+          "p99": 222.527,
+          "max": 552.132
+        },
+        "server_stage_ms": {
+          "embed": {
+            "n": 3135,
+            "mean": 132.732,
+            "p50": 129.959,
+            "p95": 170.434,
+            "p99": 194.718,
+            "max": 259.187
+          },
+          "search": {
+            "n": 3135,
+            "mean": 9.207,
+            "p50": 8.603,
+            "p95": 13.83,
+            "p99": 17.28,
+            "max": 24.055
+          },
+          "generate": {
+            "n": 3135,
+            "mean": 1.24,
+            "p50": 1.121,
+            "p95": 2.212,
+            "p99": 3.27,
+            "max": 8.584
+          },
+          "judge_decompose": {
+            "n": 3135,
+            "mean": 1.014,
+            "p50": 0.876,
+            "p95": 2.009,
+            "p99": 2.721,
+            "max": 6.092
+          },
+          "judge_verify": {
+            "n": 3135,
+            "mean": 1.029,
+            "p50": 0.904,
+            "p95": 2.0,
+            "p99": 2.68,
+            "max": 7.005
+          },
+          "total": {
+            "n": 3135,
+            "mean": 145.915,
+            "p50": 142.806,
+            "p95": 186.831,
+            "p99": 210.672,
+            "max": 279.383
+          }
+        },
+        "n_uncached_model_calls": 0
+      },
+      {
+        "users": 8,
+        "window_s": 120.01,
+        "n_requests": 2800,
+        "n_errors": 0,
+        "error_rate": 0.0,
+        "errors_by_status": {},
+        "throughput_rps": 23.331,
+        "latency_ms": {
+          "n": 2800,
+          "mean": 342.426,
+          "p50": 345.026,
+          "p95": 388.465,
+          "p99": 416.104,
+          "max": 447.49
+        },
+        "server_stage_ms": {
+          "embed": {
+            "n": 2800,
+            "mean": 314.673,
+            "p50": 317.689,
+            "p95": 358.798,
+            "p99": 382.488,
+            "max": 415.649
+          },
+          "search": {
+            "n": 2800,
+            "mean": 9.129,
+            "p50": 8.367,
+            "p95": 13.863,
+            "p99": 17.647,
+            "max": 20.85
+          },
+          "generate": {
+            "n": 2800,
+            "mean": 2.932,
+            "p50": 2.757,
+            "p95": 4.933,
+            "p99": 6.659,
+            "max": 11.533
+          },
+          "judge_decompose": {
+            "n": 2800,
+            "mean": 2.766,
+            "p50": 2.601,
+            "p95": 4.726,
+            "p99": 6.032,
+            "max": 10.576
+          },
+          "judge_verify": {
+            "n": 2800,
+            "mean": 2.8,
+            "p50": 2.633,
+            "p95": 4.888,
+            "p99": 6.313,
+            "max": 12.046
+          },
+          "total": {
+            "n": 2800,
+            "mean": 333.018,
+            "p50": 335.896,
+            "p95": 378.286,
+            "p99": 405.557,
+            "max": 436.815
+          }
+        },
+        "n_uncached_model_calls": 0
+      },
+      {
+        "users": 16,
+        "window_s": 120.009,
+        "n_requests": 2627,
+        "n_errors": 0,
+        "error_rate": 0.0,
+        "errors_by_status": {},
+        "throughput_rps": 21.89,
+        "latency_ms": {
+          "n": 2627,
+          "mean": 730.026,
+          "p50": 732.184,
+          "p95": 790.171,
+          "p99": 813.373,
+          "max": 860.755
+        },
+        "server_stage_ms": {
+          "embed": {
+            "n": 2627,
+            "mean": 683.256,
+            "p50": 686.109,
+            "p95": 741.832,
+            "p99": 764.986,
+            "max": 808.596
+          },
+          "search": {
+            "n": 2627,
+            "mean": 9.715,
+            "p50": 8.9,
+            "p95": 15.095,
+            "p99": 19.686,
+            "max": 26.705
+          },
+          "generate": {
+            "n": 2627,
+            "mean": 6.431,
+            "p50": 6.105,
+            "p95": 11.09,
+            "p99": 13.741,
+            "max": 20.669
+          },
+          "judge_decompose": {
+            "n": 2627,
+            "mean": 6.313,
+            "p50": 5.944,
+            "p95": 11.252,
+            "p99": 13.86,
+            "max": 20.216
+          },
+          "judge_verify": {
+            "n": 2627,
+            "mean": 6.305,
+            "p50": 5.888,
+            "p95": 11.139,
+            "p99": 14.016,
+            "max": 22.434
+          },
+          "total": {
+            "n": 2627,
+            "mean": 712.895,
+            "p50": 715.289,
+            "p95": 772.819,
+            "p99": 792.23,
+            "max": 837.911
+          }
+        },
+        "n_uncached_model_calls": 0
+      }
+    ]
+  }
+}

@@ -46,6 +46,11 @@ class TestExemptions:
         assert v.exemption("metrics/retrieval_grid.json", path) is None
         assert v.exemption("metrics/index_stats.json", ".configs.x.faiss.index_size_bytes") is None
 
+    def test_ledger_snapshots_but_not_phase_spend(self):
+        assert v.exemption("metrics/generation_runs.json", ".meta.api_spend_to_date_usd")
+        assert v.exemption("metrics/eval_main.json", ".meta.spend.project_spent_usd")
+        assert v.exemption("metrics/eval_main.json", ".meta.spend.phase_spent_usd") is None
+
     def test_score_tolerance_allows_rounding_noise_only(self):
         rel, path = "traces/retrieved/m__p.jsonl", "[3].retrieval.chunks[1].score"
         assert v.exemption(rel, path, 0.719329, 0.71933)
