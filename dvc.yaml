@@ -2,7 +2,8 @@
 #   ingest -> chunk -> embed -> index -> retrieve -> generate -> evaluate -> analyse -> track
 #
 # Roots (`dvc add`, pushed to the local remote): data/raw/edgar_cache, data/raw/financebench
-# and the LLM response cache data/cache/llm. Human inputs are git-tracked dependencies, never
+# and the LLM response cache data/cache/llm (with the later caches beside it: llm_batches,
+# llm_live, llm_ragas, replicates, each its own root so new responses stale no other stage). Human inputs are git-tracked dependencies, never
 # outputs, so a rebuild cannot rewrite them: the adversarial questions, the author's labels,
 # the review samples and the pre-registration. Results files are git-tracked outputs
 # (`cache: false`); data files are DVC-cached outputs.
@@ -493,4 +494,55 @@ stages:
       - build/serving
     outs:
       - results/metrics/serving_check.json:
+          cache: false
+
+  # After Phase 8. RAGAS faithfulness on the 50 hand-labelled answers, against the judge and
+  # the author's labels; the script runs itself in the `ragas` environment (pyproject.toml),
+  # which uv creates on first use. Its responses are their own DVC root, data/cache/llm_ragas.
+  ragas_faithfulness:
+    cmd: uv run --env-file configs/replay.env python scripts/15_ragas_faithfulness.py --offline
+    deps:
+      - scripts/15_ragas_faithfulness.py
+      - src/external
+      - src/generation/llm.py
+      - src/evaluation/agreement.py
+      - configs/ragas.yaml
+      - configs/evaluation.yaml
+      - data/cache/llm_ragas
+      - results/labels/validation_sample.json
+      - results/metrics/judge_agreement.json
+    outs:
+      - results/metrics/ragas_faithfulness.json:
+          cache: false
+      - results/metrics/ragas_faithfulness_per_answer.jsonl:
+          cache: false
+
+  # Two more runs of the two tied retrieved-condition Sonnet 5 arms, generated and judged as
+  # run 0 was; responses and batch records in their own DVC root, data/cache/replicates.
+  replicates:
+    cmd: uv run --env-file configs/replay.env python scripts/16_replicates.py --offline
+    deps:
+      - scripts/16_replicates.py
+      - src/replication
+      - src/evaluation
+      - src/generation
+      - src/tracking/selection.py
+      - prompts
+      - configs/replicates.yaml
+      - configs/evaluation.yaml
+      - configs/retrieval_grid.yaml
+      - data/raw/financebench
+      - data/cache/replicates
+      - results/traces/retrieved
+      - results/metrics/eval_per_trace.jsonl
+      - results/metrics/eval_main.json
+      - results/metrics/pipeline_selection.json
+      - results/metrics/gold_span_alignment.json
+      - results/labels/out_of_corpus_audit.json
+    outs:
+      - results/replicates/traces:
+          cache: false
+      - results/metrics/replicates_per_trace.jsonl:
+          cache: false
+      - results/metrics/replicates.json:
           cache: false

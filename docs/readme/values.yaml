@@ -1,0 +1,258 @@
+# Every number in README.md, by name: the results file it comes from (a path under results/),
+# the field inside it (`/`-separated; list items by index), and its format (see
+# scripts/17_readme.py `fmt`). `expr` is arithmetic over other names; `count_where` counts the
+# items of a list or dict whose fields match. Edit this file or the template, never README.md.
+
+values:
+  # ---- data
+  fb.n_questions: { file: metrics/corpus_stats.json, path: financebench_questions, fmt: int }
+  fb.n_docs: { file: metrics/corpus_stats.json, path: financebench_unique_docs, fmt: int }
+  corpus.ingested: { file: metrics/corpus_stats.json, path: documents_ingested, fmt: int }
+  corpus.pages: { file: metrics/corpus_stats.json, path: page_count, fmt: int }
+  gen.n_traces: { file: metrics/reliability_analysis.json, path: meta/n_traces, fmt: int }
+  adv.a.n: { file: metrics/adversarial_contexts.json, path: conditions/retrieved/a/n_questions, fmt: int }
+  adv.b.n: { file: metrics/adversarial_contexts.json, path: conditions/retrieved/b/n_questions, fmt: int }
+  adv.c.n: { file: metrics/adversarial_contexts.json, path: conditions/retrieved/c/n_questions, fmt: int }
+  adv.d.n: { file: metrics/adversarial_contexts.json, path: conditions/retrieved/d/n_questions, fmt: int }
+  adv.n_questions: { expr: "adv.a.n + adv.b.n + adv.c.n + adv.d.n", fmt: int }
+  adv.b.n_retrieved_any:
+    { file: metrics/adversarial_contexts.json, path: "conditions/retrieved/b/n_recall@5_gt_0", fmt: int }
+  ooc.n: { file: labels/out_of_corpus_audit.json, path: items, count_where: {}, fmt: int }
+  ooc.answerable_elsewhere:
+    { file: labels/out_of_corpus_audit.json, path: items, count_where: { status: answerable_elsewhere }, fmt: int }
+
+  # ---- retrieval
+  ret.n_cells: { file: metrics/retrieval_grid.json, path: cells, count_where: {}, fmt: int }
+  ret.n_in_corpus: { file: metrics/retrieval_grid.json, path: meta/n_questions_in_corpus, fmt: int }
+  ret.n_scored: { file: metrics/retrieval_grid.json, path: meta/n_questions_scored, fmt: int }
+  ret.best.recall5:
+    { file: metrics/retrieval_grid.json, path: "cells/fixed_size__bge-small-en-v1.5__dense/metrics/recall@5", fmt: f3 }
+  ret.best.dochit:
+    { file: metrics/retrieval_grid.json, path: "cells/fixed_size__bge-small-en-v1.5__dense/metrics/doc_hit@5", fmt: f3 }
+  ret.best.dochit_pct: { expr: "ret.best.dochit", fmt: pct0 }
+  ret.best.miss_filing_pct: { expr: "1 - ret.best.dochit", fmt: pct0 }
+  ret.bm25.dochit:
+    { file: metrics/retrieval_grid.json, path: "cells/fixed_size__bge-small-en-v1.5__bm25/metrics/doc_hit@5", fmt: f3 }
+  ret.bm25.dochit_pct: { expr: "ret.bm25.dochit", fmt: pct0 }
+  ret.best_recall20:
+    { file: metrics/retrieval_grid.json, path: "cells/fixed_size__bge-base-en-v1.5__dense/metrics/recall@20", fmt: f3 }
+  ret.share.method:
+    { file: metrics/retrieval_grid.json, path: "factor_decomposition/all_cells/recall@5/factors/method/ss_share", fmt: pct1 }
+  ret.dense.embedding:
+    { file: metrics/retrieval_grid.json, path: "factor_decomposition/dense_only/recall@5/factors/embedding/ss_share", fmt: pct1 }
+  ret.dense.chunking:
+    { file: metrics/retrieval_grid.json, path: "factor_decomposition/dense_only/recall@5/factors/chunking/ss_share", fmt: pct1 }
+  ret.runner_up.diff: { file: metrics/retrieval_grid.json, path: selection/runners_up/0/diff, fmt: sf3 }
+  ret.runner_up.lo: { file: metrics/retrieval_grid.json, path: selection/runners_up/0/ci95_low, fmt: f3 }
+  ret.runner_up.hi: { file: metrics/retrieval_grid.json, path: selection/runners_up/0/ci95_high, fmt: f3 }
+
+  # ---- correctness, groundedness (Phase 5, pooled over prompts)
+  ev.or_sonnet.acc_answered:
+    { file: metrics/eval_main.json, path: by_condition_model/oracle__claude-sonnet-5/correctness/accuracy_answered/rate, fmt: f2 }
+  ev.or_qwen.acc_answered:
+    { file: metrics/eval_main.json, path: by_condition_model/oracle__qwen2.5-3b/correctness/accuracy_answered/rate, fmt: f2 }
+  ev.or_sonnet.cp:
+    { file: metrics/eval_main.json, path: by_condition_model/oracle__claude-sonnet-5/citations/citation_precision/mean, fmt: f2 }
+  ev.ret_sonnet.n_declined:
+    { file: metrics/eval_main.json, path: by_condition_model/retrieved__claude-sonnet-5/abstention/status_counts/declined, fmt: int }
+  ev.ret_sonnet.n: { file: metrics/eval_main.json, path: by_condition_model/retrieved__claude-sonnet-5/n, fmt: int }
+  ev.ret_sonnet.declined: { expr: "ev.ret_sonnet.n_declined / ev.ret_sonnet.n", fmt: pct0 }
+  ev.ret_sonnet.decl_unanswerable:
+    { file: metrics/eval_main.json, path: by_condition_model/retrieved__claude-sonnet-5/abstention/by_answerability/unanswerable/declined/rate, fmt: pct0 }
+  ev.crosscheck_k: { file: metrics/eval_main.json, path: meta/correctness_crosscheck/binary_kappa, fmt: f2 }
+  ev.abstention_k: { file: metrics/eval_main.json, path: abstention_detector_agreement/binary_declined/kappa, fmt: f2 }
+
+  # ---- judge validation and RAGAS
+  ja.n_answers: { file: metrics/judge_agreement.json, path: meta/n_answers, fmt: int }
+  ja.n_claims: { file: metrics/judge_agreement.json, path: meta/n_claims, fmt: int }
+  ja.human_judge.claim:
+    { file: metrics/judge_agreement.json, path: agreement/human__vs__judge/document_claims/claim_supported, fmt: kci2 }
+  ja.human_judge.claim_k:
+    { file: metrics/judge_agreement.json, path: agreement/human__vs__judge/document_claims/claim_supported/kappa, fmt: f2 }
+  ja.human_judge.answer:
+    { file: metrics/judge_agreement.json, path: agreement/human__vs__judge/document_claims/answer_fully_grounded, fmt: kci2 }
+  ja.human_judge.answer_k:
+    { file: metrics/judge_agreement.json, path: agreement/human__vs__judge/document_claims/answer_fully_grounded/kappa, fmt: f2 }
+  ja.retest.claim_k:
+    { file: metrics/judge_agreement.json, path: agreement/judge__vs__judge_retest/document_claims/claim_supported/kappa, fmt: f2 }
+  ja.second.claim_k:
+    { file: metrics/judge_agreement.json, path: agreement/judge__vs__second_judge/document_claims/claim_supported/kappa, fmt: f2 }
+  ja.adjudicated_n: { file: metrics/judge_agreement.json, path: meta/adjudication/n_claims_changed, fmt: int }
+  ja.adjudicated.claim_k:
+    { file: metrics/judge_agreement.json, path: agreement/human_adjudicated__vs__judge/document_claims/claim_supported/kappa, fmt: f2 }
+  rg.human_ragas.k:
+    { file: metrics/ragas_faithfulness.json, path: comparison/pairs/human__vs__ragas/all/fully_grounded/kappa, fmt: f2 }
+  rg.human_ragas.kci:
+    { file: metrics/ragas_faithfulness.json, path: comparison/pairs/human__vs__ragas/all/fully_grounded, fmt: kci2 }
+  rg.human_ragas.rho:
+    { file: metrics/ragas_faithfulness.json, path: comparison/pairs/human__vs__ragas/all/score/spearman, fmt: f2 }
+  rg.human_judge.rho:
+    { file: metrics/ragas_faithfulness.json, path: comparison/pairs/human__vs__judge/all/score/spearman, fmt: f2 }
+  rg.diff:
+    { file: metrics/ragas_faithfulness.json, path: comparison/human_judge_minus_human_ragas/kappa_diff, fmt: sf2 }
+  rg.diff_ci:
+    { file: metrics/ragas_faithfulness.json, path: comparison/human_judge_minus_human_ragas/kappa_diff_ci95, fmt: ci2 }
+  rg.mean_statements:
+    { file: metrics/ragas_faithfulness_per_answer.jsonl, path: "", mean_of: n_statements, fmt: f1 }
+
+  # ---- Phase 6: correct vs grounded, the review, question types
+  q2.or_sonnet.ugc:
+    { file: metrics/reliability_analysis.json, path: q2/cells/oracle__claude-sonnet-5/primary/ungrounded_given_correct/mean, fmt: f2 }
+  q2.or_sonnet.ugc_pct: { expr: "q2.or_sonnet.ugc", fmt: pct0 }
+  q2.or_sonnet.ugc_ci:
+    { file: metrics/reliability_analysis.json, path: q2/cells/oracle__claude-sonnet-5/primary/ungrounded_given_correct/ci95, fmt: ci2 }
+  q2.or_sonnet.cg:
+    { file: metrics/reliability_analysis.json, path: q2/cells/oracle__claude-sonnet-5/primary/counts/correct_grounded, fmt: int }
+  q2.or_sonnet.cu:
+    { file: metrics/reliability_analysis.json, path: q2/cells/oracle__claude-sonnet-5/primary/counts/correct_ungrounded, fmt: int }
+  q2.or_sonnet.correct: { expr: "q2.or_sonnet.cg + q2.or_sonnet.cu", fmt: int }
+  rev.n: { file: metrics/reliability_analysis.json, path: q2_review/n, fmt: int }
+  rev.right: { file: metrics/reliability_analysis.json, path: q2_review/judge_right/value, fmt: f2 }
+  rev.right_ci: { file: metrics/reliability_analysis.json, path: q2_review/judge_right/ci95, fmt: ci2 }
+  rev.broke_rules: { file: metrics/reliability_analysis.json, path: q2_review/judge_wrong_categories/counts/A, fmt: int }
+  rev.rule_disputed: { file: metrics/reliability_analysis.json, path: q2_review/judge_wrong_categories/counts/B, fmt: int }
+  rev.wrong: { expr: "rev.broke_rules + rev.rule_disputed", fmt: int }
+  qt.domain:
+    { file: metrics/reliability_analysis.json, path: q2/cells/oracle__claude-sonnet-5/post_hoc_by_question_type/domain-relevant/ungrounded_given_correct/mean, fmt: f2 }
+  qt.metrics:
+    { file: metrics/reliability_analysis.json, path: q2/cells/oracle__claude-sonnet-5/post_hoc_by_question_type/metrics-generated/ungrounded_given_correct/mean, fmt: f2 }
+  prereg.unexpected:
+    { file: metrics/reliability_analysis.json, path: predictions, count_where: { unexpected: true }, fmt: int }
+  prereg.expected:
+    { file: metrics/reliability_analysis.json, path: predictions, count_where: { unexpected: false }, fmt: int }
+  prereg.checked: { expr: "prereg.unexpected + prereg.expected", fmt: int }
+
+  # ---- Phase 6: retrieval vs groundedness
+  q1.sonnet.rho:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/claude-sonnet-5/spearman_recall5_groundedness/rho, fmt: f2 }
+  q1.sonnet.rho_ci:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/claude-sonnet-5/spearman_recall5_groundedness/ci95, fmt: ci2 }
+  q1.qwen.rho:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/qwen2.5-3b/spearman_recall5_groundedness/rho, fmt: f2 }
+  q1.qwen.rho_ci:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/qwen2.5-3b/spearman_recall5_groundedness/ci95, fmt: ci2 }
+  q1.sonnet.g_gt0:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/claude-sonnet-5/groundedness_by_recall/recall5_gt_0/mean, fmt: f2 }
+  q1.sonnet.g_eq0:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/claude-sonnet-5/groundedness_by_recall/recall5_eq_0/mean, fmt: f2 }
+  q1.sonnet.ans_gt0:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/claude-sonnet-5/answer_rate/recall5_gt_0/mean, fmt: f2 }
+  q1.sonnet.ans_eq0:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/claude-sonnet-5/answer_rate/recall5_eq_0/mean, fmt: f2 }
+  q1.sonnet.n_q_gt0:
+    { file: metrics/reliability_analysis.json, path: q1/by_model/claude-sonnet-5/answer_rate/recall5_gt_0/n_questions, fmt: int }
+  q1.pair_sonnet.d_answered_pp:
+    { file: metrics/reliability_analysis.json, path: q1/paired_oracle_vs_retrieved/claude-sonnet-5/d_answered/mean, fmt: pp0 }
+  q1.pair_sonnet.d_answered_ci:
+    { file: metrics/reliability_analysis.json, path: q1/paired_oracle_vs_retrieved/claude-sonnet-5/d_answered/ci95, fmt: ppci0 }
+
+  # ---- Phase 6: signals, prompts, adversarial
+  q3.or_sonnet.gc: { file: metrics/reliability_analysis.json, path: q3/oracle__claude-sonnet-5/pairs/G-C/spearman/value, fmt: f2 }
+  q3.or_sonnet.gc_ci: { file: metrics/reliability_analysis.json, path: q3/oracle__claude-sonnet-5/pairs/G-C/spearman/ci95, fmt: ci2 }
+  q3.or_sonnet.gns: { file: metrics/reliability_analysis.json, path: q3/oracle__claude-sonnet-5/pairs/G-NS/spearman/value, fmt: f2 }
+  q3.or_sonnet.gns_ci: { file: metrics/reliability_analysis.json, path: q3/oracle__claude-sonnet-5/pairs/G-NS/spearman/ci95, fmt: ci2 }
+  q3.or_sonnet.gns_metrics:
+    { file: metrics/reliability_analysis.json, path: q3/oracle__claude-sonnet-5/post_hoc_G_NS_by_question_type/metrics-generated/spearman/value, fmt: f2 }
+  q3.or_sonnet.gns_other:
+    { file: metrics/reliability_analysis.json, path: q3/oracle__claude-sonnet-5/post_hoc_G_NS_by_question_type/other/spearman/value, fmt: f2 }
+  q5.or_sonnet.v2.g:
+    { file: metrics/reliability_analysis.json, path: q5/oracle__claude-sonnet-5/v2_citation_required_vs_v1_zero_shot/differences/groundedness/mean, fmt: sf2 }
+  q5.or_sonnet.v2.g_ci:
+    { file: metrics/reliability_analysis.json, path: q5/oracle__claude-sonnet-5/v2_citation_required_vs_v1_zero_shot/differences/groundedness/ci95, fmt: ci2 }
+  q5.or_sonnet.v2.cp:
+    { file: metrics/reliability_analysis.json, path: q5/oracle__claude-sonnet-5/v2_citation_required_vs_v1_zero_shot/differences/citation_precision/mean, fmt: sf2 }
+  q5.or_sonnet.v2.cp_ci:
+    { file: metrics/reliability_analysis.json, path: q5/oracle__claude-sonnet-5/v2_citation_required_vs_v1_zero_shot/differences/citation_precision/ci95, fmt: ci2 }
+  q5.or_qwen.v3.g:
+    { file: metrics/reliability_analysis.json, path: q5/oracle__qwen2.5-3b/v3_chain_of_thought_vs_v1_zero_shot/differences/groundedness/mean, fmt: sf2 }
+  q5.ret_sonnet.v4.ans_v1:
+    { file: metrics/reliability_analysis.json, path: q5/retrieved__claude-sonnet-5/v4_abstention_vs_v1_zero_shot/answer_rate/v1_zero_shot, fmt: f2 }
+  q5.ret_sonnet.v4.ans_v4:
+    { file: metrics/reliability_analysis.json, path: q5/retrieved__claude-sonnet-5/v4_abstention_vs_v1_zero_shot/answer_rate/v4_abstention, fmt: f2 }
+  adv.b.ret_sonnet.acc:
+    { file: metrics/reliability_analysis.json, path: q4/by_category/b/retrieved/claude-sonnet-5/accuracy_all/pooled/mean, fmt: f2 }
+  adv.b.ret_sonnet.declined:
+    { file: metrics/reliability_analysis.json, path: q4/by_category/b/retrieved/claude-sonnet-5/declined/pooled/mean, fmt: pct0 }
+  adv.c.ret_sonnet.declined:
+    { file: metrics/reliability_analysis.json, path: q4/by_category/c/retrieved/claude-sonnet-5/declined/pooled/mean, fmt: pct0 }
+  q4.premise_k: { file: metrics/reliability_analysis.json, path: q4/premise_agreement/kappa_3class, fmt: f2 }
+  q4.prem.sonnet:
+    { file: metrics/reliability_analysis.json, path: q4/premise/claude-sonnet-5/human/rejected/pooled/mean, fmt: f2 }
+  q4.prem.sonnet_ci:
+    { file: metrics/reliability_analysis.json, path: q4/premise/claude-sonnet-5/human/rejected/pooled/ci95, fmt: ci2 }
+  q4.prem.sonnet.v1_k:
+    { file: metrics/reliability_analysis.json, path: q4/premise/claude-sonnet-5/human/rejected/per_prompt/v1_zero_shot/k, fmt: int }
+  q4.prem.sonnet.v2_k:
+    { file: metrics/reliability_analysis.json, path: q4/premise/claude-sonnet-5/human/rejected/per_prompt/v2_citation_required/k, fmt: int }
+  q4.prem.sonnet.v3_k:
+    { file: metrics/reliability_analysis.json, path: q4/premise/claude-sonnet-5/human/rejected/per_prompt/v3_chain_of_thought/k, fmt: int }
+  q4.prem.sonnet.v4_k:
+    { file: metrics/reliability_analysis.json, path: q4/premise/claude-sonnet-5/human/rejected/per_prompt/v4_abstention/k, fmt: int }
+  q4.prem.qwen:
+    { file: metrics/reliability_analysis.json, path: q4/premise/qwen2.5-3b/human/rejected/pooled/mean, fmt: f2 }
+  q4.prem.qwen_accepts:
+    { file: metrics/reliability_analysis.json, path: q4/premise/qwen2.5-3b/human/counts/accepts_premise, fmt: int }
+  q4.prem.qwen_n: { file: metrics/reliability_analysis.json, path: q4/premise/qwen2.5-3b/human/rejected/pooled/n, fmt: int }
+  q4.mem.sonnet:
+    { file: metrics/reliability_analysis.json, path: q4/out_of_corpus_answered_from_memory/claude-sonnet-5/value, fmt: pct0 }
+  q4.mem.qwen:
+    { file: metrics/reliability_analysis.json, path: q4/out_of_corpus_answered_from_memory/qwen2.5-3b/value, fmt: pct0 }
+
+  # ---- selection and the three runs
+  sel.v1.n_cg:
+    { file: metrics/pipeline_selection.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/n_correct_and_grounded, fmt: int }
+  sel.v1.n: { file: metrics/pipeline_selection.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/n, fmt: int }
+  rep.v1.declined_pm:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/spread/declined_rate, fmt: pm3 }
+  rep.v1.wins:
+    { file: metrics/replicates.json, path: winner_counts/retrieved__claude-sonnet-5__v1_zero_shot, fmt: int }
+  rep.v1.cg_changes:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/stability/correct_and_grounded_changes, fmt: int }
+  rep.v1.decl_changes:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/stability/declined_changes, fmt: int }
+  rep.v1.n_q:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/stability/n_questions, fmt: int }
+  rep.v1.cg_run0:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/spread/correct_and_grounded/values/0, fmt: f3 }
+  rep.v1.cg_pm:
+    { file: metrics/replicates.json, path: arms/retrieved__claude-sonnet-5__v1_zero_shot/spread/correct_and_grounded, fmt: pm3 }
+  rep.n_runs: { file: metrics/replicates.json, path: pooled_difference/n_runs, fmt: int }
+  rep.pooled.diff_pp: { file: metrics/replicates.json, path: pooled_difference/diff, fmt: pp1 }
+  rep.pooled.diff_ci: { file: metrics/replicates.json, path: pooled_difference/ci95, fmt: ppci1 }
+
+  # ---- deployment
+  serve.n: { file: metrics/serving_check.json, path: n_matching/groundedness, fmt: int }
+  load.max_rps: { file: metrics/load_test.json, path: replay/levels/2/throughput_rps, fmt: f0 }
+  load.max_rps_users: { file: metrics/load_test.json, path: replay/levels/2/users, fmt: int }
+  load.search_ms: { file: metrics/load_test.json, path: replay/levels/0/server_stage_ms/search/p50, fmt: f0 }
+  load.live_n: { file: metrics/load_test.json, path: live/n_questions, fmt: int }
+  load.live_p50_ms: { file: metrics/load_test.json, path: live/stage_ms/total/p50, fmt: f0 }
+  load.live_p95_ms: { file: metrics/load_test.json, path: live/stage_ms/total/p95, fmt: f0 }
+  load.live_p50_s: { expr: "load.live_p50_ms / 1000", fmt: s1 }
+  load.live_p95_s: { expr: "load.live_p95_ms / 1000", fmt: s1 }
+  load.live_cost_q: { file: metrics/load_test.json, path: live/cost_usd/per_question/mean, fmt: usd3 }
+  load.judge_cost: { file: metrics/load_test.json, path: live/judge_share/cost, fmt: f3 }
+  load.judge_share_cost: { expr: "load.judge_cost", fmt: pct0 }
+  load.judge_share_time: { file: metrics/load_test.json, path: live/judge_share/latency, fmt: pct0 }
+  load.judge_ratio: { expr: "load.judge_cost / (1 - load.judge_cost)", fmt: f0 }
+  load.same_text: { file: metrics/load_test.json, path: live/vs_evaluated/same_answer_text, fmt: int }
+  load.same_ground: { file: metrics/load_test.json, path: live/vs_evaluated/same_groundedness, fmt: int }
+  k8s.rollout_s: { file: metrics/k8s_check.json, path: deploy/rollout_s, fmt: s1 }
+  k8s.first_replica_s: { file: metrics/k8s_check.json, path: autoscale/first_extra_replica_ready_s, fmt: s0 }
+  deploy.clone_to_answer_s: { file: metrics/deploy_check.json, path: seconds/clone_to_first_answer, fmt: s1 }
+  deploy.download_mb: { file: metrics/deploy_check.json, path: images/download_mb_compressed_total, fmt: f0 }
+  deploy.download_gb: { expr: "deploy.download_mb / 1000", fmt: f1 }
+
+  # ---- data release
+  release.raw_bytes: { file: metrics/data_release.json, path: archives/raw-edgar.tar.gz/bytes, fmt: int }
+  release.caches_bytes: { file: metrics/data_release.json, path: archives/llm-caches.tar.gz/bytes, fmt: int }
+  release.raw_mb: { expr: "release.raw_bytes / 1000000", fmt: f0 }
+  release.caches_mb: { expr: "release.caches_bytes / 1000000", fmt: f0 }
+
+  # ---- spend
+  spend.total_usd: { file: metrics/api_spend.json, path: total_usd, fmt: usd2 }
+  spend.n_calls: { file: metrics/api_spend.json, path: n_calls, fmt: int }
+
+# Decimals the template may type outside a placeholder: model versions, not results.
+allowed_literals:
+  - "4.5" # Haiku 4.5

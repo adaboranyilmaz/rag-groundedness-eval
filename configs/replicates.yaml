@@ -1,0 +1,29 @@
+# Two more runs of the two tied retrieved-condition Sonnet 5 arms (scripts/16_replicates.py),
+# so their numbers are reported as mean +- std over three runs instead of one. Run 0 is the
+# Phase 4/5 run. Every value here is copied into results/metrics/replicates.json.
+
+arms: # condition__model__prompt, as in eval_main.json
+  - retrieved__claude-sonnet-5__v1_zero_shot # the selected pipeline
+  - retrieved__claude-sonnet-5__v2_citation_required # tied with it on correct-and-grounded
+runs: [1, 2]
+# Added to every generation and judge request of run r as the `_replicate` metadata param:
+# part of the cache key, never sent, so run r is a fresh sample of both generation and
+# judging, and no run can reuse another's responses.
+replicate_tag: "replicates_run{run}"
+
+traces_dir: results/replicates/traces # run{r}/retrieved/<model>__<prompt>.jsonl; outside
+# results/traces, which the Phase 4 replay check walks
+cache_dir: data/cache/replicates/llm # one DVC root with the batch records, so new
+batch_dir: data/cache/replicates/batches # responses stale no other stage
+
+budget:
+  ledger: results/metrics/api_spend.json
+  project_cap_usd: 30.0
+  phase: arm_replicates
+  phase_cap_usd: 5.75 # the author's approval, 2026-09-26 (estimate ~$1.31 per arm per run)
+  # Stop after run 1 if twice its measured cost would not fit under the phase cap.
+  checkpoint_after_run: 1
+  batch_discount: 0.5
+  prices_as_of: "2026-06-24"
+  prices_usd_per_mtok:
+    claude-sonnet-5: { input: 2.0, output: 10.0 }

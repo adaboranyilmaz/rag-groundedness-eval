@@ -1,0 +1,6 @@
+outs:
+- md5: 300dc8339bf07552983ce86742eddfb4.dir
+  size: 19084149
+  nfiles: 1943
+  hash: md5
+  path: replicates

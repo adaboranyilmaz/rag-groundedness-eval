@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "updated_utc": "2026-09-26T16:47:37+00:00",
+    "what": "wall-clock time of each stage's command on the development machine, in pipeline order; `from_scratch` computes the embeddings rather than reading them back (one run); `replayed` replays from the response caches (2 runs, `seconds` is the slower)",
+    "host": {
+      "platform": "Windows-10-10.0.19045-SP0",
+      "python": "3.12.13"
+    }
+  },
+  "from_scratch": {
+    "ingest": {
+      "script": "01_ingest.py",
+      "seconds": 39.6
+    },
+    "chunk": {
+      "script": "02_chunk.py",
+      "seconds": 13.9
+    },
+    "embed": {
+      "script": "03_build_index.py --embed-only (9 configurations)",
+      "seconds": 3788.3
+    },
+    "index": {
+      "script": "03_build_index.py --all",
+      "seconds": 366.6
+    }
+  },
+  "replayed": {
+    "retrieve": {
+      "script": "04_eval_retrieval.py",
+      "runs_s": [
+        1548.2,
+        1544.4
+      ],
+      "seconds": 1548.2
+    },
+    "retrieve_scoped": {
+      "script": "04b_scoped_retrieval.py",
+      "runs_s": [
+        31.1,
+        31.8
+      ],
+      "seconds": 31.8
+    },
+    "generate": {
+      "script": "05_generate.py",
+      "runs_s": [
+        45.0,
+        34.4
+      ],
+      "seconds": 45.0
+    },
+    "replay_check": {
+      "script": "05_generate.py --verify-replay",
+      "runs_s": [
+        4.7,
+        1.8
+      ],
+      "seconds": 4.7
+    },
+    "evaluate": {
+      "script": "06_eval_generation.py",
+      "runs_s": [
+        43.5,
+        20.9
+      ],
+      "seconds": 43.5
+    },
+    "judge_validation": {
+      "script": "06b_judge_validation.py",
+      "runs_s": [
+        28.0,
+        27.8
+      ],
+      "seconds": 28.0
+    },
+    "adversarial_generate": {
+      "script": "07b_adversarial_run.py (generate)",
+      "runs_s": [
+        25.0,
+        25.7
+      ],
+      "seconds": 25.7
+    },
+    "adversarial_evaluate": {
+      "script": "07b_adversarial_run.py (evaluate)",
+      "runs_s": [
+        8.8,
+        4.0
+      ],
+      "seconds": 8.8
+    },
+    "analyse": {
+      "script": "07_reliability_analysis.py",
+      "runs_s": [
+        145.8,
+        147.2
+      ],
+      "seconds": 147.2
+    },
+    "select": {
+      "script": "09_track_experiments.py select",
+      "runs_s": [
+        4.4,
+        4.4
+      ],
+      "seconds": 4.4
+    },
+    "track": {
+      "script": "09_track_experiments.py track",
+      "runs_s": [
+        19.8,
+        18.9
+      ],
+      "seconds": 19.8
+    },
+    "serving_bundle": {
+      "script": "12_serving.py bundle",
+      "runs_s": [
+        14.1,
+        13.6
+      ],
+      "seconds": 14.1
+    },
+    "serving_check": {
+      "script": "12_serving.py check",
+      "runs_s": [
+        19.8,
+        19.8
+      ],
+      "seconds": 19.8
+    },
+    "ragas_faithfulness": {
+      "script": "15_ragas_faithfulness.py",
+      "runs_s": [
+        28.6,
+        27.1
+      ],
+      "seconds": 28.6
+    },
+    "replicates": {
+      "script": "16_replicates.py",
+      "runs_s": [
+        16.3,
+        5.1
+      ],
+      "seconds": 16.3
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "run_utc": "2026-09-26T11:28:53+00:00",
+    "estimate": true,
+    "prices_as_of": "2026-06-24",
+    "price_basis": "Message Batches, 0.5 of the standard price",
+    "input_tokens": "generation: counted with the token-counting endpoint on the rebuilt requests; judge: run 0's measured usage (its requests depend on the new answers)",
+    "output_tokens": "run 0's measured usage; worst case: every call at max_tokens"
+  },
+  "arms": {
+    "retrieved__claude-sonnet-5__v1_zero_shot": {
+      "stages": {
+        "generate": {
+          "calls": 150,
+          "in": 220726,
+          "out": 17161,
+          "expected_usd": 0.3065,
+          "worst_case_usd": 1.7567
+        },
+        "decompose": {
+          "calls": 150,
+          "in": 201922,
+          "out": 30203,
+          "expected_usd": 0.3529,
+          "worst_case_usd": 1.7379
+        },
+        "verify": {
+          "calls": 150,
+          "in": 345970,
+          "out": 47930,
+          "expected_usd": 0.5856,
+          "worst_case_usd": 3.418
+        },
+        "correctness": {
+          "calls": 40,
+          "in": 41461,
+          "out": 3725,
+          "expected_usd": 0.0601,
+          "worst_case_usd": 0.2463
+        }
+      },
+      "generation_input_counted_equals_run0_usage": "150/150",
+      "per_run_expected_usd": 1.3051,
+      "per_run_worst_case_usd": 7.1589
+    },
+    "retrieved__claude-sonnet-5__v2_citation_required": {
+      "stages": {
+        "generate": {
+          "calls": 150,
+          "in": 231826,
+          "out": 25164,
+          "expected_usd": 0.3576,
+          "worst_case_usd": 1.7678
+        },
+        "decompose": {
+          "calls": 150,
+          "in": 201919,
+          "out": 29034,
+          "expected_usd": 0.3471,
+          "worst_case_usd": 1.7379
+        },
+        "verify": {
+          "calls": 147,
+          "in": 338468,
+          "out": 46005,
+          "expected_usd": 0.5685,
+          "worst_case_usd": 3.349
+        },
+        "correctness": {
+          "calls": 37,
+          "in": 38480,
+          "out": 3273,
+          "expected_usd": 0.0548,
+          "worst_case_usd": 0.2279
+        }
+      },
+      "generation_input_counted_equals_run0_usage": "150/150",
+      "per_run_expected_usd": 1.328,
+      "per_run_worst_case_usd": 7.0826
+    }
+  },
+  "per_run_expected_usd": 2.6331,
+  "total_expected_usd": 5.2662,
+  "total_worst_case_usd": 28.483,
+  "n_runs": 2,
+  "phase_spent_usd": 0.0,
+  "project_spent_usd": 21.267,
+  "caps": {
+    "project_usd": 30.0,
+    "phase_usd": 5.75
+  },
+  "checkpoint": "stop after run 1 if twice its measured cost exceeds the phase cap"
+}

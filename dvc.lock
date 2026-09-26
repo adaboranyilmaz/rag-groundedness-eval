@@ -1820,3 +1820,147 @@ stages:
       hash: md5
       md5: 892d6e960f7ad49f939ff719a01625f5
       size: 804
+  ragas_faithfulness:
+    cmd: uv run --env-file configs/replay.env python 
+      scripts/15_ragas_faithfulness.py --offline
+    deps:
+    - path: configs/evaluation.yaml
+      hash: md5
+      md5: ee02647108fa90ba473d123630a34b86
+      size: 2879
+    - path: configs/ragas.yaml
+      hash: md5
+      md5: 4b11354b0a64c0eb38223039394eeaab
+      size: 1541
+    - path: data/cache/llm_ragas
+      hash: md5
+      md5: c75797e63e3372f0916d6a9cdab67406.dir
+      size: 626374
+      nfiles: 100
+    - path: results/labels/validation_sample.json
+      hash: md5
+      md5: 6ed24684c499e8edab32c62c61d1e1af
+      size: 224733
+    - path: results/metrics/judge_agreement.json
+      hash: md5
+      md5: 28ec6d5ce7fa155405649fb388a3c627
+      size: 203460
+    - path: scripts/15_ragas_faithfulness.py
+      hash: md5
+      md5: d8a2a76db16097d60276e3a08220c99f
+      size: 17545
+    - path: src/evaluation/agreement.py
+      hash: md5
+      md5: adbd78fabaee8f09f96c5bd160686673
+      size: 4257
+    - path: src/external
+      hash: md5
+      md5: 19ad03487a9baf54093b8d01f19511ce.dir
+      size: 13200
+      nfiles: 3
+    - path: src/generation/llm.py
+      hash: md5
+      md5: 92cb5d0eb30de9cc35ac61ec4f2d1db5
+      size: 17703
+    outs:
+    - path: results/metrics/ragas_faithfulness.json
+      hash: md5
+      md5: b1893ceafbe38bcc1e74ec78062bf765
+      size: 50677
+    - path: results/metrics/ragas_faithfulness_per_answer.jsonl
+      hash: md5
+      md5: c05ae59317f29406cc80fb04e8dd604a
+      size: 93621
+  replicates:
+    cmd: uv run --env-file configs/replay.env python scripts/16_replicates.py 
+      --offline
+    deps:
+    - path: configs/evaluation.yaml
+      hash: md5
+      md5: ee02647108fa90ba473d123630a34b86
+      size: 2879
+    - path: configs/replicates.yaml
+      hash: md5
+      md5: f01a26822508e1675302c4cf836ba4f9
+      size: 1492
+    - path: configs/retrieval_grid.yaml
+      hash: md5
+      md5: 214df53929d93c2463ec2668cc1f8c36
+      size: 1300
+    - path: data/cache/replicates
+      hash: md5
+      md5: 300dc8339bf07552983ce86742eddfb4.dir
+      size: 19084149
+      nfiles: 1943
+    - path: data/raw/financebench
+      hash: md5
+      md5: d5f26d0310b207e9f441fde093cf758d.dir
+      size: 958387
+      nfiles: 4
+    - path: prompts
+      hash: md5
+      md5: f4fe432ff866f1b0f78f8ae5b3b3db0f.dir
+      size: 14002
+      nfiles: 9
+    - path: results/labels/out_of_corpus_audit.json
+      hash: md5
+      md5: 144dde1413fbb6db9d22ef63dc8473fb
+      size: 15335
+    - path: results/metrics/eval_main.json
+      hash: md5
+      md5: 68c20b371923109c98f3b62cc8c39726
+      size: 120906
+    - path: results/metrics/eval_per_trace.jsonl
+      hash: md5
+      md5: 0ed4c7218eb65630928c696cb3dd79e2
+      size: 5419668
+    - path: results/metrics/gold_span_alignment.json
+      hash: md5
+      md5: f023b7efb662f502a1c1a381a982a34e
+      size: 48182
+    - path: results/metrics/pipeline_selection.json
+      hash: md5
+      md5: 0e3ba477f80878169f47a09d0631e65c
+      size: 9572
+    - path: results/traces/retrieved
+      hash: md5
+      md5: 833f46620c765a18cdd4b7c7912b657b.dir
+      size: 7640630
+      nfiles: 8
+    - path: scripts/16_replicates.py
+      hash: md5
+      md5: 0be07f6ee12b5d8e413d1d427cd99c48
+      size: 19506
+    - path: src/evaluation
+      hash: md5
+      md5: 7e119006559ba53b1e4fb629b810ee87.dir
+      size: 213465
+      nfiles: 20
+    - path: src/generation
+      hash: md5
+      md5: a64cee44e578b9b486a26256bd28aa42.dir
+      size: 47425
+      nfiles: 7
+    - path: src/replication
+      hash: md5
+      md5: eb2ea3a656b4f6f23939af333525b200.dir
+      size: 8694
+      nfiles: 2
+    - path: src/tracking/selection.py
+      hash: md5
+      md5: 44584e2ebc702326495f63f42e32f774
+      size: 3961
+    outs:
+    - path: results/metrics/replicates.json
+      hash: md5
+      md5: 2507d62d5e36a9fccae91702bf9476ea
+      size: 15906
+    - path: results/metrics/replicates_per_trace.jsonl
+      hash: md5
+      md5: 79f9f8fa7594744a065c7eee56c30d48
+      size: 1727644
+    - path: results/replicates/traces
+      hash: md5
+      md5: 9ae704f2c208c2acdc9868497b8cfafb.dir
+      size: 3843061
+      nfiles: 4

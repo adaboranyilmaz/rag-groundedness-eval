@@ -41,6 +41,8 @@ jobs:
           uv run ruff format --check .
       - name: Unit tests
         run: uv run pytest -q
+      - name: README numbers match the results files
+        run: uv run python scripts/17_readme.py --check
 
   smoke-eval:
     needs: lint-and-test

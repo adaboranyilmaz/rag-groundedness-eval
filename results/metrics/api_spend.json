@@ -1,6 +1,6 @@
 {
-  "total_usd": 21.26695900000001,
-  "n_calls": 6503,
+  "total_usd": 27.145511000000084,
+  "n_calls": 8531,
   "by_phase": {
     "phase4_generation": {
       "usd": 5.726233999999997,
@@ -27,15 +27,28 @@
       "n_calls": 63,
       "input_tokens": 108648,
       "output_tokens": 12416
+    },
+    "ragas_faithfulness": {
+      "usd": 0.6195820000000001,
+      "n_calls": 100,
+      "input_tokens": 187301,
+      "output_tokens": 24498
+    },
+    "arm_replicates": {
+      "usd": 5.258970000000004,
+      "n_calls": 1928,
+      "input_tokens": 3215275,
+      "output_tokens": 408739,
+      "n_batch_calls": 1928
     }
   },
   "by_model": {
     "claude-sonnet-5": {
-      "usd": 21.10691600000001,
-      "n_calls": 6453,
-      "input_tokens": 10414905,
-      "output_tokens": 1249498,
-      "n_batch_calls": 4665
+      "usd": 26.985468000000083,
+      "n_calls": 8481,
+      "input_tokens": 13817481,
+      "output_tokens": 1682735,
+      "n_batch_calls": 6593
     },
     "claude-haiku-4-5": {
       "usd": 0.160043,
@@ -44,12 +57,14 @@
       "output_tokens": 13455
     }
   },
-  "updated_utc": "2026-09-26T10:12:14+00:00",
+  "updated_utc": "2026-09-26T13:22:46+00:00",
   "caps": {
     "project_usd": 30.0,
     "phase4_generation_usd": 10.0,
     "phase5_evaluation_usd": 15.0,
     "phase6_reliability_usd": 6.0,
-    "phase8_serving_usd": 1.0
+    "phase8_serving_usd": 1.0,
+    "ragas_faithfulness_usd": 1.75,
+    "arm_replicates_usd": 5.75
   }
 }

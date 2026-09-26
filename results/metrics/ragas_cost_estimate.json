@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "run_utc": "2026-09-26T11:23:12+00:00",
+    "estimate": true,
+    "prices_as_of": "2026-06-24",
+    "price_basis": "standard (RAGAS calls are synchronous; no batch discount)",
+    "n_answers": 50,
+    "input_tokens": "counted with the token-counting endpoint; the NLI step with the judge's claims standing in for RAGAS's statements",
+    "output_tokens": "the judge's measured outputs on the same answers (decompose for statements; verify x1.5 for NLI)"
+  },
+  "steps": {
+    "statements": {
+      "in": 44124,
+      "out": 9512,
+      "calls": 50,
+      "expected_usd": 0.1834,
+      "worst_case_usd": 1.1122
+    },
+    "nli": {
+      "in": 143433,
+      "out": 24230,
+      "calls": 50,
+      "expected_usd": 0.5292,
+      "worst_case_usd": 1.3109
+    }
+  },
+  "total_expected_usd": 0.7126,
+  "total_worst_case_usd": 2.4231,
+  "phase_spent_usd": 0.0,
+  "project_spent_usd": 21.267,
+  "caps": {
+    "project_usd": 30.0,
+    "phase_usd": 1.75
+  }
+}

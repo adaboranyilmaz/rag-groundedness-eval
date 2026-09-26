@@ -1,0 +1,50 @@
+{
+  "tag": "data-v1",
+  "repo": "adaboranyilmaz/rag-groundedness-eval",
+  "download_base": "https://github.com/adaboranyilmaz/rag-groundedness-eval/releases/download/data-v1/",
+  "scanned_for": "email addresses in EDGAR_USER_AGENT and API-key prefixes: none found",
+  "archives": {
+    "raw-edgar.tar.gz": {
+      "sha256": "d6881fd1d02f9dcdc3755e1444ee4005c93ce8e05bc4fe28e77c1282b8a7972b",
+      "bytes": 29590633,
+      "n_files": 293,
+      "contains": [
+        "data/raw/edgar_cache"
+      ]
+    },
+    "llm-caches.tar.gz": {
+      "sha256": "e422726f99054b08fa8802ac7bde45649bfec7a8ff5ff2146058c21e41272b55",
+      "bytes": 13720641,
+      "n_files": 9934,
+      "contains": [
+        "data/cache/llm",
+        "data/cache/llm_batches",
+        "data/cache/llm_live",
+        "data/cache/llm_ragas",
+        "data/cache/replicates"
+      ]
+    }
+  },
+  "financebench": {
+    "dir": "data/raw/financebench",
+    "repo_id": "PatronusAI/financebench",
+    "file": "financebench_merged.jsonl",
+    "license": "CC BY-NC 4.0 (downloaded from the Hub, not redistributed)",
+    "sha256": "7a1c81789e0fd2f1c37057a7ec0097756d726b05e7228e68e57db8e18c54fd0b",
+    "hub_files": {
+      ".cache/huggingface/.gitignore": "*",
+      ".cache/huggingface/CACHEDIR.TAG": "Signature: 8a477f597d28d172789f06886806bc55\r\n# This file is a cache directory tag created by huggingface_hub.\r\n# For information about cache directory tags, see:\r\n#\thttps://bford.info/cachedir/\r\n",
+      ".cache/huggingface/download/financebench_merged.jsonl.metadata": "e04404e3a97f69f79c14d42f24981a1c9c3bcd18\r\n195023fa920637f0ff4f0f70afb0a77fee3a846a\r\n1790251428.7994554\r\n"
+    },
+    "revision": "e04404e3a97f69f79c14d42f24981a1c9c3bcd18"
+  },
+  "dvc_roots": {
+    "data/cache/llm.dvc": "824802260d3f4433e3a4c83556f045a7.dir",
+    "data/cache/llm_batches.dvc": "6e9eab67d8f266265594c0a3b0c7dc9c.dir",
+    "data/cache/llm_live.dvc": "f3a6c1a70ed1e9344869344608d30173.dir",
+    "data/cache/llm_ragas.dvc": "c75797e63e3372f0916d6a9cdab67406.dir",
+    "data/cache/replicates.dvc": "300dc8339bf07552983ce86742eddfb4.dir",
+    "data/raw/edgar_cache.dvc": "3a222ae019fed1b1d1363f24d5084bdc.dir",
+    "data/raw/financebench.dvc": "d5f26d0310b207e9f441fde093cf758d.dir"
+  }
+}

@@ -1,0 +1,1973 @@
+{
+  "meta": {
+    "updated_utc": "2026-09-26T13:26:44+00:00",
+    "single_run": true,
+    "sample_sha256": "a04b4e3f1e27ce98f37fbd318fc6510686516800bec1562dde2e373a1b7d08d7",
+    "config": {
+      "ragas_version": "0.4.3",
+      "model": {
+        "backend": "anthropic",
+        "model": "claude-sonnet-5",
+        "thinking": "disabled"
+      },
+      "max_tokens": 2048,
+      "concurrency": 4,
+      "cache_dir": "data/cache/llm_ragas",
+      "sample": "results/labels/validation_sample.json",
+      "agreement": "results/metrics/judge_agreement.json",
+      "budget": {
+        "ledger": "results/metrics/api_spend.json",
+        "project_cap_usd": 30.0,
+        "phase": "ragas_faithfulness",
+        "phase_cap_usd": 1.75,
+        "batch_discount": 0.5,
+        "prices_as_of": "2026-06-24",
+        "prices_usd_per_mtok": {
+          "claude-sonnet-5": {
+            "input": 2.0,
+            "output": 10.0
+          }
+        }
+      },
+      "bootstrap": {
+        "n_resamples": 10000,
+        "seed": 0
+      }
+    },
+    "ragas_version": "0.4.3",
+    "ragas_prompt_sha256": {
+      "statement_generator": "9a446ce256409b2a264552e167d3ab66fca930694343c426e48eed1b8d2c9aba",
+      "nli_statement": "e1e07784ae64f594274b8038f57d29e25f6550f20fbdf9fb44c8cdbe4a5f5b2b"
+    },
+    "metric": "ragas.metrics.collections.Faithfulness",
+    "inputs": "question, the ANSWER field, the five excerpts with their headers (as the generator and the judge saw them)",
+    "rater_definitions": {
+      "human": "the author's blind claim labels (judge_agreement.json), on the judge's own claim split; score = supported / document claims",
+      "judge": "the Phase 5 judge (claude-sonnet-5, thinking off)",
+      "second_judge": "claude-haiku-4-5, the Phase 5 second judge",
+      "ragas": "RAGAS Faithfulness on the same model as the judge; score = faithful statements / statements (RAGAS has no claim kinds)",
+      "fully_grounded": "score == 1"
+    },
+    "caveat": "the human labels were given on the judge's claims, not on RAGAS's statements, which favours the judge in any comparison with RAGAS",
+    "calls": {
+      "n": 100,
+      "input_tokens": 187301,
+      "output_tokens": 24498,
+      "stop_reasons": {
+        "end_turn": 100
+      }
+    },
+    "phase_spent_usd": 0.619582,
+    "environment": {
+      "python": "3.12.13",
+      "anthropic": "1.8.0"
+    },
+    "phase5_human_vs_judge_kappa_reproduced": true
+  },
+  "comparison": {
+    "n_answers": 50,
+    "n_ragas_unscored": 0,
+    "ragas_unscored": [],
+    "pairs": {
+      "human__vs__ragas": {
+        "all": {
+          "fully_grounded": {
+            "n": 50,
+            "n_clusters": 50,
+            "kappa": 0.56,
+            "kappa_ci95": [
+              0.32429892298313356,
+              0.7611464968152867
+            ],
+            "raw_agreement": 0.78,
+            "marginals_a": {
+              "true": 30,
+              "false": 20
+            },
+            "marginals_b": {
+              "true": 25,
+              "false": 25
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 22,
+                "false": 8
+              },
+              "false": {
+                "true": 3,
+                "false": 17
+              }
+            }
+          },
+          "score": {
+            "n": 50,
+            "spearman": 0.6884053189423601,
+            "spearman_ci95": [
+              0.46674441446234205,
+              0.8624145154836852
+            ],
+            "mean_a": 0.6514141414141414,
+            "mean_b": 0.6415128205128205,
+            "mean_abs_diff": 0.16621833721833723,
+            "n_a_higher": 10,
+            "n_b_higher": 6,
+            "n_equal": 34
+          }
+        },
+        "claude-sonnet-5": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.4186046511627908,
+            "kappa_ci95": [
+              -0.08695652173913052,
+              0.8015873015873017
+            ],
+            "raw_agreement": 0.8,
+            "marginals_a": {
+              "true": 20,
+              "false": 5
+            },
+            "marginals_b": {
+              "true": 19,
+              "false": 6
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 17,
+                "false": 3
+              },
+              "false": {
+                "true": 2,
+                "false": 3
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.3731010519679289,
+            "spearman_ci95": [
+              -0.10257582372097283,
+              0.7977328078457024
+            ],
+            "mean_a": 0.8606060606060606,
+            "mean_b": 0.8991452991452991,
+            "mean_abs_diff": 0.16742812742812746,
+            "n_a_higher": 3,
+            "n_b_higher": 4,
+            "n_equal": 18
+          }
+        },
+        "qwen2.5-3b": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.46428571428571425,
+            "kappa_ci95": [
+              0.0863787375415284,
+              0.8031496062992127
+            ],
+            "raw_agreement": 0.76,
+            "marginals_a": {
+              "true": 10,
+              "false": 15
+            },
+            "marginals_b": {
+              "true": 6,
+              "false": 19
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 5,
+                "false": 5
+              },
+              "false": {
+                "true": 1,
+                "false": 14
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.7280993706446531,
+            "spearman_ci95": [
+              0.42383932525619483,
+              0.9463204468147677
+            ],
+            "mean_a": 0.44222222222222224,
+            "mean_b": 0.3838803418803418,
+            "mean_abs_diff": 0.165008547008547,
+            "n_a_higher": 7,
+            "n_b_higher": 2,
+            "n_equal": 16
+          }
+        }
+      },
+      "judge__vs__ragas": {
+        "all": {
+          "fully_grounded": {
+            "n": 50,
+            "n_clusters": 50,
+            "kappa": 0.6399999999999999,
+            "kappa_ci95": [
+              0.4057052297939778,
+              0.8392282958199357
+            ],
+            "raw_agreement": 0.82,
+            "marginals_a": {
+              "true": 26,
+              "false": 24
+            },
+            "marginals_b": {
+              "true": 25,
+              "false": 25
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 21,
+                "false": 5
+              },
+              "false": {
+                "true": 4,
+                "false": 20
+              }
+            }
+          },
+          "score": {
+            "n": 50,
+            "spearman": 0.7986634288551936,
+            "spearman_ci95": [
+              0.6257324324653956,
+              0.9264586259374176
+            ],
+            "mean_a": 0.5768376068376068,
+            "mean_b": 0.6415128205128205,
+            "mean_abs_diff": 0.11241880341880343,
+            "n_a_higher": 5,
+            "n_b_higher": 8,
+            "n_equal": 37
+          }
+        },
+        "claude-sonnet-5": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.4186046511627908,
+            "kappa_ci95": [
+              -0.10619469026548672,
+              0.8031496062992127
+            ],
+            "raw_agreement": 0.8,
+            "marginals_a": {
+              "true": 20,
+              "false": 5
+            },
+            "marginals_b": {
+              "true": 19,
+              "false": 6
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 17,
+                "false": 3
+              },
+              "false": {
+                "true": 2,
+                "false": 3
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.5493918506294303,
+            "spearman_ci95": [
+              -0.10860125732139311,
+              0.8826320825762692
+            ],
+            "mean_a": 0.8666666666666666,
+            "mean_b": 0.8991452991452991,
+            "mean_abs_diff": 0.09196581196581198,
+            "n_a_higher": 3,
+            "n_b_higher": 4,
+            "n_equal": 18
+          }
+        },
+        "qwen2.5-3b": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.5614035087719298,
+            "kappa_ci95": [
+              0.1071428571428573,
+              0.896265560165975
+            ],
+            "raw_agreement": 0.84,
+            "marginals_a": {
+              "true": 6,
+              "false": 19
+            },
+            "marginals_b": {
+              "true": 6,
+              "false": 19
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 4,
+                "false": 2
+              },
+              "false": {
+                "true": 2,
+                "false": 17
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.7511483753814107,
+            "spearman_ci95": [
+              0.45976502399006586,
+              0.9738838449134326
+            ],
+            "mean_a": 0.287008547008547,
+            "mean_b": 0.3838803418803418,
+            "mean_abs_diff": 0.13287179487179487,
+            "n_a_higher": 2,
+            "n_b_higher": 4,
+            "n_equal": 19
+          }
+        }
+      },
+      "second_judge__vs__ragas": {
+        "all": {
+          "fully_grounded": {
+            "n": 50,
+            "n_clusters": 50,
+            "kappa": 0.52,
+            "kappa_ci95": [
+              0.27066450567260947,
+              0.7504159733777038
+            ],
+            "raw_agreement": 0.76,
+            "marginals_a": {
+              "true": 25,
+              "false": 25
+            },
+            "marginals_b": {
+              "true": 25,
+              "false": 25
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 19,
+                "false": 6
+              },
+              "false": {
+                "true": 6,
+                "false": 19
+              }
+            }
+          },
+          "score": {
+            "n": 50,
+            "spearman": 0.7770579762106181,
+            "spearman_ci95": [
+              0.5850044413900417,
+              0.907438037673737
+            ],
+            "mean_a": 0.6063675213675214,
+            "mean_b": 0.6415128205128205,
+            "mean_abs_diff": 0.10733333333333334,
+            "n_a_higher": 7,
+            "n_b_higher": 9,
+            "n_equal": 34
+          }
+        },
+        "claude-sonnet-5": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.0663900414937761,
+            "kappa_ci95": [
+              -0.3043478260869565,
+              0.4813278008298757
+            ],
+            "raw_agreement": 0.64,
+            "marginals_a": {
+              "true": 18,
+              "false": 7
+            },
+            "marginals_b": {
+              "true": 19,
+              "false": 6
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 14,
+                "false": 4
+              },
+              "false": {
+                "true": 5,
+                "false": 2
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.19752166271267216,
+            "spearman_ci95": [
+              -0.29767238137791924,
+              0.6421185326728727
+            ],
+            "mean_a": 0.8766666666666667,
+            "mean_b": 0.8991452991452991,
+            "mean_abs_diff": 0.12196581196581197,
+            "n_a_higher": 4,
+            "n_b_higher": 6,
+            "n_equal": 15
+          }
+        },
+        "qwen2.5-3b": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.6887966804979254,
+            "kappa_ci95": [
+              0.25742574257425754,
+              1.0
+            ],
+            "raw_agreement": 0.88,
+            "marginals_a": {
+              "true": 7,
+              "false": 18
+            },
+            "marginals_b": {
+              "true": 6,
+              "false": 19
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 5,
+                "false": 2
+              },
+              "false": {
+                "true": 1,
+                "false": 17
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.853717128313643,
+            "spearman_ci95": [
+              0.615951024579016,
+              0.9903793624056398
+            ],
+            "mean_a": 0.3360683760683761,
+            "mean_b": 0.3838803418803418,
+            "mean_abs_diff": 0.09270085470085469,
+            "n_a_higher": 3,
+            "n_b_higher": 3,
+            "n_equal": 19
+          }
+        }
+      },
+      "human__vs__judge": {
+        "all": {
+          "fully_grounded": {
+            "n": 50,
+            "n_clusters": 50,
+            "kappa": 0.5161290322580645,
+            "kappa_ci95": [
+              0.27066450567260947,
+              0.7457627118644068
+            ],
+            "raw_agreement": 0.76,
+            "marginals_a": {
+              "true": 30,
+              "false": 20
+            },
+            "marginals_b": {
+              "true": 26,
+              "false": 24
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 22,
+                "false": 8
+              },
+              "false": {
+                "true": 4,
+                "false": 16
+              }
+            }
+          },
+          "score": {
+            "n": 50,
+            "spearman": 0.5809859846412883,
+            "spearman_ci95": [
+              0.33452640394612054,
+              0.7926099858412152
+            ],
+            "mean_a": 0.6514141414141414,
+            "mean_b": 0.5768376068376068,
+            "mean_abs_diff": 0.2273038073038073,
+            "n_a_higher": 12,
+            "n_b_higher": 4,
+            "n_equal": 34
+          }
+        },
+        "claude-sonnet-5": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.24999999999999992,
+            "kappa_ci95": [
+              -0.19047619047619013,
+              0.6634784134784182
+            ],
+            "raw_agreement": 0.76,
+            "marginals_a": {
+              "true": 20,
+              "false": 5
+            },
+            "marginals_b": {
+              "true": 20,
+              "false": 5
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 17,
+                "false": 3
+              },
+              "false": {
+                "true": 3,
+                "false": 2
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.1813165296548828,
+            "spearman_ci95": [
+              -0.20541547446153652,
+              0.6543909348441926
+            ],
+            "mean_a": 0.8606060606060606,
+            "mean_b": 0.8666666666666666,
+            "mean_abs_diff": 0.21939393939393936,
+            "n_a_higher": 5,
+            "n_b_higher": 3,
+            "n_equal": 17
+          }
+        },
+        "qwen2.5-3b": {
+          "fully_grounded": {
+            "n": 25,
+            "n_clusters": 25,
+            "kappa": 0.46428571428571425,
+            "kappa_ci95": [
+              0.08163265306122455,
+              0.8015873015873017
+            ],
+            "raw_agreement": 0.76,
+            "marginals_a": {
+              "true": 10,
+              "false": 15
+            },
+            "marginals_b": {
+              "true": 6,
+              "false": 19
+            },
+            "confusion_rows_a": {
+              "true": {
+                "true": 5,
+                "false": 5
+              },
+              "false": {
+                "true": 1,
+                "false": 14
+              }
+            }
+          },
+          "score": {
+            "n": 25,
+            "spearman": 0.6098756868001667,
+            "spearman_ci95": [
+              0.2668447130207659,
+              0.8826641728489388
+            ],
+            "mean_a": 0.44222222222222224,
+            "mean_b": 0.287008547008547,
+            "mean_abs_diff": 0.2352136752136752,
+            "n_a_higher": 7,
+            "n_b_higher": 1,
+            "n_equal": 17
+          }
+        }
+      }
+    },
+    "human_judge_minus_human_ragas": {
+      "n": 50,
+      "reference": "human",
+      "a": "judge",
+      "b": "ragas",
+      "kappa_diff": -0.04387096774193555,
+      "kappa_diff_ci95": [
+        -0.2790244317446859,
+        0.18387982524058008
+      ]
+    }
+  },
+  "per_answer": [
+    {
+      "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_08286",
+      "item_id": "d76f8f168399",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v2_citation_required__financebench_id_01079",
+      "item_id": "caaf54bbb554",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 0.5555555555555556,
+        "fully_grounded": false,
+        "n_document_claims": 9
+      },
+      "judge": {
+        "score": 0.4444444444444444,
+        "fully_grounded": false,
+        "n_document_claims": 9
+      },
+      "second_judge": {
+        "score": 0.5555555555555556,
+        "fully_grounded": false,
+        "n_document_claims": 9
+      },
+      "ragas": {
+        "score": 0.4444444444444444,
+        "fully_grounded": false,
+        "n_statements": 9,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_03031",
+      "item_id": "549279d7719b",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.3333333333333333,
+        "fully_grounded": false,
+        "n_statements": 3,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v4_abstention__financebench_id_04209",
+      "item_id": "7a9e64d63a83",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_05915",
+      "item_id": "22c4a317a870",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v1_zero_shot__financebench_id_03282",
+      "item_id": "49ee541aa4ed",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__financebench_id_02024",
+      "item_id": "b0c74e616a06",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_00460",
+      "item_id": "f8431c4d83a7",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v4_abstention__financebench_id_03882",
+      "item_id": "d748b3584d3a",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v4_abstention__financebench_id_01319",
+      "item_id": "1d3800ef6f8c",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "ragas": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_09724",
+      "item_id": "f32f8b86ab65",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_01290",
+      "item_id": "0c9462621066",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 0.75,
+        "fully_grounded": false,
+        "n_statements": 4,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v3_chain_of_thought__financebench_id_00394",
+      "item_id": "c3c279695aff",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v1_zero_shot__financebench_id_00591",
+      "item_id": "88ab6b62aa30",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 0.18181818181818182,
+        "fully_grounded": false,
+        "n_document_claims": 11
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 11
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 11
+      },
+      "ragas": {
+        "score": 0.9230769230769231,
+        "fully_grounded": false,
+        "n_statements": 13,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v4_abstention__financebench_id_01930",
+      "item_id": "32d41a91b4d7",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 4,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v1_zero_shot__financebench_id_00995",
+      "item_id": "3f82d558383a",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 26
+      },
+      "judge": {
+        "score": 0.23076923076923078,
+        "fully_grounded": false,
+        "n_document_claims": 26
+      },
+      "second_judge": {
+        "score": 0.34615384615384615,
+        "fully_grounded": false,
+        "n_document_claims": 26
+      },
+      "ragas": {
+        "score": 0.7692307692307693,
+        "fully_grounded": false,
+        "n_statements": 26,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00724",
+      "item_id": "b1f9240492ce",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 4,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v2_citation_required__financebench_id_07507",
+      "item_id": "d871d6438e10",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v2_citation_required__financebench_id_03069",
+      "item_id": "e973ef71e5ce",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v2_citation_required__financebench_id_00807",
+      "item_id": "cac9a22bccf1",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 6,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v2_citation_required__financebench_id_00302",
+      "item_id": "1b025ad761f0",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v1_zero_shot__financebench_id_04254",
+      "item_id": "b924031edfda",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v4_abstention__financebench_id_00382",
+      "item_id": "1f46ad531d87",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00669",
+      "item_id": "802138c7ac2b",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 6
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 6
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 6
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 7,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__financebench_id_03029",
+      "item_id": "e94cf791bd87",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_01028",
+      "item_id": "7703af005708",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.8333333333333334,
+        "fully_grounded": false,
+        "n_document_claims": 6
+      },
+      "judge": {
+        "score": 0.6666666666666666,
+        "fully_grounded": false,
+        "n_document_claims": 6
+      },
+      "second_judge": {
+        "score": 0.8333333333333334,
+        "fully_grounded": false,
+        "n_document_claims": 6
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 6,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_00566",
+      "item_id": "73742f675b56",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 9
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 9
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 9
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 10,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__financebench_id_00216",
+      "item_id": "d703145d9c72",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "ragas": {
+        "score": 0.2222222222222222,
+        "fully_grounded": false,
+        "n_statements": 9,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v2_citation_required__financebench_id_10285",
+      "item_id": "6ccdef8511d9",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v3_chain_of_thought__financebench_id_00723",
+      "item_id": "96fabf8b302b",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 3,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_01148",
+      "item_id": "a7f98c0517dd",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 12
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 12
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 12
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 13,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v4_abstention__financebench_id_01858",
+      "item_id": "16e1856d0327",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 6
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 6
+      },
+      "second_judge": {
+        "score": 0.8333333333333334,
+        "fully_grounded": false,
+        "n_document_claims": 6
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 6,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_01275",
+      "item_id": "30134200b194",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v4_abstention__financebench_id_00494",
+      "item_id": "1b65b8e43664",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "judge": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "second_judge": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "ragas": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00517",
+      "item_id": "5813fc402766",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 10
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 10
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 10
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 10,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v2_citation_required__financebench_id_03838",
+      "item_id": "aad1e83fb7b4",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 3,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v1_zero_shot__financebench_id_02608",
+      "item_id": "5e59b4e1ec18",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v2_citation_required__financebench_id_01244",
+      "item_id": "19f9406dee4b",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "second_judge": {
+        "score": 0.6666666666666666,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 4,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v2_citation_required__financebench_id_01865",
+      "item_id": "4eacfdf4b3ad",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v4_abstention__financebench_id_01346",
+      "item_id": "304c0a90db6b",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "second_judge": {
+        "score": 0.3333333333333333,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 4,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v4_abstention__financebench_id_07661",
+      "item_id": "b74342220567",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__qwen2.5-3b__v1_zero_shot__financebench_id_00005",
+      "item_id": "5a1776ec25a6",
+      "model_key": "qwen2.5-3b",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 0.8,
+        "fully_grounded": false,
+        "n_statements": 5,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v3_chain_of_thought__financebench_id_01981",
+      "item_id": "5b4928d411bb",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 2,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v4_abstention__financebench_id_00552",
+      "item_id": "2340724bbbbf",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 3
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 3
+      },
+      "ragas": {
+        "score": 0.6666666666666666,
+        "fully_grounded": false,
+        "n_statements": 3,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v4_abstention__financebench_id_01091",
+      "item_id": "f696361bfffe",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 0.75,
+        "fully_grounded": false,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 5,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v1_zero_shot__financebench_id_02981",
+      "item_id": "bd657b7501a2",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 5,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_00283",
+      "item_id": "e107ece78cec",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 0.6666666666666666,
+        "fully_grounded": false,
+        "n_statements": 3,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__claude-sonnet-5__v3_chain_of_thought__financebench_id_00956",
+      "item_id": "9297e455feae",
+      "model_key": "claude-sonnet-5",
+      "condition": "retrieved",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 2
+      },
+      "judge": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "second_judge": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_document_claims": 2
+      },
+      "ragas": {
+        "score": 0.5,
+        "fully_grounded": false,
+        "n_statements": 4,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "retrieved__qwen2.5-3b__v4_abstention__financebench_id_00882",
+      "item_id": "79cf8d5e3a5b",
+      "model_key": "qwen2.5-3b",
+      "condition": "retrieved",
+      "human": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "second_judge": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_document_claims": 1
+      },
+      "ragas": {
+        "score": 0.0,
+        "fully_grounded": false,
+        "n_statements": 1,
+        "error": null
+      }
+    },
+    {
+      "trace_id": "oracle__claude-sonnet-5__v3_chain_of_thought__financebench_id_02049",
+      "item_id": "c4cc306b3250",
+      "model_key": "claude-sonnet-5",
+      "condition": "oracle",
+      "human": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "second_judge": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_document_claims": 4
+      },
+      "ragas": {
+        "score": 1.0,
+        "fully_grounded": true,
+        "n_statements": 4,
+        "error": null
+      }
+    }
+  ]
+}
