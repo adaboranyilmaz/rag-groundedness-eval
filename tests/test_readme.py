@@ -77,8 +77,7 @@ def test_typed_numbers_are_caught_outside_placeholders_and_code(tmp_path, monkey
     )
     values = tmp_path / "v.yaml"
     values.write_text("values: {}\nallowed_literals: []\n", encoding="utf-8")
-    monkeypatch.setattr(readme, "TEMPLATE", template)
     monkeypatch.setattr(readme, "VALUES", values)
-    found = readme.typed_literals()
+    found = readme.typed_literals(template)
     assert len(found) == 2
     assert "'0.18'" in found[0] and "'12%'" in found[1]

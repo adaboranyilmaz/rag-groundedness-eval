@@ -1,5 +1,6 @@
-"""Render README.md from docs/readme/README.template.md, so every number in it comes from a
-committed results file (spec §3.1-3.2, §10: README numbers are never edited by hand).
+"""Render README.md (the short, plain-language version) and TECHNICAL_REPORT.md (the full
+report) from their templates in docs/readme/, so every number in either comes from a committed
+results file (spec §3.1-3.2, §10: README numbers are never edited by hand).
 
 The template holds the prose. Numbers are placeholders:
   {{name}}         a value defined in docs/readme/values.yaml: a results file, a path inside
@@ -7,8 +8,8 @@ The template holds the prose. Numbers are placeholders:
                    other values (differences, ratios)
   {{table:name}}   a table built below from results files, ending with its source line
 Modes:
-  (default)   write README.md
-  --check     render in memory and fail if README.md differs (a hand edit, or a results file
+  (default)   write README.md and TECHNICAL_REPORT.md
+  --check     render in memory and fail if either file differs (a hand edit, or a results file
               changed without a re-render), or if the template types a decimal or a
               percentage outside a placeholder that values.yaml does not allow. CI runs this.
 
@@ -31,9 +32,12 @@ from typing import Any
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
-TEMPLATE = ROOT / "docs/readme/README.template.md"
+# (template, output): both share docs/readme/values.yaml and the tables below
+DOCS = [
+    (ROOT / "docs/readme/README.template.md", ROOT / "README.md"),
+    (ROOT / "docs/readme/TECHNICAL_REPORT.template.md", ROOT / "TECHNICAL_REPORT.md"),
+]
 VALUES = ROOT / "docs/readme/values.yaml"
-README = ROOT / "README.md"
 RESULTS = ROOT / "results"
 PLACEHOLDER = re.compile(r"\{\{\s*([\w.:-]+)\s*\}\}")
 # a decimal or a percentage typed into the prose (integers are left to review: years,
@@ -77,7 +81,7 @@ def _num(x: float, digits: int) -> str:
 
 def fmt(value: Any, spec: str) -> str:
     """f3 -> 0.179 | sf2 -> +0.04 | pct1 -> 17.9% | pp1 -> +1.2 pp | ppci1 -> [−1.0, +1.7] |
-    int -> 1,234 | usd2 -> $0.62 |
+    int -> 1,234 | usd2 -> $0.62 | dur -> 1.7 h |
     ci2 -> [0.27, 0.75] | kci2 -> 0.52 [0.27, 0.75] (a kappa summary) | pm3 -> 0.080 ± 0.012
     (a spread) | s1 -> seconds with one decimal | str"""
     kind, digits = re.fullmatch(r"([a-z]+)(\d*)", spec).groups()
@@ -109,8 +113,12 @@ def fmt(value: Any, spec: str) -> str:
         return f"{_num(k, d)} [{_num(ci[0], d)}, {_num(ci[1], d)}]"
     if kind == "pm":
         return f"{_num(value['mean'], d)} ± {_num(value['std'], d)}"
+    if kind == "pmpct":  # a spread of shares, in percent and percentage points
+        return f"{_num(100 * value['mean'], d)}% ± {_num(100 * value['std'], d)} pp"
     if kind == "s":
         return f"{value:.{d}f} s"
+    if kind == "dur":  # a duration in seconds, in the unit that reads best
+        return _duration(value)
     raise ValueError(f"unknown format {spec!r}")
 
 
@@ -164,6 +172,10 @@ def resolve_values(spec: dict) -> dict[str, str]:
                 raw[name] = sum(
                     all(x.get(k) == want for k, want in v["count_where"].items()) for x in items
                 )
+            elif "sum_of" in v:  # sum of one field over a list, or a dict's values
+                items = lookup(load(v["file"]), v["path"])
+                items = items.values() if isinstance(items, dict) else items
+                raw[name] = sum(lookup(x, v["sum_of"]) for x in items)
             elif "mean_of" in v:  # mean of one field over a list of records
                 items = [lookup(x, v["mean_of"]) for x in lookup(load(v["file"]), v["path"])]
                 raw[name] = sum(items) / len(items)
@@ -529,6 +541,108 @@ def runtimes() -> str:
 
 
 # --------------------------------------------------------------------------------------
+# Tables for the short README: fewer columns, plain names, percentages
+
+
+SEARCH_NAMES = {
+    "dense": "Meaning-based (dense)",
+    "hybrid_rerank": "Mixed, then re-ranked",
+    "hybrid": "Mixed (meaning + keywords)",
+    "bm25": "Keywords only (BM25)",
+}
+
+
+@table
+def simple_search() -> str:
+    g = load("metrics/retrieval_grid.json")
+    rows = []
+    for method, name in SEARCH_NAMES.items():
+        cells = {k: c for k, c in g["cells"].items() if c["method"] == method}
+        best = max(cells.values(), key=lambda c: c["metrics"]["recall@5"])["metrics"]
+        rows.append([name, fmt(best["recall@5"], "pct0"), fmt(best["doc_hit@5"], "pct0")])
+    return md(
+        ["Search method (best setup)", "Evidence found in top 5", "Right report in top 5"],
+        rows,
+        "`results/metrics/retrieval_grid.json` (126 questions)",
+    )
+
+
+@table
+def simple_results() -> str:
+    e = load("metrics/eval_main.json")["by_condition_model"]
+    rows = []
+    pages = (("oracle", "Handed the right pages"), ("retrieved", "Its own search results"))
+    for cond, how in pages:
+        for gen in ("claude-sonnet-5", "qwen2.5-3b"):
+            a = e[f"{cond}__{gen}"]
+            rows.append(
+                [
+                    GEN[gen],
+                    how,
+                    fmt(a["correctness"]["accuracy_all"]["rate"], "pct0"),
+                    fmt(a["groundedness"]["fully_grounded"]["rate"], "pct0"),
+                    fmt(a["abstention"]["status_counts"]["declined"] / a["n"], "pct0"),
+                ]
+            )
+    return md(
+        ["Model", "Pages given", "Correct", "Fully grounded (of scored answers)", "Declined"],
+        rows,
+        "`results/metrics/eval_main.json` (four prompts pooled; single run)",
+    )
+
+
+@table
+def simple_agreement() -> str:
+    ja = load("metrics/judge_agreement.json")["agreement"]
+    rf = load("metrics/ragas_faithfulness.json")["comparison"]["pairs"]
+    rows = [
+        ["Judge vs human", ja["human__vs__judge"]["document_claims"]["answer_fully_grounded"]],
+        [
+            "Second judge (Haiku 4.5) vs human",
+            ja["human__vs__second_judge"]["document_claims"]["answer_fully_grounded"],
+        ],
+        ["RAGAS vs human", rf["human__vs__ragas"]["all"]["fully_grounded"]],
+        [
+            "Judge vs second judge",
+            ja["judge__vs__second_judge"]["document_claims"]["answer_fully_grounded"],
+        ],
+        [
+            "Judge vs itself (re-run)",
+            ja["judge__vs__judge_retest"]["document_claims"]["answer_fully_grounded"],
+        ],
+    ]
+    return md(
+        ["Who is compared (50 answers)", 'κ on "fully grounded"', "Same verdict"],
+        [[who, fmt(s, "kci2"), fmt(s["raw_agreement"], "pct0")] for who, s in rows],
+        "`results/metrics/judge_agreement.json`, `results/metrics/ragas_faithfulness.json` "
+        "(95% intervals in brackets)",
+    )
+
+
+@table
+def simple_replicates() -> str:
+    r = load("metrics/replicates.json")["arms"]
+    rows = []
+    for key, label in (
+        ("correct_and_grounded", "Correct and fully grounded"),
+        ("accuracy_all", "Correct"),
+        ("declined_rate", "Declined"),
+    ):
+        rows.append(
+            [label]
+            + [
+                fmt(r[f"retrieved__claude-sonnet-5__{p}"]["spread"][key], "pmpct1")
+                for p in ("v1_zero_shot", "v2_citation_required")
+            ]
+        )
+    return md(
+        ["Share of all 150 questions", "Plain prompt", '"Quote your source" prompt'],
+        rows,
+        "`results/metrics/replicates.json` (mean ± standard deviation over three runs)",
+    )
+
+
+# --------------------------------------------------------------------------------------
 # Figure
 
 
@@ -628,36 +742,39 @@ def plot_rater_agreement(path: Path = AGREEMENT_FIGURE) -> None:
 # --------------------------------------------------------------------------------------
 
 
-def render() -> str:
-    spec = yaml.safe_load(VALUES.read_text(encoding="utf-8"))
-    values = resolve_values(spec)
-    text = TEMPLATE.read_text(encoding="utf-8")
-
+def render(template: Path, values: dict[str, str]) -> str:
     def sub(m: re.Match) -> str:
         name = m.group(1)
         if name.startswith("table:"):
             return TABLES[name.split(":", 1)[1]]()
         if name not in values:
-            raise KeyError(f"template placeholder {{{{{name}}}}} has no value in values.yaml")
+            raise KeyError(f"{template.name}: {{{{{name}}}}} has no value in values.yaml")
         return values[name]
 
+    header = "<!-- Generated by scripts/17_readme.py from docs/readme/; edit those, not this. -->\n"
+    return header + PLACEHOLDER.sub(sub, template.read_text(encoding="utf-8"))
+
+
+def render_all() -> dict[Path, str]:
+    spec = yaml.safe_load(VALUES.read_text(encoding="utf-8"))
+    values = resolve_values(spec)
+    used = {n for t, _ in DOCS for n in PLACEHOLDER.findall(t.read_text(encoding="utf-8"))}
     in_exprs = {
         n
         for v in spec["values"].values()
         if "expr" in v
         for n in re.findall(r"[A-Za-z_][\w.]*", v["expr"])
     }
-    unused = set(values) - set(PLACEHOLDER.findall(text)) - in_exprs
+    unused = set(values) - used - in_exprs
     if unused:
         print(f"note: values defined but not used: {sorted(unused)}")
-    header = "<!-- Generated by scripts/17_readme.py from docs/readme/; edit those, not this. -->\n"
-    return header + PLACEHOLDER.sub(sub, text)
+    return {out: render(t, values) for t, out in DOCS}
 
 
-def typed_literals() -> list[str]:
+def typed_literals(template: Path) -> list[str]:
     spec = yaml.safe_load(VALUES.read_text(encoding="utf-8"))
     allowed = set(spec.get("allowed_literals", []))
-    text = PLACEHOLDER.sub("", TEMPLATE.read_text(encoding="utf-8"))
+    text = PLACEHOLDER.sub("", template.read_text(encoding="utf-8"))
     text = re.sub(r"`[^`\n]*`", "", text)  # code spans: settings, versions, paths
     text = re.sub(r"```.*?```", "", text, flags=re.S)
     text = re.sub(r"\]\([^)]*\)", "]", text)  # link targets
@@ -665,7 +782,7 @@ def typed_literals() -> list[str]:
     for i, line in enumerate(text.splitlines(), 1):
         for m in LITERAL.finditer(line):
             if m.group(0) not in allowed:
-                found.append(f"line {i}: {m.group(0)!r} in: {line.strip()[:90]}")
+                found.append(f"{template.name} line {i}: {m.group(0)!r} in: {line.strip()[:80]}")
     return found
 
 
@@ -673,24 +790,28 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    rendered = render()
-    literals = typed_literals()
+    rendered = render_all()
+    literals = [x for t, _ in DOCS for x in typed_literals(t)]
     if args.check:
-        problems = []
-        if not README.exists() or README.read_text(encoding="utf-8") != rendered:
-            problems.append("README.md differs from a fresh render: run scripts/17_readme.py")
+        problems = [
+            f"{out.name} differs from a fresh render: run scripts/17_readme.py"
+            for out, text in rendered.items()
+            if not out.exists() or out.read_text(encoding="utf-8") != text
+        ]
         problems += [f"typed number (not from a results file): {x}" for x in literals]
         if not AGREEMENT_FIGURE.exists():
             problems.append(f"{AGREEMENT_FIGURE.relative_to(ROOT)} is missing")
         if problems:
             sys.exit("\n".join(problems))
-        print("README.md matches the results files")
+        print("README.md and TECHNICAL_REPORT.md match the results files")
         return
     if literals:
-        sys.exit("typed numbers in the template:\n" + "\n".join(literals))
-    README.write_text(rendered, encoding="utf-8", newline="\n")
+        sys.exit("typed numbers in a template:\n" + "\n".join(literals))
+    for out, text in rendered.items():
+        out.write_text(text, encoding="utf-8", newline="\n")
+        print(f"wrote {out.relative_to(ROOT)}")
     plot_rater_agreement()
-    print(f"wrote {README} and {AGREEMENT_FIGURE.relative_to(ROOT)}")
+    print(f"wrote {AGREEMENT_FIGURE.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
