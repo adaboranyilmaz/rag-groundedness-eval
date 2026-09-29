@@ -1,4 +1,4 @@
-# Measuring Groundedness in RAG over Financial Filings
+# Measuring RAG Groundedness on Financial Filings
 
 *Does a retrieval-augmented system get the right answer for the right reasons?*
 
